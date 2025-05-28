@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import me.vitalpaw.ui.screens.veterinario.RegistrerScreen
 import me.vitalpaw.ui.theme.VitalPawTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,14 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            VitalPawTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+                RegistrerScreen()
         }
     }
 }
