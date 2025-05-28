@@ -28,16 +28,18 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.vitalpaw.R
 
+@Preview(showBackground = true)
 @Composable
 fun LoginScreen(){
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0ECF7))
+            .background(Color(0xFFCBDFF4))
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,17 +53,11 @@ fun LoginScreen(){
                 painter = painterResource( id  = R.drawable.logo),
                 contentDescription = "Logo VitalPaw",
                 modifier = Modifier
-                    .height(100.dp)
-            )
-            Text(
-                text = "VitalPaw",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF337AB7),
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+                    .width(300.dp)
+                    .height(200.dp)
             )
             Surface(
-                shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
+                shape = RoundedCornerShape(topStart = 90.dp, topEnd = 0.dp),
                 color = Color.White,
                 modifier = Modifier
                     .fillMaxSize()
@@ -76,7 +72,7 @@ fun LoginScreen(){
                     text = "Iniciar Sesión",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF2996CC)
+                    color = Color(0xFF3695B9)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -89,7 +85,7 @@ fun LoginScreen(){
                     shape = RoundedCornerShape(24.dp)
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Password
                 OutlinedTextField(
