@@ -3,8 +3,7 @@ package me.vitalpaw.ui.screens.veterinario
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,15 +27,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import me.vitalpaw.R
+import me.vitalpaw.viewmodels.SessionViewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.IconButton
+
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen(){
+fun LoginScreen(viewModel: SessionViewModel = viewModel()){
+    val email = viewModel.email
+    val password = viewModel.password
+    val showError = viewModel.showError
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,47 +83,73 @@ fun LoginScreen(){
             ){
                 Text(
                     text = "Iniciar Sesión",
-                    fontSize = 22.sp,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF3695B9)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = email,
+                    onValueChange = viewModel::onEmailChange,
                     label = { Text("Enter Email") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(24.dp),
+                    isError = showError && email.isBlank()
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Password
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = password,
+                    onValueChange = viewModel::onPasswordChange,
                     label = { Text("Enter Password") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(24.dp),
+                    isError = showError && password.isBlank(),
+                    visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
+                    else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (viewModel.isPasswordVisible)
+                            Icons.Filled.Visibility
+                        else
+                            Icons.Filled.VisibilityOff
+
+                        IconButton(onClick = viewModel::onTogglePasswordVisibility) {
+                            Icon(imageVector = image, contentDescription = "Toggle password")
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                if (showError && (email.isBlank() || password.isBlank())) {
+                    Text(
+                        text = "Rellenar campos vacíos",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(35.dp))
 
                 // Botón iniciar sesión
                 Button(
-                    onClick = { /* TODO: Acción de login */ },
+                    onClick = viewModel::onLoginClick,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Iniciar Sesión", color = Color.White)
+                    Text(
+                        text = "Iniciar Sesión",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White)
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 // Texto de registro
                 Text(
@@ -125,7 +164,6 @@ fun LoginScreen(){
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Botón de Google
                 Button(
                     onClick = { /* TODO: Login con Google */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
@@ -135,13 +173,16 @@ fun LoginScreen(){
                         .height(50.dp)
                 ){
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_background), // icono
+                        painter = painterResource(id = R.drawable.google_icon),
                         contentDescription = "Google",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(24.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Ingresar con Google", color = Color.White)
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Ingresar con Google",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White)
                 }
             }
             }
