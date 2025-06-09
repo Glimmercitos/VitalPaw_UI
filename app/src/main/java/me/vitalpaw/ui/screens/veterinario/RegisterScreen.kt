@@ -2,26 +2,12 @@ package me.vitalpaw.ui.screens.veterinario
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,17 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.vitalpaw.viewmodels.RegisterViewModel
-import me.vitalpaw.R
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-
+import me.vitalpaw.R
+import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.RegisterViewModel
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
@@ -55,36 +39,38 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFE0ECF7))
-    ){
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             Spacer(modifier = Modifier.height(60.dp))
 
             Image(
-                painter = painterResource( id  = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo VitalPaw",
                 modifier = Modifier.height(100.dp)
             )
+
             Surface(
                 shape = RoundedCornerShape(topStart = 0.dp, topEnd = 50.dp),
                 color = Color.White,
                 modifier = Modifier.fillMaxSize()
-            ){
+            ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp, vertical = 36.dp)
-                ){
+                ) {
                     Text(
                         text = "Regístrate",
-                        fontSize = 22.sp,
+                        fontSize = 30.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF2996CC)
+                        color = Color(0xFF2996CC),
+                        fontFamily = quicksandFont
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -94,7 +80,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         onValueChange = viewModel::onNameChange,
                         label = { Text("Name") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(24.dp),
                         isError = showError && name.isBlank()
                     )
 
@@ -105,7 +91,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         onValueChange = viewModel::onEmailChange,
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(24.dp),
                         isError = showError && email.isBlank()
                     )
 
@@ -116,7 +102,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         onValueChange = viewModel::onPhoneChange,
                         label = { Text("Tel") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(24.dp),
                         isError = showError && phone.isBlank()
                     )
 
@@ -129,8 +115,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
                         isError = showError && password.isBlank(),
-                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
-                        else PasswordVisualTransformation(),
+                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val image = if (viewModel.isPasswordVisible)
                                 Icons.Filled.Visibility
@@ -150,10 +135,9 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         onValueChange = viewModel::onConfirmPasswordChange,
                         label = { Text("Confirm Password") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(24.dp),
                         isError = showError && (confirmPassword.isBlank() || password != confirmPassword),
-                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
-                        else PasswordVisualTransformation(),
+                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val image = if (viewModel.isPasswordVisible)
                                 Icons.Filled.Visibility
@@ -188,7 +172,11 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(text = "Registrarse", color = Color.White)
+                        Text(
+                            text = "Registrarse",
+                            color = Color.White,
+                            fontFamily = quicksandFont
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -212,7 +200,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                    ){
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.google_icon),
                             contentDescription = "Google",
