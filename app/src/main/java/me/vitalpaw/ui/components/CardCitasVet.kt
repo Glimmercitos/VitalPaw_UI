@@ -51,16 +51,24 @@ fun AppointmentCard(
                 .border(2.dp, Color(0xFF3695B9), CircleShape)
         ) {
             // Imagen circular
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = "Foto de $petName",
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .size(90.dp)
+                    .size(85.dp) // Tamaño total incluyendo el borde
+                    .background(Color.White, CircleShape)
+                    .padding(2.dp) // Espacio para que la imagen no tape el borde
                     .clip(CircleShape)
-                    .border(2.dp, Color.White, CircleShape)
-            )
+            ) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = "Foto de $petName",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                )
+            }
+
 
             // Contenido central
             Column(
