@@ -40,6 +40,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.IconButton
+import me.vitalpaw.ui.theme.quicksandFont
 
 
 @Preview(showBackground = true)
@@ -83,9 +84,10 @@ fun LoginScreen(viewModel: SessionViewModel = viewModel()){
             ){
                 Text(
                     text = "Iniciar Sesión",
-                    fontSize = 28.sp,
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF3695B9)
+                    color = Color(0xFF3695B9),
+                    fontFamily = quicksandFont
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -146,7 +148,8 @@ fun LoginScreen(viewModel: SessionViewModel = viewModel()){
                     Text(
                         text = "Iniciar Sesión",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White)
+                        color = Color.White,
+                        fontFamily = quicksandFont)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
