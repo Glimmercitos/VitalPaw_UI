@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import me.vitalpaw.ui.screens.veterinario.LoginScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
-import me.vitalpaw.ui.screens.veterinario.RegistrerScreen
+import me.vitalpaw.ui.screens.veterinario.RegisterScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen()
-                RegisterScreen()
             }
 
         }
