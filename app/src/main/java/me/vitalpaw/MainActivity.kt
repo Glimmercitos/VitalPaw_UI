@@ -9,6 +9,7 @@ import me.vitalpaw.ui.screens.veterinario.LoginScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 import me.vitalpaw.ui.screens.veterinario.RegistrerScreen
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen()
+                RegisterScreen()
             }
 
         }
