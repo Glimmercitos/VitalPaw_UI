@@ -1,27 +1,28 @@
-package me.vitalpaw.ui.screens.veterinario
+package me.vitalpaw.viewmodels
 
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import me.vitalpaw.models.Pet
+import me.vitalpaw.models.Service
 
 class ToAssignedViewModel : ViewModel() {
+    val pets = mutableStateListOf(
+        Pet(1, "Luna", "Perro", "Labrador", 3, "Carlos"),
+        Pet(2, "Michi", "Gato", "Siames", 2, "Ana"),
+        Pet(3, "Rocky", "Perro", "Pitbull", 4, "Luis")
+    )
 
-    // Datos quemados
-    val servicios = listOf("Grooming", "Consulta", "Vacunación")
-    val horas = listOf("9:00", "10:30", "1:20", "3:00")
+    val services = mutableStateListOf(
+        Service(1, "Luna", "Consulta"),
+        Service(2, "Michi", "Vacunación"),
+        Service(3, "Rocky", "Grooming")
+    )
 
-    // Estado
-    var selectedServicio by mutableStateOf("")
-    var descripcion by mutableStateOf("")
-    var selectedFecha by mutableStateOf("")
-    var selectedHora by mutableStateOf("")
-    var showDialog by mutableStateOf(false)
-
-    fun clearFields() {
-        selectedServicio = ""
-        descripcion = ""
-        selectedFecha = ""
-        selectedHora = ""
-    }
+    val selectedPet = mutableStateOf<Pet?>(null)
+    val selectedService = mutableStateOf<Service?>(null)
+    val description = mutableStateOf("")
+    val date = mutableStateOf("")
+    val hour = mutableStateOf("")
+    val showDialog = mutableStateOf(false)
 }

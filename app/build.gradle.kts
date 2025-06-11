@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0") // <- importante
+    implementation("androidx.compose.material:material:1.6.0")
     implementation ("androidx.compose.material:material-icons-extended:1.6.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import me.vitalpaw.ui.screens.veterinario.LoginScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 import me.vitalpaw.ui.screens.veterinario.RegisterScreen
+import me.vitalpaw.ui.screens.veterinario.ToAssignedScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 LoginScreen()
+                ToAssignedScreen()
             }
 
         }
