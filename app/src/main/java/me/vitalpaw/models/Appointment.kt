@@ -9,5 +9,7 @@ data class Appointment(
     val description: String,
     val date: String, // ISO 8601 string (ej. "2025-06-15")
     val time: String,
-    val veterinarian: User
+    val veterinarian: User,
+    val status: String,// pending, confirmed, cancelled
+    val imageRes: Int
 )
