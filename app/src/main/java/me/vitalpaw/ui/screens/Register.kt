@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,14 +27,20 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
 
+@Preview(showBackground = true)
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
+fun PreviewRegisterScreen() {
+    Register()
+}
+
+@Composable
+fun Register(viewModel: RegisterViewModel = viewModel()) {
     val name = viewModel.name
     val email = viewModel.email
-    val phone = viewModel.phone
     val password = viewModel.password
     val confirmPassword = viewModel.confirmPassword
     val showError = viewModel.showError
+    val gender = viewModel.gender
 
     Box(
         modifier = Modifier
@@ -77,7 +84,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
 
                     OutlinedTextField(
                         value = name,
-                        onValueChange = viewModel::onNameChange,
+                        onValueChange = { viewModel.onNameChange(it) },
                         label = { Text("Name") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -88,7 +95,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = viewModel::onEmailChange,
+                        onValueChange = { viewModel.onEmailChange(it) },
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -98,19 +105,71 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = phone,
-                        onValueChange = viewModel::onPhoneChange,
-                        label = { Text("Tel") },
+                        value = gender,
+                        onValueChange = {},
+                        enabled = false,
+                        readOnly = true,
+                        label = {
+                            Text(
+                                "Gender",
+                                color = Color.DarkGray
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && phone.isBlank()
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledBorderColor = if (showError && gender.isBlank()) Color.Red else Color(0xFF7C7C7C),
+                            disabledTextColor = Color(0xFF7C7C7C),
+                            disabledLabelColor = Color(0xFF7C7C7C),
+                            disabledTrailingIconColor = Color(0xFF7C7C7C)
+                        ),
+                        trailingIcon = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier.padding(end = 20.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RadioButton(
+                                        selected = gender == "Female",
+                                        onClick = { viewModel.onGenderChange("Female") },
+                                        colors = RadioButtonDefaults.colors(
+                                            selectedColor = Color.DarkGray,
+                                            unselectedColor = Color(0xFF7C7C7C)
+                                        )
+                                    )
+                                    Text(
+                                        "F",
+                                        color = Color(0xFF7C7C7C),
+                                        fontFamily = quicksandFont,
+                                        fontSize = 17.sp
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RadioButton(
+                                        selected = gender == "Male",
+                                        onClick = { viewModel.onGenderChange("Male") },
+                                        colors = RadioButtonDefaults.colors(
+                                            selectedColor = Color.DarkGray,
+                                            unselectedColor = Color(0xFF7C7C7C)
+                                        )
+                                    )
+                                    Text(
+                                        "M",
+                                        color = Color(0xFF7C7C7C),
+                                        fontFamily = quicksandFont,
+                                        fontSize = 17.sp
+                                    )
+                                }
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = viewModel::onPasswordChange,
+                        onValueChange = { viewModel.onPasswordChange(it) },
                         label = { Text("Enter Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -122,7 +181,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                             else
                                 Icons.Filled.VisibilityOff
 
-                            IconButton(onClick = viewModel::onTogglePasswordVisibility) {
+                            IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
                                 Icon(imageVector = image, contentDescription = "Toggle password")
                             }
                         }
@@ -132,7 +191,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
 
                     OutlinedTextField(
                         value = confirmPassword,
-                        onValueChange = viewModel::onConfirmPasswordChange,
+                        onValueChange = { viewModel.onConfirmPasswordChange(it) },
                         label = { Text("Confirm Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -144,7 +203,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                             else
                                 Icons.Filled.VisibilityOff
 
-                            IconButton(onClick = viewModel::onTogglePasswordVisibility) {
+                            IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
                                 Icon(imageVector = image, contentDescription = "Toggle password")
                             }
                         }
@@ -165,7 +224,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = viewModel::onRegisterClick,
+                        onClick = { viewModel.onRegisterClick() },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier
@@ -192,24 +251,6 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = { /* TODO: Login con Google */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                        shape = RoundedCornerShape(50.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
-                            contentDescription = "Google",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Ingresar con Google", color = Color.White)
-                    }
                 }
             }
         }
