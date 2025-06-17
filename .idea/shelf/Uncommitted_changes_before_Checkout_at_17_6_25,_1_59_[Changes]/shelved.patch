@@ -1,0 +1,75 @@
+Index: app/src/main/java/me/vitalpaw/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package me.vitalpaw\n\nimport android.os.Bundle\nimport androidx.activity.ComponentActivity\nimport androidx.activity.compose.setContent\nimport androidx.activity.enableEdgeToEdge\nimport androidx.compose.material3.MaterialTheme\nimport me.vitalpaw.ui.screens.ToAssigned\n\n\nclass MainActivity : ComponentActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        enableEdgeToEdge()\n        setContent {\n            MaterialTheme {\n                ToAssigned()\n            }\n\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/me/vitalpaw/MainActivity.kt b/app/src/main/java/me/vitalpaw/MainActivity.kt
+--- a/app/src/main/java/me/vitalpaw/MainActivity.kt	(revision 1aea79c03f6771c8e677f4a16a30fa3631c4a639)
++++ b/app/src/main/java/me/vitalpaw/MainActivity.kt	(date 1750147134447)
+@@ -5,7 +5,9 @@
+ import androidx.activity.compose.setContent
+ import androidx.activity.enableEdgeToEdge
+ import androidx.compose.material3.MaterialTheme
+-import me.vitalpaw.ui.screens.ToAssigned
++import me.vitalpaw.ui.screens.Register
++
++//import me.vitalpaw.ui.screens.ToAssigned
+ 
+ 
+ class MainActivity : ComponentActivity() {
+@@ -14,7 +16,8 @@
+         enableEdgeToEdge()
+         setContent {
+             MaterialTheme {
+-                ToAssigned()
++               // ToAssigned()
++                Register()
+             }
+ 
+         }
+Index: app/src/main/java/me/vitalpaw/ui/screens/Register.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package me.vitalpaw.ui.screens\n\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.layout.*\nimport androidx.compose.foundation.shape.RoundedCornerShape\nimport androidx.compose.material.icons.Icons\nimport androidx.compose.material.icons.filled.Visibility\nimport androidx.compose.material.icons.filled.VisibilityOff\nimport androidx.compose.material3.*\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.res.painterResource\nimport androidx.compose.ui.text.SpanStyle\nimport androidx.compose.ui.text.buildAnnotatedString\nimport androidx.compose.ui.text.font.FontWeight\nimport androidx.compose.ui.text.input.PasswordVisualTransformation\nimport androidx.compose.ui.text.input.VisualTransformation\nimport androidx.compose.ui.text.withStyle\nimport androidx.compose.ui.unit.dp\nimport androidx.compose.ui.unit.sp\nimport androidx.lifecycle.viewmodel.compose.viewModel\nimport me.vitalpaw.R\nimport me.vitalpaw.ui.theme.quicksandFont\nimport me.vitalpaw.viewmodels.RegisterViewModel\n\n@Composable\nfun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {\n    val name = viewModel.name\n    val email = viewModel.email\n    val phone = viewModel.phone\n    val password = viewModel.password\n    val confirmPassword = viewModel.confirmPassword\n    val showError = viewModel.showError\n\n    Box(\n        modifier = Modifier\n            .fillMaxSize()\n            .background(Color(0xFFE0ECF7))\n    ) {\n        Column(\n            horizontalAlignment = Alignment.CenterHorizontally,\n            verticalArrangement = Arrangement.Top,\n            modifier = Modifier.fillMaxSize()\n        ) {\n            Spacer(modifier = Modifier.height(60.dp))\n\n            Image(\n                painter = painterResource(id = R.drawable.logo),\n                contentDescription = \"Logo VitalPaw\",\n                modifier = Modifier.height(100.dp)\n            )\n\n            Surface(\n                shape = RoundedCornerShape(topStart = 0.dp, topEnd = 50.dp),\n                color = Color.White,\n                modifier = Modifier.fillMaxSize()\n            ) {\n                Column(\n                    horizontalAlignment = Alignment.CenterHorizontally,\n                    verticalArrangement = Arrangement.Top,\n                    modifier = Modifier\n                        .fillMaxWidth()\n                        .padding(horizontal = 24.dp, vertical = 36.dp)\n                ) {\n                    Text(\n                        text = \"Regístrate\",\n                        fontSize = 30.sp,\n                        fontWeight = FontWeight.SemiBold,\n                        color = Color(0xFF2996CC),\n                        fontFamily = quicksandFont\n                    )\n\n                    Spacer(modifier = Modifier.height(24.dp))\n\n                    OutlinedTextField(\n                        value = name,\n                        onValueChange = viewModel::onNameChange,\n                        label = { Text(\"Name\") },\n                        modifier = Modifier.fillMaxWidth(),\n                        shape = RoundedCornerShape(24.dp),\n                        isError = showError && name.isBlank()\n                    )\n\n                    Spacer(modifier = Modifier.height(8.dp))\n\n                    OutlinedTextField(\n                        value = email,\n                        onValueChange = viewModel::onEmailChange,\n                        label = { Text(\"Email\") },\n                        modifier = Modifier.fillMaxWidth(),\n                        shape = RoundedCornerShape(24.dp),\n                        isError = showError && email.isBlank()\n                    )\n\n                    Spacer(modifier = Modifier.height(8.dp))\n\n                    OutlinedTextField(\n                        value = phone,\n                        onValueChange = viewModel::onPhoneChange,\n                        label = { Text(\"Tel\") },\n                        modifier = Modifier.fillMaxWidth(),\n                        shape = RoundedCornerShape(24.dp),\n                        isError = showError && phone.isBlank()\n                    )\n\n                    Spacer(modifier = Modifier.height(8.dp))\n\n                    OutlinedTextField(\n                        value = password,\n                        onValueChange = viewModel::onPasswordChange,\n                        label = { Text(\"Enter Password\") },\n                        modifier = Modifier.fillMaxWidth(),\n                        shape = RoundedCornerShape(24.dp),\n                        isError = showError && password.isBlank(),\n                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),\n                        trailingIcon = {\n                            val image = if (viewModel.isPasswordVisible)\n                                Icons.Filled.Visibility\n                            else\n                                Icons.Filled.VisibilityOff\n\n                            IconButton(onClick = viewModel::onTogglePasswordVisibility) {\n                                Icon(imageVector = image, contentDescription = \"Toggle password\")\n                            }\n                        }\n                    )\n\n                    Spacer(modifier = Modifier.height(8.dp))\n\n                    OutlinedTextField(\n                        value = confirmPassword,\n                        onValueChange = viewModel::onConfirmPasswordChange,\n                        label = { Text(\"Confirm Password\") },\n                        modifier = Modifier.fillMaxWidth(),\n                        shape = RoundedCornerShape(24.dp),\n                        isError = showError && (confirmPassword.isBlank() || password != confirmPassword),\n                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),\n                        trailingIcon = {\n                            val image = if (viewModel.isPasswordVisible)\n                                Icons.Filled.Visibility\n                            else\n                                Icons.Filled.VisibilityOff\n\n                            IconButton(onClick = viewModel::onTogglePasswordVisibility) {\n                                Icon(imageVector = image, contentDescription = \"Toggle password\")\n                            }\n                        }\n                    )\n\n                    if (showError) {\n                        Text(\n                            text = if (password != confirmPassword && confirmPassword.isNotBlank())\n                                \"Las contraseñas no coinciden\"\n                            else\n                                \"Rellenar todos los campos\",\n                            color = Color.Red,\n                            style = MaterialTheme.typography.bodyMedium,\n                            modifier = Modifier.padding(top = 8.dp)\n                        )\n                    }\n\n                    Spacer(modifier = Modifier.height(16.dp))\n\n                    Button(\n                        onClick = viewModel::onRegisterClick,\n                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),\n                        shape = RoundedCornerShape(24.dp),\n                        modifier = Modifier\n                            .fillMaxWidth()\n                            .height(50.dp)\n                    ) {\n                        Text(\n                            text = \"Registrarse\",\n                            color = Color.White,\n                            fontFamily = quicksandFont\n                        )\n                    }\n\n                    Spacer(modifier = Modifier.height(16.dp))\n\n                    Text(\n                        buildAnnotatedString {\n                            append(\"¿Ya tienes una cuenta? \")\n                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {\n                                append(\"Inicia Sesión\")\n                            }\n                        },\n                        fontSize = 14.sp\n                    )\n\n                    Spacer(modifier = Modifier.height(24.dp))\n\n                    Button(\n                        onClick = { /* TODO: Login con Google */ },\n                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),\n                        shape = RoundedCornerShape(50.dp),\n                        modifier = Modifier\n                            .fillMaxWidth()\n                            .height(50.dp)\n                    ) {\n                        Icon(\n                            painter = painterResource(id = R.drawable.ic_launcher_background),\n                            contentDescription = \"Google\",\n                            tint = Color.Unspecified,\n                            modifier = Modifier.size(24.dp)\n                        )\n                        Spacer(modifier = Modifier.width(8.dp))\n                        Text(text = \"Ingresar con Google\", color = Color.White)\n                    }\n                }\n            }\n        }\n    }\n}\n
+===================================================================
+diff --git a/app/src/main/java/me/vitalpaw/ui/screens/Register.kt b/app/src/main/java/me/vitalpaw/ui/screens/Register.kt
+--- a/app/src/main/java/me/vitalpaw/ui/screens/Register.kt	(revision 1aea79c03f6771c8e677f4a16a30fa3631c4a639)
++++ b/app/src/main/java/me/vitalpaw/ui/screens/Register.kt	(date 1750147134455)
+@@ -27,7 +27,7 @@
+ import me.vitalpaw.viewmodels.RegisterViewModel
+ 
+ @Composable
+-fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
++fun Register(viewModel: RegisterViewModel = viewModel()) {
+     val name = viewModel.name
+     val email = viewModel.email
+     val phone = viewModel.phone
+@@ -190,26 +190,6 @@
+                         },
+                         fontSize = 14.sp
+                     )
+-
+-                    Spacer(modifier = Modifier.height(24.dp))
+-
+-                    Button(
+-                        onClick = { /* TODO: Login con Google */ },
+-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+-                        shape = RoundedCornerShape(50.dp),
+-                        modifier = Modifier
+-                            .fillMaxWidth()
+-                            .height(50.dp)
+-                    ) {
+-                        Icon(
+-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+-                            contentDescription = "Google",
+-                            tint = Color.Unspecified,
+-                            modifier = Modifier.size(24.dp)
+-                        )
+-                        Spacer(modifier = Modifier.width(8.dp))
+-                        Text(text = "Ingresar con Google", color = Color.White)
+-                    }
+                 }
+             }
+         }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
+import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.ToAssigned
 
 
@@ -14,7 +15,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MaterialTheme {
-                ToAssigned()
+                //ToAssigned()
+                Register()
             }
 
         }

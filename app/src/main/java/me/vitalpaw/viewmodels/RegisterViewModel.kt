@@ -1,18 +1,16 @@
 package me.vitalpaw.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class RegisterViewModel : ViewModel() {
+
     var name by mutableStateOf("")
         private set
 
     var email by mutableStateOf("")
-        private set
-
-    var phone by mutableStateOf("")
         private set
 
     var password by mutableStateOf("")
@@ -21,44 +19,45 @@ class RegisterViewModel : ViewModel() {
     var confirmPassword by mutableStateOf("")
         private set
 
-    var showError by mutableStateOf(false)
+    var gender by mutableStateOf("")
         private set
-
-    fun onNameChange(newName: String) {
-        name = newName
-        if (showError) showError = false
-    }
-
-    fun onEmailChange(newEmail: String) {
-        email = newEmail
-        if (showError) showError = false
-    }
-
-    fun onPhoneChange(newPhone: String) {
-        phone = newPhone
-        if (showError) showError = false
-    }
-
-    fun onPasswordChange(newPassword: String) {
-        password = newPassword
-        if (showError) showError = false
-    }
-
-    fun onConfirmPasswordChange(newConfirm: String) {
-        confirmPassword = newConfirm
-        if (showError) showError = false
-    }
-
-    fun onRegisterClick() {
-        showError = name.isBlank() || email.isBlank() || phone.isBlank() ||
-                password.isBlank() || confirmPassword.isBlank() ||
-                password != confirmPassword
-    }
 
     var isPasswordVisible by mutableStateOf(false)
         private set
 
-    fun onTogglePasswordVisibility(){
+    var showError by mutableStateOf(false)
+        private set
+
+    fun onNameChange(value: String) {
+        name = value
+    }
+
+    fun onEmailChange(value: String) {
+        email = value
+    }
+
+    fun onPasswordChange(value: String) {
+        password = value
+    }
+
+    fun onConfirmPasswordChange(value: String) {
+        confirmPassword = value
+    }
+
+    fun onGenderChange(value: String) {
+        gender = value
+    }
+
+    fun onTogglePasswordVisibility() {
         isPasswordVisible = !isPasswordVisible
+    }
+
+    fun onRegisterClick() {
+        showError = name.isBlank() || email.isBlank() || password.isBlank() ||
+                confirmPassword.isBlank() || password != confirmPassword || gender.isBlank()
+
+        if (!showError) {
+            // Aquí podrías llamar a tu lógica de registro o navegación
+        }
     }
 }
