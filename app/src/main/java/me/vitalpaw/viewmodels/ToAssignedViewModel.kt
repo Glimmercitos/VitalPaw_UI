@@ -1,45 +1,37 @@
-package me.vitalpaw.ui.screens.veterinario
+package me.vitalpaw.ui.screens
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import java.util.Calendar
 
 class ToAssignedViewModel : ViewModel() {
-    var servicioSeleccionado by mutableStateOf("")
-        private set
 
-    var descripcion by mutableStateOf("")
-        private set
+    private val _selectedService = MutableStateFlow("Consulta")
+    val selectedService: StateFlow<String> = _selectedService
 
-    var fecha by mutableStateOf("")
-        private set
+    private val _description = MutableStateFlow("")
+    val description: StateFlow<String> = _description
 
-    var hora by mutableStateOf("")
-        private set
+    private val _selectedDate = MutableStateFlow(Calendar.getInstance())
+    val selectedDate: StateFlow<Calendar> = _selectedDate
 
-    fun onServicioSeleccionado(servicio: String) {
-        servicioSeleccionado = servicio
+    private val _selectedTime = MutableStateFlow(Calendar.getInstance())
+    val selectedTime: StateFlow<Calendar> = _selectedTime
+
+    fun onServiceChange(service: String) {
+        _selectedService.value = service
     }
 
-    fun onDescripcionCambiada(texto: String) {
-        descripcion = texto
+    fun onDescriptionChange(desc: String) {
+        _description.value = desc
     }
 
-    fun onFechaSeleccionada(nuevaFecha: String) {
-        fecha = nuevaFecha
+    fun onDateChange(date: Calendar) {
+        _selectedDate.value = date
     }
 
-    fun onHoraSeleccionada(nuevaHora: String) {
-        hora = nuevaHora
-    }
-
-    fun cancelar() {
-        servicioSeleccionado = ""
-        descripcion = ""
-        fecha = ""
-        hora = ""
-    }
-
-    fun guardar() {
-        // Aquí podrías agregar lógica para enviar o guardar la cita
+    fun onTimeChange(time: Calendar) {
+        _selectedTime.value = time
     }
 }

@@ -202,7 +202,7 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel()) {
                             .height(50.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.google_icon),
+                            painter = painterResource(id = R.drawable.ic_launcher_background),
                             contentDescription = "Google",
                             tint = Color.Unspecified,
                             modifier = Modifier.size(24.dp)

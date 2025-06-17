@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.screens.veterinario
+/*package me.vitalpaw.ui.screens.veterinario
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -56,5 +56,7 @@ fun AppointmentScreen(viewModel: AppointmentViewModel = viewModel()) {
                 }
             }
         }
+
     }
 }
+*/

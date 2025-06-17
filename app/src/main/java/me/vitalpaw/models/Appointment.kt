@@ -1,5 +1,7 @@
 package me.vitalpaw.models
 
+import android.R
+
 data class Appointment(
     val id: String? = null,
     val owner: User,
@@ -10,6 +12,7 @@ data class Appointment(
     val date: String, // ISO 8601 format: "2025-06-14"
     val time: String, // e.g., "14:30"
     val veterinarian: User,
-    val createdAt: String? = null
+    val createdAt: String? = null,
+    val imageRes: R.drawable
 //    val updatedAt: String? = null
 )
