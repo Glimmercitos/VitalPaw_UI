@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodels
+/*package me.vitalpaw.viewmodels
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -33,3 +33,4 @@ class AppointmentViewModel : ViewModel() {
         appointments = emptyList()
     }
 }
+*/
