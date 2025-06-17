@@ -1,4 +1,3 @@
-
 package me.vitalpaw.models
 
 data class Pet(

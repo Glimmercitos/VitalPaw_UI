@@ -5,7 +5,6 @@ data class User(
     val googleId: String,
     val name: String,
     val email: String,
-    val avatar: String? = null,
     val role: String = "cliente", // cliente, veterinario, admin
     val createdAt: String? = null
 //    val updatedAt: String? = null

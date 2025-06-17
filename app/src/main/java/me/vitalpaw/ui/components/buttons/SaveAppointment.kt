@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.components.Button
+package me.vitalpaw.ui.components.buttons
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CancelarCitaButton(onClick: () -> Unit){
+fun GuardarCitaButton(onClick: () -> Unit){
 
     Button(
         onClick = onClick,
@@ -29,7 +29,7 @@ fun CancelarCitaButton(onClick: () -> Unit){
             pressedElevation = 2.dp)
     ) {
         Text(
-            text = "CANCELAR",
+            text = "GUARDAR",
             color = Color.White,
             fontSize = 16.sp,
             style = MaterialTheme.typography.bodyLarge
@@ -40,6 +40,6 @@ fun CancelarCitaButton(onClick: () -> Unit){
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewCancelarCitaButton() {
-    CancelarCitaButton(onClick = {})
+fun PreviewGuardarCitaButton() {
+    GuardarCitaButton(onClick = {})
 }

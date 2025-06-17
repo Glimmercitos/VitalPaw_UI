@@ -5,9 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
-import me.vitalpaw.ui.screens.veterinario.LoginScreen
-import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
-import me.vitalpaw.ui.screens.veterinario.RegisterScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssignedScreen
 
 
