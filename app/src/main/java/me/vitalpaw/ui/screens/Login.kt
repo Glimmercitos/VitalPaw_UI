@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.screens.veterinario
+package me.vitalpaw.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
