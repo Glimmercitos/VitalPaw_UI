@@ -63,9 +63,12 @@ dependencies {
     implementation(libs.firebase.firestore)
 
     //Retrofit
-    
-
-
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.java.websocket)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 
     implementation(libs.navigation.compose)
     implementation(libs.androidx.core.ktx)
