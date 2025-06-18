@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import me.vitalpaw.ui.navigation.AppNavGraph
 import me.vitalpaw.ui.screens.cliente.HomeScreen
+import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController)*/
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    HomeScreen(navController = rememberNavController())
+                    RegisterPetScreen(navController = rememberNavController())
                 }
             }
         }
