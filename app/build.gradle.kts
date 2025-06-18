@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
     id("com.google.dagger.hilt.android") // Hilt plugin
     id("kotlin-kapt")
 }
@@ -53,6 +54,18 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.52")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    //Firebase
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.firebase.firestore)
+
+    //Retrofit
+    
+
+
 
     implementation(libs.navigation.compose)
     implementation(libs.androidx.core.ktx)
