@@ -1,4 +1,4 @@
-/*package me.vitalpaw.ui.screens.veterinario
+package me.vitalpaw.ui.screens.veterinario
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import me.vitalpaw.R
 
 @Composable
 fun AppointmentScreen(viewModel: AppointmentViewModel = viewModel()) {
-    // Carga las citas al iniciar
+    //Carga las citas al iniciar
     LaunchedEffect(Unit) {
         viewModel.loadAppointments()
     }
@@ -59,4 +59,4 @@ fun AppointmentScreen(viewModel: AppointmentViewModel = viewModel()) {
 
     }
 }
-*/
+

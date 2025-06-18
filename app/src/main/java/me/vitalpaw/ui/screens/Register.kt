@@ -23,18 +23,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import me.vitalpaw.R
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterScreen() {
-    Register()
-}
 
 @Composable
-fun Register(viewModel: RegisterViewModel = viewModel()) {
+fun Register(
+    navController: NavController,
+    viewModel: RegisterViewModel = viewModel()
+) {
     val name = viewModel.name
     val email = viewModel.email
     val password = viewModel.password
@@ -109,12 +109,7 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                         onValueChange = {},
                         enabled = false,
                         readOnly = true,
-                        label = {
-                            Text(
-                                "Gender",
-                                color = Color.DarkGray
-                            )
-                        },
+                        label = { Text("Gender", color = Color.DarkGray) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -138,12 +133,7 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                                             unselectedColor = Color(0xFF7C7C7C)
                                         )
                                     )
-                                    Text(
-                                        "F",
-                                        color = Color(0xFF7C7C7C),
-                                        fontFamily = quicksandFont,
-                                        fontSize = 17.sp
-                                    )
+                                    Text("F", color = Color(0xFF7C7C7C), fontFamily = quicksandFont, fontSize = 17.sp)
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     RadioButton(
@@ -154,12 +144,7 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                                             unselectedColor = Color(0xFF7C7C7C)
                                         )
                                     )
-                                    Text(
-                                        "M",
-                                        color = Color(0xFF7C7C7C),
-                                        fontFamily = quicksandFont,
-                                        fontSize = 17.sp
-                                    )
+                                    Text("M", color = Color(0xFF7C7C7C), fontFamily = quicksandFont, fontSize = 17.sp)
                                 }
                             }
                         }
@@ -176,13 +161,9 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                         isError = showError && password.isBlank(),
                         visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image = if (viewModel.isPasswordVisible)
-                                Icons.Filled.Visibility
-                            else
-                                Icons.Filled.VisibilityOff
-
+                            val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
-                                Icon(imageVector = image, contentDescription = "Toggle password")
+                                Icon(imageVector = icon, contentDescription = "Toggle password")
                             }
                         }
                     )
@@ -198,13 +179,9 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                         isError = showError && (confirmPassword.isBlank() || password != confirmPassword),
                         visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image = if (viewModel.isPasswordVisible)
-                                Icons.Filled.Visibility
-                            else
-                                Icons.Filled.VisibilityOff
-
+                            val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
-                                Icon(imageVector = image, contentDescription = "Toggle password")
+                                Icon(imageVector = icon, contentDescription = "Toggle password")
                             }
                         }
                     )
@@ -224,31 +201,34 @@ fun Register(viewModel: RegisterViewModel = viewModel()) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = { viewModel.onRegisterClick() },
+                        onClick = {
+                            viewModel.onRegisterClick()
+                            if (!viewModel.showError) {
+                                navController.navigate(NavRoutes.Login.route) // Puedes cambiar a NavRoutes.Home.route si deseas
+                            }
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                         shape = RoundedCornerShape(24.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(
-                            text = "Registrarse",
-                            color = Color.White,
-                            fontFamily = quicksandFont
-                        )
+                        Text("Registrarse", color = Color.White, fontFamily = quicksandFont)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        buildAnnotatedString {
-                            append("¿Ya tienes una cuenta? ")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("Inicia Sesión")
-                            }
-                        },
-                        fontSize = 14.sp
-                    )
+                    TextButton(onClick = { navController.navigate(NavRoutes.Login.route) }) {
+                        Text(
+                            buildAnnotatedString {
+                                append("¿Ya tienes una cuenta? ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Inicia Sesión")
+                                }
+                            },
+                            fontSize = 14.sp
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }

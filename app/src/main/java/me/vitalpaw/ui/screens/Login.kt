@@ -27,17 +27,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.vitalpaw.R
-import me.vitalpaw.viewmodels.SessionViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.IconButton
+import androidx.navigation.NavHostController
 import me.vitalpaw.ui.theme.quicksandFont
 
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen(viewModel: SessionViewModel = viewModel()){
+fun LoginScreen(viewModel: NavHostController = viewModel()){
     val email = viewModel.email
     val password = viewModel.password
     val showError = viewModel.showError
@@ -184,3 +184,4 @@ fun LoginScreen(viewModel: SessionViewModel = viewModel()){
         }
     }
 }
+
