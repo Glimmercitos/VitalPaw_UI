@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import me.vitalpaw.repository.SessionRepository
 import me.vitalpaw.ui.state.SessionUiState
 import javax.inject.Inject
 
