@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -22,25 +23,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import me.vitalpaw.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.IconButton
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 
 
-@Preview(showBackground = true)
 @Composable
-fun LoginScreen(viewModel: NavHostController = viewModel()){
-    val email = viewModel.email
-    val password = viewModel.password
-    val showError = viewModel.showError
+fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hiltViewModel()){
+    val uiState = viewModel.uiState
 
     Box(
         modifier = Modifier
@@ -82,31 +82,31 @@ fun LoginScreen(viewModel: NavHostController = viewModel()){
                     fontFamily = quicksandFont
                 )
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 OutlinedTextField(
-                    value = email,
+                    value = uiState.email,
                     onValueChange = viewModel::onEmailChange,
                     label = { Text("Enter Email") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    isError = showError && email.isBlank()
+                    isError = uiState.showError && uiState.email.isBlank()
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(25.dp))
 
                 // Password
                 OutlinedTextField(
-                    value = password,
+                    value = uiState.password,
                     onValueChange = viewModel::onPasswordChange,
                     label = { Text("Enter Password") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    isError = showError && password.isBlank(),
-                    visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
+                    isError = uiState.showError && uiState.password.isBlank(),
+                    visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None
                     else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (viewModel.isPasswordVisible)
+                        val image = if (uiState.isPasswordVisible)
                             Icons.Filled.Visibility
                         else
                             Icons.Filled.VisibilityOff
@@ -117,7 +117,7 @@ fun LoginScreen(viewModel: NavHostController = viewModel()){
                     }
                 )
 
-                if (showError && (email.isBlank() || password.isBlank())) {
+                if (uiState.showError && (uiState.email.isBlank() || uiState.password.isBlank())) {
                     Text(
                         text = "Rellenar campos vacíos",
                         color = Color.Red,
@@ -126,7 +126,7 @@ fun LoginScreen(viewModel: NavHostController = viewModel()){
                     )
                 }
 
-                Spacer(modifier = Modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(70.dp))
 
                 // Botón iniciar sesión
                 Button(
@@ -147,39 +147,29 @@ fun LoginScreen(viewModel: NavHostController = viewModel()){
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Texto de registro
-                Text(
-                    buildAnnotatedString {
+                ClickableText(
+                    text = buildAnnotatedString {
                         append("¿No tienes una cuenta? ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold,
+                            color = Color(0xFF3C7DBF))) {
                             append("Regístrate")
                         }
                     },
-                    fontSize = 14.sp
+                    onClick = { offset ->
+                        val start = "¿No tienes una cuenta? ".length
+                        val end = start + "Regístrate".length
+                        if (offset in start..end) {
+                            navController.navigate(NavRoutes.Register.route)
+                        }
+                    },
+                    modifier = Modifier.padding(top = 8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
 
-                Button(
-                    onClick = { /* TODO: Login con Google */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                    shape = RoundedCornerShape(50.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ){
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = "Google",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = "Ingresar con Google",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White)
-                }
+
+
             }
+
             }
         }
     }
