@@ -10,8 +10,7 @@ import me.vitalpaw.ui.screens.LoginScreen
 //import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
-
-//import me.vitalpaw.ui.screens.veterinario.ToAssigned
+import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 //import me.vitalpaw.ui.screens.veterinario.*
 //import me.vitalpaw.ui.screens.cliente.HomeScreen
 
@@ -21,7 +20,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.Login.route) { LoginScreen(navController) }
         composable(NavRoutes.Register.route) { Register(navController) }
         //composable(NavRoutes.Home.route) { HomeScreen(navController) }
-        //composable(NavRoutes.AssignedAppointments.route) { AssignedAppointments(navController) }
+        composable(NavRoutes.AppointmentScreen.route) { AppointmentScreen(navController) }
         composable(NavRoutes.ToAssigned.route) { ToAssigned(navController) }
     }
 }
