@@ -18,8 +18,8 @@ class MainActivity : ComponentActivity() {
                 /*Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController)*/
-                Surface() {
-                    HomeScreen()
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    HomeScreen(navController = rememberNavController())
                 }
             }
         }

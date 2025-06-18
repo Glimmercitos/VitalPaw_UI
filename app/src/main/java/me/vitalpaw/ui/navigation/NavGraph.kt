@@ -12,14 +12,15 @@ import me.vitalpaw.ui.screens.veterinario.ToAssigned
 
 //import me.vitalpaw.ui.screens.veterinario.ToAssigned
 //import me.vitalpaw.ui.screens.veterinario.*
-//import me.vitalpaw.ui.screens.cliente.HomeScreen
+import me.vitalpaw.ui.screens.cliente.HomeScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavRoutes.Login.route) {
         //composable(NavRoutes.Login.route) { LoginScreen(navController) }
         composable(NavRoutes.Register.route) { Register(navController) }
-        //composable(NavRoutes.Home.route) { HomeScreen(navController) }
+        composable(NavRoutes.Home.route) { HomeScreen(navController) }
+        composable(NavRoutes.Grooming.route) {}
         //composable(NavRoutes.AssignedAppointments.route) { AssignedAppointments(navController) }
         composable(NavRoutes.ToAssigned.route) { ToAssigned(navController) }
     }
