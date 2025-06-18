@@ -22,17 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import me.vitalpaw.R
+import me.vitalpaw.models.Appointment
 
 
 @Composable
 fun AppointmentCard(
-    imageRes: Int,
-    petName: String,
-    date: String,
-    time: String,
+    appointment: Appointment,
     onClick: () -> Unit
 ) {
     Card(
@@ -60,8 +56,8 @@ fun AppointmentCard(
                     .clip(CircleShape)
             ) {
                 Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "Foto de $petName",
+                    painter = painterResource(appointment.pet.imageRes ),
+                    contentDescription = "Foto de ${appointment.petName}",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -80,17 +76,17 @@ fun AppointmentCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = petName,
+                    text = appointment.petName,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color.Black
                 )
                 Text(
-                    text = "fecha: $date",
+                    text = "Fecha: ${appointment.date}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
                 Text(
-                    text = "hora: $time",
+                    text = "Hora: ${appointment.time}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
@@ -101,8 +97,10 @@ fun AppointmentCard(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(55.dp)
-                    .background(Color(0xFF3695B9),
-                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)),
+                    .background(
+                        Color(0xFF3695B9),
+                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -117,14 +115,3 @@ fun AppointmentCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AppointmentPreview() {
-    AppointmentCard(
-        imageRes = R.drawable.ic_launcher_background,
-        petName = "Max",
-        date = "28 de mayo",
-        time = "10:00 AM",
-        onClick = {}
-    )
-}

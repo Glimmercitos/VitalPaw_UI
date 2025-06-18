@@ -1,36 +1,25 @@
-/*package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodel
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.mutableStateListOf
+import dagger.hilt.android.lifecycle.HiltViewModel
 import me.vitalpaw.models.Appointment
-import me.vitalpaw.R
+import me.vitalpaw.repository.AppointmentRepository
+import javax.inject.Inject
 
+@HiltViewModel
+class AppointmentViewModel @Inject constructor(
+    private val repository: AppointmentRepository
+) : ViewModel() {
 
-class AppointmentViewModel : ViewModel() {
+    val appointments = mutableStateListOf<Appointment>()
 
-    // Lista de citas (estado observable)
-    var appointments by mutableStateOf<List<Appointment>>(emptyList())
-        private set
-
-    fun loadAppointments() {
-        // Ejemplo de Lista con citas
-        appointments = listOf(
-            Appointment(1, R.drawable.dog1, "Max", "2025-06-08", "10:00 AM"),
-            Appointment(2, R.drawable.gato1, "Luna", "2025-06-09", "11:30 AM"),
-            Appointment(3, R.drawable.gato02, "Pepita", "2025-07-10", "1:30 PM"),
-            Appointment(4, R.drawable.dog1, "Max", "2025-06-08", "10:00 AM"),
-            Appointment(5, R.drawable.gato1, "Luna", "2025-06-09", "11:30 AM"),
-            Appointment(6, R.drawable.gato02, "Pepita", "2025-07-10", "1:30 PM"),
-            Appointment(7, R.drawable.dog1, "Max", "2025-06-08", "10:00 AM"),
-            Appointment(8, R.drawable.gato02, "Pepita", "2025-07-10", "1:30 PM")
-
-
-            )
+    init {
+        loadAppointments()
     }
 
-    // Para simular que no hay citas
-    fun clearAppointments() {
-        appointments = emptyList()
+     fun loadAppointments() {
+        appointments.clear()
+        appointments.addAll(repository.getAppointments())
     }
 }
-*/

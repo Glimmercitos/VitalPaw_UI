@@ -1,6 +1,5 @@
 package me.vitalpaw.ui.screens.veterinario
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,18 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import me.vitalpaw.ui.components.AppointmentCard
-import me.vitalpaw.viewmodels.AppointmentViewModel
-import me.vitalpaw.R
-
+import me.vitalpaw.viewmodel.AppointmentViewModel
 
 @Composable
-fun AppointmentScreen(viewModel: AppointmentViewModel = viewModel()) {
-    //Carga las citas al iniciar
+fun AppointmentScreen(navController: NavController, viewModel: AppointmentViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.loadAppointments()
     }
@@ -44,14 +39,10 @@ fun AppointmentScreen(viewModel: AppointmentViewModel = viewModel()) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(15.dp)) {
-                appointments.forEach { appointment ->
-                    AppointmentCard(
-                        imageRes = appointment.imageRes,
-                        petName = appointment.petName,
-                        date = appointment.date,
-                        time = appointment.time,
-                        onClick = {
-                        }
+                appointments.forEach {
+                    appointment -> AppointmentCard(
+                        appointment = appointment,
+                        onClick = { }
                     )
                 }
             }
