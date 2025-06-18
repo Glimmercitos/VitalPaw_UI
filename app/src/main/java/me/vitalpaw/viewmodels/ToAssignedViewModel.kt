@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.screens
+package me.vitalpaw.viewmodels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

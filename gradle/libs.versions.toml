@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 lifecycleRuntime = "2.6.1"
 lifecycleViewmodel = "2.6.1"
 lifecycleViewmodelCompose = "2.6.1"
+nav-compose = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycleRuntime" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "nav-compose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

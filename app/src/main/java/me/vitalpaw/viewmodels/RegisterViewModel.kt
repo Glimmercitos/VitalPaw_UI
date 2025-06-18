@@ -57,7 +57,7 @@ class RegisterViewModel : ViewModel() {
                 confirmPassword.isBlank() || password != confirmPassword || gender.isBlank()
 
         if (!showError) {
-            // Aquí podrías llamar a tu lógica de registro o navegación
+            // Realizar la acción de registro
         }
     }
 }

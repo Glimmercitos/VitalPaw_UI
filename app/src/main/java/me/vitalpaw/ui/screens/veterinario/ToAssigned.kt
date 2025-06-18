@@ -1,8 +1,7 @@
-package me.vitalpaw.ui.screens
+package me.vitalpaw.ui.screens.veterinario
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,8 +17,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
@@ -27,6 +32,7 @@ import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,9 +40,18 @@ val PrimaryBlue = Color(0xFF6E7AE6)
 val TextGray = Color(0xFF606060)
 val ButtonBlue = Color(0xFF19486D)
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewToAssigned() {
+    ToAssigned(navController = NavHostController(LocalContext.current))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToAssigned(viewModel: ToAssignedViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun ToAssigned(
+    navController: NavHostController,
+    viewModel: ToAssignedViewModel = viewModel()
+) {
     val context = LocalContext.current
 
     val service by viewModel.selectedService.collectAsState()
@@ -74,7 +89,7 @@ fun ToAssigned(viewModel: ToAssignedViewModel = androidx.lifecycle.viewmodel.com
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = TextGray)
                 }
                 Text(
@@ -84,7 +99,7 @@ fun ToAssigned(viewModel: ToAssignedViewModel = androidx.lifecycle.viewmodel.com
                     color = TextGray,
                     fontWeight = FontWeight.Medium
                 )
-                IconButton(onClick = { }) {
+                IconButton(onClick = { /* Menú futuro */ }) {
                     Icon(Icons.Default.Menu, contentDescription = "Menú", tint = TextGray)
                 }
             }
