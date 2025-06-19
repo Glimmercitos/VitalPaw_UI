@@ -23,4 +23,26 @@ class UserRepository @Inject constructor(){
             role = "veterinario"
         )
     }
+    fun getAllUsers(): List<User> {
+        return listOf(
+            User(
+                id = "u1",
+                googleId = "google-123",
+                name = "Carlos",
+                email = "carlos@example.com"
+            ),
+            User(
+                id = "u2",
+                googleId = "google-124",
+                name = "Ana",
+                email = "ana@example.com"
+            ),
+            User(
+                id = "u3",
+                googleId = "google-125",
+                name = "Luis",
+                email = "luis@example.com"
+            )
+        )
+    }
 }

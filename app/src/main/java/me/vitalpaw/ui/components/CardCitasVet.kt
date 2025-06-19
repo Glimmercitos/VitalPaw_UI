@@ -57,7 +57,7 @@ fun AppointmentCard(
             ) {
                 Image(
                     painter = painterResource(appointment.pet.imageRes ),
-                    contentDescription = "Foto de ${appointment.petName}",
+                    contentDescription = "Foto de ${appointment.pet.name}",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -76,7 +76,7 @@ fun AppointmentCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = appointment.petName,
+                    text = appointment.pet.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color.Black
                 )
