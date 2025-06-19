@@ -1,8 +1,17 @@
 package me.vitalpaw.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
@@ -23,24 +32,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import me.vitalpaw.R
+import me.vitalpaw.viewmodels.SessionViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.SessionViewModel
+import me.vitalpaw.viewmodels.RegisterViewModel
 
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hiltViewModel()){
-    val uiState = viewModel.uiState
+fun LoginScreen(viewModel: SessionViewModel = hiltViewModel(), navController: NavHostController){
+    val email = viewModel.email
+    val password = viewModel.password
+    val showError = viewModel.showError
+
+    if (viewModel.isLoginSuccess) {
+        LaunchedEffect(Unit) {
+            navController.navigate("bienvenida") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -76,37 +101,37 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
             ){
                 Text(
                     text = "Iniciar Sesión",
-                    fontSize = 30.sp,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF3695B9),
                     fontFamily = quicksandFont
                 )
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 OutlinedTextField(
-                    value = uiState.email,
+                    value = email,
                     onValueChange = viewModel::onEmailChange,
                     label = { Text("Enter Email") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    isError = uiState.showError && uiState.email.isBlank()
+                    isError = showError && email.isBlank()
                 )
 
                 Spacer(modifier = Modifier.height(25.dp))
 
                 // Password
                 OutlinedTextField(
-                    value = uiState.password,
+                    value = password,
                     onValueChange = viewModel::onPasswordChange,
                     label = { Text("Enter Password") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    isError = uiState.showError && uiState.password.isBlank(),
-                    visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None
+                    isError = showError && password.isBlank(),
+                    visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
                     else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (uiState.isPasswordVisible)
+                        val image = if (viewModel.isPasswordVisible)
                             Icons.Filled.Visibility
                         else
                             Icons.Filled.VisibilityOff
@@ -117,7 +142,7 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
                     }
                 )
 
-                if (uiState.showError && (uiState.email.isBlank() || uiState.password.isBlank())) {
+                if (showError && (email.isBlank() || password.isBlank())) {
                     Text(
                         text = "Rellenar campos vacíos",
                         color = Color.Red,
@@ -125,8 +150,17 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
+                if (showError && email.isNotBlank() && password.isNotBlank()) {
+                    Text(
+                        text = viewModel.errorMsg,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(70.dp))
+
+                Spacer(modifier = Modifier.height(35.dp))
 
                 // Botón iniciar sesión
                 Button(
@@ -165,13 +199,8 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
-
-
-
             }
-
             }
         }
     }
 }
-
