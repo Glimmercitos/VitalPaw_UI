@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.screens
+/*package me.vitalpaw.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -175,3 +175,4 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
     }
 }
 
+*/

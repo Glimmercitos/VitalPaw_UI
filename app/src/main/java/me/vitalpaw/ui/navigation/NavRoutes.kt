@@ -6,4 +6,5 @@ sealed class NavRoutes(val route: String) {
     object Home : NavRoutes("home")
     object AppointmentScreen : NavRoutes("assigned_appointments")
     object ToAssigned : NavRoutes("to_assigned")
+    object Grooming : NavRoutes("grooming")
 }
