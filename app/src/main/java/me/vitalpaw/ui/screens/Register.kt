@@ -22,6 +22,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
@@ -33,7 +34,7 @@ import me.vitalpaw.viewmodels.RegisterViewModel
 @Composable
 fun Register(
     navController: NavController,
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val name = viewModel.name
     val email = viewModel.email
@@ -84,7 +85,7 @@ fun Register(
 
                     OutlinedTextField(
                         value = name,
-                        onValueChange = { viewModel.onNameChange(it) },
+                        onValueChange = viewModel::onNameChange,
                         label = { Text("Name") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -95,7 +96,7 @@ fun Register(
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { viewModel.onEmailChange(it) },
+                        onValueChange = viewModel::onEmailChange,
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -106,7 +107,7 @@ fun Register(
 
                     OutlinedTextField(
                         value = gender,
-                        onValueChange = {},
+                        onValueChange = viewModel::onGenderChange,
                         enabled = false,
                         readOnly = true,
                         label = { Text("Gender", color = Color.DarkGray) },
@@ -154,7 +155,7 @@ fun Register(
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { viewModel.onPasswordChange(it) },
+                        onValueChange = viewModel::onPasswordChange,
                         label = { Text("Enter Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
@@ -172,7 +173,7 @@ fun Register(
 
                     OutlinedTextField(
                         value = confirmPassword,
-                        onValueChange = { viewModel.onConfirmPasswordChange(it) },
+                        onValueChange = viewModel::onConfirmPasswordChange,
                         label = { Text("Confirm Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
