@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController)*/
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    RegisterPetScreen(navController = rememberNavController())
+                RegisterPetScreen(navController = rememberNavController())
                 }
             }
         }

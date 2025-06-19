@@ -99,9 +99,6 @@ fun RegisterAppointment(
                     color = TextGray,
                     fontWeight = FontWeight.Medium
                 )
-                IconButton(onClick = { /* Menú futuro */ }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menú", tint = TextGray)
-                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))

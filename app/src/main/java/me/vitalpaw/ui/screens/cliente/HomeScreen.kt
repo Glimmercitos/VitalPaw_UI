@@ -267,8 +267,17 @@ fun MenuItem(text: String, onClick: () -> Unit) {
 
 @Composable
 fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Unit) {
+    var isHovered by remember { mutableStateOf(false) }
     var pressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(if (pressed) 0.97f else 1f, label = "scale")
+
+    val scale by animateFloatAsState(
+        targetValue = if (pressed || isHovered) 0.97f else 1f,
+        label = "scale"
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isHovered) 0.95f else 1f,
+        label = "alpha"
+    )
 
     Card(
         modifier = Modifier
@@ -276,6 +285,7 @@ fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Un
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
+                this.alpha = alpha
             }
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -284,6 +294,15 @@ fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Un
                         tryAwaitRelease()
                         pressed = false
                         onClick()
+                    }
+                )
+            }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isHovered = true
+                        tryAwaitRelease()
+                        isHovered = false
                     }
                 )
             },
