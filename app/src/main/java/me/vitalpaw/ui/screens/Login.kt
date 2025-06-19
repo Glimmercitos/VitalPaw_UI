@@ -53,7 +53,7 @@ import me.vitalpaw.viewmodels.RegisterViewModel
 
 
 @Composable
-fun LoginScreen(viewModel: SessionViewModel = hiltViewModel(), navController: NavHostController){
+fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = hiltViewModel()){
     val email = viewModel.email
     val password = viewModel.password
     val showError = viewModel.showError
