@@ -50,9 +50,9 @@ fun AppointmentCard(
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .size(85.dp) // Tamaño total incluyendo el borde
+                    .size(85.dp)
                     .background(Color.White, CircleShape)
-                    .padding(2.dp) // Espacio para que la imagen no tape el borde
+                    .padding(2.dp)
                     .clip(CircleShape)
             ) {
                 Image(
@@ -65,8 +65,6 @@ fun AppointmentCard(
                 )
             }
 
-
-            // Contenido central
             Column(
                 modifier = Modifier
                     .weight(1f)

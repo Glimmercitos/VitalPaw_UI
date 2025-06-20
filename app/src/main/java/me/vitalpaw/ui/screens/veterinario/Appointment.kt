@@ -23,39 +23,48 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodel.AppointmentViewModel
 
 @Composable
-fun AppointmentScreen(navController: NavController, viewModel: AppointmentViewModel = hiltViewModel()) {
+fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewModel = hiltViewModel()){
     LaunchedEffect(Unit) {
         viewModel.loadAppointments()
     }
 
     val appointments = viewModel.appointments
 
-    Box(modifier = Modifier.fillMaxSize()){
-        if (appointments.isEmpty()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)){
+        if (appointments.isEmpty()){
             Box(modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White),
-                contentAlignment = Alignment.Center)
-            {
-                Text(text = "Sin citas asignadas", style = MaterialTheme.typography.titleMedium)
+                contentAlignment = Alignment.Center){
+                Text(text = "Sin citas asignadas0", style = MaterialTheme.typography.titleMedium)
             }
-        } else {
+        }else{
             Column(modifier = Modifier
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(15.dp)) {
-                appointments.forEach { appointment ->
-                    AppointmentCard(
+                appointments.forEach {
+                    appointment -> AppointmentCard(
                         appointment = appointment,
-                        onClick = {
-                            navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!))
+                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!))
                         }
                     )
                 }
-
             }
         }
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

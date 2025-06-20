@@ -1,6 +1,7 @@
 package me.vitalpaw.ui.screens.veterinario
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,16 +38,17 @@ import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.text.style.TextAlign
+import me.vitalpaw.ui.components.buttons.AsignarCitaButton
+import me.vitalpaw.ui.theme.quicksandFont
 
 
 @Composable
-fun AppointmentDetailScreen(
-    // mismos parámetros
-    navController: NavController,
-    appointmentId: String,
-    viewModel: MedicalRecordViewModel = hiltViewModel()
+fun AppointmentDetailScreen(navController: NavController, appointmentId: String, viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
     LaunchedEffect(appointmentId) {
         viewModel.loadRecordById(appointmentId)
@@ -81,7 +83,8 @@ fun AppointmentDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .background(Color.White)
+            .padding(horizontal = 30.dp, vertical = 18.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -89,27 +92,35 @@ fun AppointmentDetailScreen(
             painter = painterResource(id = pet.imageRes),
             contentDescription = pet.name,
             modifier = Modifier
-                .size(120.dp)
+                .size(140.dp)
                 .clip(CircleShape)
-                .border(3.dp, Color(0xFF3B82F6), CircleShape) // azul más parecido
+                .border(3.dp, Color(0xFF4AA5C8), CircleShape)
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
         DisabledText(pet.name)
+        Spacer(Modifier.height(15.dp))
 
         Row(
             Modifier.fillMaxWidth()
             .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DisabledText(pet.species, modifier = Modifier.weight(1f))
-            DisabledText("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
-            DisabledText(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
+            DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
+            DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
+            DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
         }
+        Spacer(Modifier.height(15.dp))
 
         DisabledText(pet.breed)
+        Spacer(Modifier.height(15.dp))
+
         DisabledText("${pet.weight} Kg")
+        Spacer(Modifier.height(15.dp))
+
         DisabledText(recordValue.service)
+        Spacer(Modifier.height(20.dp))
+
 
         OutlinedTextField(
             value = recordValue.description,
@@ -118,49 +129,65 @@ fun AppointmentDetailScreen(
                 .fillMaxWidth()
                 .height(100.dp),
             enabled = false,
+            shape = RoundedCornerShape(20.dp),
+            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
             colors = OutlinedTextFieldDefaults.colors(
                 disabledTextColor = Color.Black,
                 disabledContainerColor = Color.Transparent,
-                disabledBorderColor = Color(0xFF3B82F6)
+                disabledBorderColor = Color(0xFF4AA5C8)
             )
-
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
             value = recordValue.notes,
             onValueChange = { viewModel.updateNotes(it) },
-            label = { Text("Notas") },
+            label = { Text("Notas", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp),
+                .height(120.dp),
+            shape = RoundedCornerShape(20.dp),
+            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF3B82F6),
-                unfocusedBorderColor = Color(0xFF3B82F6)
+                focusedBorderColor = Color(0xFF4AA5C8),
+                unfocusedBorderColor = Color(0xFF4AA5C8)
             )
         )
 
-        Spacer(Modifier.height(12.dp))
+
+        Spacer(Modifier.height(20.dp))
+
 
         OutlinedTextField(
             value = recordValue.treatment,
             onValueChange = { viewModel.updateTreatment(it) },
-            label = { Text("Tratamiento") },
+            label = { Text("Tratamiento", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp),
+                .height(120.dp),
+            shape = RoundedCornerShape(20.dp),
+            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF3B82F6),
-                unfocusedBorderColor = Color(0xFF3B82F6)
+                focusedBorderColor = Color(0xFF4AA5C8),
+                unfocusedBorderColor = Color(0xFF4AA5C8)
             )
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(40.dp))
+
+        AsignarCitaButton(onClick = {
+            navController.navigate(NavRoutes.ToAssigned.route){
+                popUpTo(NavRoutes.ToAssigned.route){inclusive = true}
+            }
+        })
+
+        Spacer(modifier = Modifier.height(40.dp))
+
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CancelarCitaButton(onClick = {
                 navController.navigate(NavRoutes.Home.route) {
@@ -194,16 +221,37 @@ fun DisabledText(value: String, modifier: Modifier = Modifier) {
         value = value,
         onValueChange = {},
         enabled = false,
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth(),
+        shape = RoundedCornerShape(40.dp),
+        textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF3B82F6)
+            disabledBorderColor = Color(0xFF4AA5C8)
         )
-
     )
 }
+
+@Composable
+fun DisabledTextRow(value: String, modifier: Modifier = Modifier) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        enabled = false,
+        modifier = modifier
+            .padding(vertical = 4.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(40.dp),
+        textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont, textAlign = TextAlign.Center),
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledTextColor = Color.Black,
+            disabledContainerColor = Color.Transparent,
+            disabledBorderColor = Color(0xFF4AA5C8)
+        )
+    )
+}
+
 
 
