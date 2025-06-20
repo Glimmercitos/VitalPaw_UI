@@ -3,7 +3,9 @@ package me.vitalpaw.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,26 +29,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes.Register
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewRegister() {
+    Register(navController = NavController(LocalContext.current))
+    }
 
 @Composable
 fun Register(
     navController: NavController,
     viewModel: RegisterViewModel = viewModel()
 ) {
-    val name = viewModel.name
-    val email = viewModel.email
-    val password = viewModel.password
-    val confirmPassword = viewModel.confirmPassword
-    val showError = viewModel.showError
-    val gender = viewModel.gender
-
+    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0ECF7))
+            .background(Color(0xFFCBDFF4))
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,7 +60,7 @@ fun Register(
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo VitalPaw",
-                modifier = Modifier.height(100.dp)
+                modifier = Modifier.height(140.dp)
             )
 
             Surface(
@@ -70,6 +73,7 @@ fun Register(
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp, vertical = 36.dp)
                 ) {
                     Text(
@@ -83,29 +87,29 @@ fun Register(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedTextField(
-                        value = name,
-                        onValueChange = { viewModel.onNameChange(it) },
+                        value = viewModel.name,
+                        onValueChange = viewModel::onNameChange,
                         label = { Text("Name") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && name.isBlank()
+                        isError = viewModel.showError && viewModel.name.isBlank()
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = email,
-                        onValueChange = { viewModel.onEmailChange(it) },
+                        value = viewModel.email,
+                        onValueChange = viewModel::onEmailChange,
                         label = { Text("Email") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && email.isBlank()
+                        isError = viewModel.showError && viewModel.email.isBlank()
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = gender,
+                        value = viewModel.gender,
                         onValueChange = {},
                         enabled = false,
                         readOnly = true,
@@ -113,7 +117,7 @@ fun Register(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            disabledBorderColor = if (showError && gender.isBlank()) Color.Red else Color(0xFF7C7C7C),
+                            disabledBorderColor = if (viewModel.showError && viewModel.gender.isBlank()) Color.Red else Color(0xFF7C7C7C),
                             disabledTextColor = Color(0xFF7C7C7C),
                             disabledLabelColor = Color(0xFF7C7C7C),
                             disabledTrailingIconColor = Color(0xFF7C7C7C)
@@ -126,7 +130,7 @@ fun Register(
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     RadioButton(
-                                        selected = gender == "Female",
+                                        selected = viewModel.gender == "Female",
                                         onClick = { viewModel.onGenderChange("Female") },
                                         colors = RadioButtonDefaults.colors(
                                             selectedColor = Color.DarkGray,
@@ -137,7 +141,7 @@ fun Register(
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     RadioButton(
-                                        selected = gender == "Male",
+                                        selected = viewModel.gender == "Male",
                                         onClick = { viewModel.onGenderChange("Male") },
                                         colors = RadioButtonDefaults.colors(
                                             selectedColor = Color.DarkGray,
@@ -153,12 +157,12 @@ fun Register(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = password,
-                        onValueChange = { viewModel.onPasswordChange(it) },
+                        value = viewModel.password,
+                        onValueChange = viewModel::onPasswordChange,
                         label = { Text("Enter Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && password.isBlank(),
+                        isError = viewModel.showError && viewModel.password.isBlank(),
                         visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
@@ -171,12 +175,12 @@ fun Register(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { viewModel.onConfirmPasswordChange(it) },
+                        value = viewModel.confirmPassword,
+                        onValueChange = viewModel::onConfirmPasswordChange,
                         label = { Text("Confirm Password") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && (confirmPassword.isBlank() || password != confirmPassword),
+                        isError = viewModel.showError && (viewModel.confirmPassword.isBlank() || viewModel.password != viewModel.confirmPassword),
                         visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
@@ -186,9 +190,9 @@ fun Register(
                         }
                     )
 
-                    if (showError) {
+                    if (viewModel.showError) {
                         Text(
-                            text = if (password != confirmPassword && confirmPassword.isNotBlank())
+                            text = if (viewModel.password != viewModel.confirmPassword && viewModel.confirmPassword.isNotBlank())
                                 "Las contraseñas no coinciden"
                             else
                                 "Rellenar todos los campos",
@@ -204,7 +208,7 @@ fun Register(
                         onClick = {
                             viewModel.onRegisterClick()
                             if (!viewModel.showError) {
-                                navController.navigate(NavRoutes.Login.route) // Puedes cambiar a NavRoutes.Home.route si deseas
+                                navController.navigate(NavRoutes.Login.route)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
@@ -226,7 +230,8 @@ fun Register(
                                     append("Inicia Sesión")
                                 }
                             },
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = Color.Black
                         )
                     }
 
