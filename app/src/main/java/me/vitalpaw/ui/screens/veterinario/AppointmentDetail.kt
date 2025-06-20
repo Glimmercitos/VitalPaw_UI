@@ -65,15 +65,30 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
 
+    var errorTitle by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+
+    var succesTitle by remember { mutableStateOf("") }
+    var succesMessage by remember { mutableStateOf("") }
+
+
     fun handleSave() {
         try {
             if (recordValue.notes.isBlank() || recordValue.treatment.isBlank()) {
-                throw IllegalArgumentException("Campos vacíos")
+                errorTitle = "Error al asignar cita"
+                errorMessage = "Campos vacios"
+                throw IllegalArgumentException("campos vacios")
             }
             viewModel.saveRecord()
+            succesTitle = "Cita guardada!"
+            succesMessage = "Cita asignada correctamente"
             showSuccessDialog = true
 
         } catch (e: Exception) {
+            if (errorTitle.isEmpty()){
+                errorTitle = "Error al asignar cita"
+                errorMessage = "Vuelve a intentar"
+            }
             showErrorDialog = true
         }
     }
@@ -201,17 +216,25 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
 
     ConfirmationDialog(
         show = showSuccessDialog,
-        onDismiss = {
-            showSuccessDialog = false
+        onDismiss = { showSuccessDialog = false
+            succesTitle = ""
+            succesMessage = ""
             navController.navigate(NavRoutes.Home.route) {
                 popUpTo(NavRoutes.Home.route) { inclusive = true }
             }
-        }
+        },
+        Title = succesTitle,
+        Message = succesMessage
     )
 
     ErrorDialog(
         show = showErrorDialog,
-        onDismiss = { showErrorDialog = false }
+        onDismiss = { showErrorDialog = false
+        errorTitle = ""
+        errorMessage = ""
+        },
+        title = errorTitle,
+        message = errorMessage
     )
 }
 
