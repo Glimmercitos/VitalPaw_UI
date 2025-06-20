@@ -7,7 +7,7 @@ import java.util.Calendar
 
 class ToAssignedViewModel : ViewModel() {
 
-    private val _selectedService = MutableStateFlow("Consulta")
+    private val _selectedService = MutableStateFlow("")
     val selectedService: StateFlow<String> = _selectedService
 
     private val _description = MutableStateFlow("")
@@ -16,7 +16,12 @@ class ToAssignedViewModel : ViewModel() {
     private val _selectedDate = MutableStateFlow(Calendar.getInstance())
     val selectedDate: StateFlow<Calendar> = _selectedDate
 
-    private val _selectedTime = MutableStateFlow(Calendar.getInstance())
+    private val _selectedTime = MutableStateFlow(
+        Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0) // ← hora 00
+            set(Calendar.MINUTE, 0)      // ← minutos 00
+        }
+    )
     val selectedTime: StateFlow<Calendar> = _selectedTime
 
     fun onServiceChange(service: String) {
