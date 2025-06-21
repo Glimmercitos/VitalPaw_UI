@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.repository.MedicalRecordRepository
 import javax.inject.Inject
-
 @HiltViewModel
 class MedicalRecordViewModel @Inject constructor(
     private val repository: MedicalRecordRepository
@@ -15,6 +14,24 @@ class MedicalRecordViewModel @Inject constructor(
 
     private val _record = MutableStateFlow<MedicalRecord?>(null)
     val record: StateFlow<MedicalRecord?> = _record
+
+    private val _showSuccessDialog = MutableStateFlow(false)
+    val showSuccessDialog: StateFlow<Boolean> = _showSuccessDialog
+
+    private val _showErrorDialog = MutableStateFlow(false)
+    val showErrorDialog: StateFlow<Boolean> = _showErrorDialog
+
+    private val _successTitle = MutableStateFlow("")
+    val successTitle: StateFlow<String> = _successTitle
+
+    private val _successMessage = MutableStateFlow("")
+    val successMessage: StateFlow<String> = _successMessage
+
+    private val _errorTitle = MutableStateFlow("")
+    val errorTitle: StateFlow<String> = _errorTitle
+
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage: StateFlow<String> = _errorMessage
 
     fun loadRecordById(appointmentId: String) {
         _record.value = repository.getMedicalRecordById(appointmentId)
@@ -29,7 +46,30 @@ class MedicalRecordViewModel @Inject constructor(
     }
 
     fun saveRecord() {
-        println("Guardado localmente: ${_record.value}")
+        val current = _record.value
+        if (current == null || current.notes.isBlank() || current.treatment.isBlank()) {
+            _errorTitle.value = "Error al asignar cita"
+            _errorMessage.value = "Campos vacíos"
+            _showErrorDialog.value = true
+            return
+        }
+
+        _successTitle.value = "Cita guardada!"
+        _successMessage.value = "Cita asignada correctamente"
+        _showSuccessDialog.value = true
+    }
+
+    fun dismissSuccessDialog() {
+        _showSuccessDialog.value = false
+        _successTitle.value = ""
+        _successMessage.value = ""
+    }
+
+    fun dismissErrorDialog() {
+        _showErrorDialog.value = false
+        _errorTitle.value = ""
+        _errorMessage.value = ""
     }
 }
+
 
