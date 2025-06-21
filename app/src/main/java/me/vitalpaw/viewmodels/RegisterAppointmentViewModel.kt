@@ -1,13 +1,14 @@
 package me.vitalpaw.viewmodels
 
+
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Calendar
 
-class ToAssignedViewModel : ViewModel() {
+class RegisterAppointmentViewModel : ViewModel() {
 
-    private val _selectedService = MutableStateFlow("")
+    private val _selectedService = MutableStateFlow("Consulta")
     val selectedService: StateFlow<String> = _selectedService
 
     private val _description = MutableStateFlow("")
@@ -16,12 +17,7 @@ class ToAssignedViewModel : ViewModel() {
     private val _selectedDate = MutableStateFlow(Calendar.getInstance())
     val selectedDate: StateFlow<Calendar> = _selectedDate
 
-    private val _selectedTime = MutableStateFlow(
-        Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0) // ← hora 00
-            set(Calendar.MINUTE, 0)      // ← minutos 00
-        }
-    )
+    private val _selectedTime = MutableStateFlow(Calendar.getInstance())
     val selectedTime: StateFlow<Calendar> = _selectedTime
 
     fun onServiceChange(service: String) {

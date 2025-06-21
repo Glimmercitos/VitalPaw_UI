@@ -47,7 +47,6 @@ fun AppNavGraph(navController: NavHostController) {
             val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
             AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
         }
-
     }
 }
 

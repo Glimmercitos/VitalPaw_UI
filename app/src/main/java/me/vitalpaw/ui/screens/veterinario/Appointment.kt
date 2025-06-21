@@ -55,16 +55,3 @@ fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewMod
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
