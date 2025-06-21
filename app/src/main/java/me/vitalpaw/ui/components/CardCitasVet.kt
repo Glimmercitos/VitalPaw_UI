@@ -40,11 +40,11 @@ fun AppointmentCard(
         shape = RoundedCornerShape(50.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Row( //0xFF4AA5C8
+        Row( //0xFF6980BF
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(Color.White)
-                .border(2.dp, Color(0xFF3695B9), CircleShape)
+                .border(2.dp, Color(0xFF6980BF), CircleShape)
         ) {
             // Imagen circular
             Box(
@@ -96,7 +96,7 @@ fun AppointmentCard(
                     .fillMaxHeight()
                     .width(55.dp)
                     .background(
-                        Color(0xFF3695B9),
+                        Color(0xFF6980BF),
                         shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
                     ),
                 contentAlignment = Alignment.Center

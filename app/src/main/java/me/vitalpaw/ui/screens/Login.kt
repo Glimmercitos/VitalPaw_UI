@@ -132,7 +132,9 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
                 Button(
                     onClick = {
                         if (uiState.email.isNotBlank() && uiState.password.isNotBlank()) {
-                            navController.navigate(NavRoutes.Home.route)
+                            navController.navigate(NavRoutes.Bienvenido.route) {
+                                popUpTo(NavRoutes.Login.route) { inclusive = true }
+                            }
                         } else {
                             viewModel.onLoginClick()
                         }

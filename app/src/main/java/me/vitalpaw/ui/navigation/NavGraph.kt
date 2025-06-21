@@ -13,6 +13,7 @@ import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
+import me.vitalpaw.ui.screens.veterinario.BienvenidoScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -30,6 +31,13 @@ fun AppNavGraph(navController: NavHostController) {
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { Register(navController) }
+
+        composable(NavRoutes.Bienvenido.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) {
+            BienvenidoScreen(navController)
+        }
 
         composable(NavRoutes.Home.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },

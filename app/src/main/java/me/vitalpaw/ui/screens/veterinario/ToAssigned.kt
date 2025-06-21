@@ -54,6 +54,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
@@ -61,7 +62,7 @@ import java.util.Calendar
 import java.util.Locale
 
 val PrimaryBlue = Color(0xFF6E7AE6)
-val TextGray = Color(0xFF606060)
+val TextGray = Color(0xFFAAAAAA)
 
 @Preview(showBackground = true)
 @Composable
@@ -87,8 +88,15 @@ fun ToAssigned(
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
-    var showSuccessDialog by remember { mutableStateOf(false) }
-    var showErrorDialog by remember { mutableStateOf(false) }
+
+    val errorTitle by viewModel.errorTitle.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val successTitle by viewModel.successTitle.collectAsState()
+    val successMessage by viewModel.successMessage.collectAsState()
+
+    val showSuccessDialog by viewModel.showSuccessDialog.collectAsState()
+    val showErrorDialog by viewModel.showErrorDialog.collectAsState()
 
     val serviceOptions = listOf("Emergencia", "Consulta", "Grooming")
     var expanded by remember { mutableStateOf(false) }
@@ -280,10 +288,11 @@ fun ToAssigned(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                CancelarCitaButton { showErrorDialog = true }
-                GuardarCitaButton { showSuccessDialog = true }
+                CancelarCitaButton {navController.popBackStack()}
+                GuardarCitaButton { viewModel.validateAndSave() }
+
             }
         }
 
@@ -315,8 +324,28 @@ fun ToAssigned(
                 onDismiss = { showTimePicker = false }
             )
         }
+        if (showSuccessDialog) {
+            ConfirmationDialog(
+                show = true,
+                onDismiss = {
+                    viewModel.dismissSuccessDialog()
+                    navController.navigate(NavRoutes.Home.route) {
+                        popUpTo(NavRoutes.Home.route) { inclusive = true }
+                    }
+                },
+                Title = successTitle,
+                Message = successMessage
+            )
+        }
 
-//        ConfirmationDialog(show = showSuccessDialog) { showSuccessDialog = false }
-//        ErrorDialog(show = showErrorDialog) { showErrorDialog = false }
+        if (showErrorDialog) {
+            ErrorDialog(
+                show = true,
+                onDismiss = { viewModel.dismissErrorDialog() },
+                title = errorTitle,
+                message = errorMessage
+            )
+        }
+
     }
 }

@@ -81,28 +81,34 @@ fun AppointmentDetailScreen(
                 modifier = Modifier
                     .size(140.dp)
                     .clip(CircleShape)
-                    .border(3.dp, Color(0xFF4AA5C8), CircleShape)
+                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
             )
 
             Spacer(Modifier.height(20.dp))
-            DisabledText(pet.name)
+            DisabledText(pet.name, "Nombre de la mascota")
             Spacer(Modifier.height(15.dp))
 
             Row(
                 Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
-                DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
-                DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
+                DisabledTextRow(value = pet.species, label = "especie", modifier = Modifier.weight(1f))
+                DisabledTextRow(value = "${pet.age} ${pet.unitAge}", label = "edad", modifier = Modifier.weight(1f))
+                DisabledTextRow(if (pet.gender) "M" else "F", "genero", modifier = Modifier.weight(1f))
             }
 
             Spacer(Modifier.height(15.dp))
-            DisabledText(pet.breed)
+
+            DisabledText(value = pet.breed, label = "raza")
+
             Spacer(Modifier.height(15.dp))
-            DisabledText("${pet.weight} Kg")
+
+            DisabledText(value = "${pet.weight} Kg", label = "peso")
+
             Spacer(Modifier.height(15.dp))
-            DisabledText(recordValue.service)
+
+            DisabledText(value = recordValue.service, label = "Tipo de servicio")
+
             Spacer(Modifier.height(20.dp))
 
             OutlinedTextField(
@@ -110,12 +116,13 @@ fun AppointmentDetailScreen(
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth().height(100.dp),
+                label = { Text("Descripcion", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 shape = RoundedCornerShape(20.dp),
                 textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Black,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF4AA5C8)
+                    disabledBorderColor = Color(0xFF6E7AE6)
                 )
             )
 
@@ -124,13 +131,13 @@ fun AppointmentDetailScreen(
             OutlinedTextField(
                 value = recordValue.notes,
                 onValueChange = { viewModel.updateNotes(it) },
-                label = { Text("Notas", fontFamily = quicksandFont) },
+                label = { Text("Notas", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 shape = RoundedCornerShape(20.dp),
                 textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF4AA5C8),
-                    unfocusedBorderColor = Color(0xFF4AA5C8)
+                    focusedBorderColor = Color(0xFF6E7AE6),
+                    unfocusedBorderColor = Color(0xFF6E7AE6)
                 )
             )
 
@@ -139,13 +146,13 @@ fun AppointmentDetailScreen(
             OutlinedTextField(
                 value = recordValue.treatment,
                 onValueChange = { viewModel.updateTreatment(it) },
-                label = { Text("Tratamiento", fontFamily = quicksandFont) },
+                label = { Text("Tratamiento", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 shape = RoundedCornerShape(20.dp),
                 textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF4AA5C8),
-                    unfocusedBorderColor = Color(0xFF4AA5C8)
+                    focusedBorderColor = Color(0xFF6E7AE6),
+                    unfocusedBorderColor = Color(0xFF6E7AE6)
                 )
             )
 
@@ -160,7 +167,9 @@ fun AppointmentDetailScreen(
             Spacer(Modifier.height(40.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CancelarCitaButton {
@@ -198,7 +207,7 @@ fun AppointmentDetailScreen(
 
 
 @Composable
-fun DisabledText(value: String, modifier: Modifier = Modifier) {
+fun DisabledText(value: String, label: String, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = value,
         onValueChange = {},
@@ -206,18 +215,19 @@ fun DisabledText(value: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth(),
+        label = { Text(label, fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
         shape = RoundedCornerShape(40.dp),
         textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF4AA5C8)
+            disabledBorderColor = Color(0xFF6E7AE6)
         )
     )
 }
 
 @Composable
-fun DisabledTextRow(value: String, modifier: Modifier = Modifier) {
+fun DisabledTextRow(value: String, label: String, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = value,
         onValueChange = {},
@@ -225,12 +235,13 @@ fun DisabledTextRow(value: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth(),
+        label = { Text(label, fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
         shape = RoundedCornerShape(40.dp),
         textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont, textAlign = TextAlign.Center),
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF4AA5C8)
+            disabledBorderColor = Color(0xFF6E7AE6)
         )
     )
 }
