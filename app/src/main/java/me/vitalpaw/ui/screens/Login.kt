@@ -130,7 +130,13 @@ fun LoginScreen(navController: NavController, viewModel: SessionViewModel = hilt
 
                 // Botón iniciar sesión
                 Button(
-                    onClick = viewModel::onLoginClick,
+                    onClick = {
+                        if (uiState.email.isNotBlank() && uiState.password.isNotBlank()) {
+                            navController.navigate(NavRoutes.Home.route)
+                        } else {
+                            viewModel.onLoginClick()
+                        }
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier

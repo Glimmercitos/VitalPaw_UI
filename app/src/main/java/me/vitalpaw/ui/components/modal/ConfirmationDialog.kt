@@ -19,7 +19,9 @@ import me.vitalpaw.ui.theme.quicksandFont
 @Composable
 fun ConfirmationDialog(
     show: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    Title: String = "Exito!",
+    Message: String = "Transaccion exitosa"
 ) {
     if (show) {
         AlertDialog(
@@ -55,15 +57,18 @@ fun ConfirmationDialog(
                             .clip(RoundedCornerShape(50))
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Text(
-                        text = "¡Cita confirmada!",
+                        text = Title,
                         fontFamily = quicksandFont,
                         fontSize = 20.sp,
-                        color = Color(0xFF6E7AE6)
+                        color = Color(0xFF6E7AE6),
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Text(
-                        text = "Cita asignada correctamente",
+                        text = Message,
                         fontFamily = quicksandFont,
                         fontSize = 20.sp,
                         color = Color.Gray,

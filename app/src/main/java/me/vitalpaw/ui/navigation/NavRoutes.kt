@@ -3,8 +3,9 @@ package me.vitalpaw.ui.navigation
 sealed class NavRoutes(val route: String) {
     object Login : NavRoutes("login")
     object Register : NavRoutes("register")
-    object Home : NavRoutes("home")
-    object AppointmentScreen : NavRoutes("assigned_appointments")
+    object Home : NavRoutes("assigned_appointments")
     object ToAssigned : NavRoutes("to_assigned")
-    object Grooming : NavRoutes("grooming")
+    object AppointmentDetail : NavRoutes("appointment_detail/{appointmentId}"){
+        fun createRoute(appointmentId: String) = "appointment_detail/$appointmentId"
+    }
 }

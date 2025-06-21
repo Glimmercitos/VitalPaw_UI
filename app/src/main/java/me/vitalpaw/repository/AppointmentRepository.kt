@@ -11,20 +11,30 @@ class AppointmentRepository @Inject constructor (
     fun getAppointments(): List<Appointment> {
         val owner = userRepository.getCurrentUser()
         val vet = userRepository.getVeterinarian()
-        val pet = petRepository.getPets().first() // o selecciona el que necesites
+        val pets = petRepository.getPets()
 
         return listOf(
             Appointment(
                 id = "1",
                 owner = owner,
-                pet = pet,
-                petName = pet.name,
+                pet = pets[0].copy(),
                 service = "Consulta médica",
                 description = "Chequeo general",
                 date = "2025-06-28",
                 time = "10:00 AM",
                 veterinarian = vet
+            ),
+            Appointment(
+                id = "2",
+                owner = owner,
+                pet = pets[1].copy(),
+                service = "Vacunación",
+                description = "Primera dosis de vacunas",
+                date = "2025-07-18",
+                time = "1:00 PM",
+                veterinarian = vet
             )
         )
     }
+
 }
