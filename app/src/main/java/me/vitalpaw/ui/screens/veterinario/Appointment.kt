@@ -1,5 +1,6 @@
 package me.vitalpaw.ui.screens.veterinario
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,28 +14,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.AppointmentCard
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodel.AppointmentViewModel
 
 @Composable
-fun AppointmentScreen(navController: NavController, viewModel: AppointmentViewModel = hiltViewModel()) {
+fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewModel = hiltViewModel()){
     LaunchedEffect(Unit) {
         viewModel.loadAppointments()
     }
 
     val appointments = viewModel.appointments
 
-    Box(modifier = Modifier.fillMaxSize()){
-        if (appointments.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center)
-            {
-                Text(text = "Sin citas asignadas", style = MaterialTheme.typography.titleMedium)
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)){
+        if (appointments.isEmpty()){
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+                contentAlignment = Alignment.Center){
+                Text(text = "Sin citas asignadas0", style = MaterialTheme.typography.titleMedium)
             }
-        } else {
+        }else{
             Column(modifier = Modifier
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
@@ -42,12 +46,12 @@ fun AppointmentScreen(navController: NavController, viewModel: AppointmentViewMo
                 appointments.forEach {
                     appointment -> AppointmentCard(
                         appointment = appointment,
-                        onClick = { }
+                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!))
+                        }
                     )
                 }
             }
         }
-
     }
 }
 

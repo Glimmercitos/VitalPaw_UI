@@ -50,14 +50,14 @@ fun AppointmentCard(
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .size(85.dp) // Tamaño total incluyendo el borde
+                    .size(85.dp)
                     .background(Color.White, CircleShape)
-                    .padding(2.dp) // Espacio para que la imagen no tape el borde
+                    .padding(2.dp)
                     .clip(CircleShape)
             ) {
                 Image(
                     painter = painterResource(appointment.pet.imageRes ),
-                    contentDescription = "Foto de ${appointment.petName}",
+                    contentDescription = "Foto de ${appointment.pet.name}",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -65,8 +65,6 @@ fun AppointmentCard(
                 )
             }
 
-
-            // Contenido central
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -76,7 +74,7 @@ fun AppointmentCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = appointment.petName,
+                    text = appointment.pet.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color.Black
                 )

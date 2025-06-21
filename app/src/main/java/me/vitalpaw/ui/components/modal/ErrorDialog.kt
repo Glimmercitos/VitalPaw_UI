@@ -19,7 +19,9 @@ import me.vitalpaw.ui.theme.quicksandFont
 @Composable
 fun ErrorDialog(
     show: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    title: String = "Error",
+    message: String = "Algo salio mal"
 ) {
     if (show) {
         AlertDialog(
@@ -56,14 +58,14 @@ fun ErrorDialog(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Error al asignar cita",
+                        text = title,
                         fontFamily = quicksandFont,
                         fontSize = 20.sp,
                         color = Color(0xFFDB4453)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Vuelve a intentar",
+                        text = message,
                         fontFamily = quicksandFont,
                         fontSize = 20.sp,
                         color = Color.Gray,
