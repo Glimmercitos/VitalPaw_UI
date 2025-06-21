@@ -62,7 +62,7 @@ import java.util.Calendar
 import java.util.Locale
 
 val PrimaryBlue = Color(0xFF6E7AE6)
-val TextGray = Color(0xFFAAAAAA)
+val TextGray = Color(0xFF606060)
 
 @Preview(showBackground = true)
 @Composable
@@ -148,7 +148,7 @@ fun ToAssigned(
                     value = service,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Servicio", fontFamily = quicksandFont, color = TextGray) },
+                    label = { Text("Servicio", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
@@ -208,7 +208,7 @@ fun ToAssigned(
                 value = description,
                 onValueChange = viewModel::onDescriptionChange,
                 placeholder = { Text("", fontFamily = quicksandFont) },
-                label = { Text("Descripción general", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Descripción general", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 singleLine = false,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
@@ -232,7 +232,7 @@ fun ToAssigned(
                 value = if (hasDateSelected) dateFormatter.format(date.time) else "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Fecha", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Fecha", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker = true }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Fecha", tint = PrimaryBlue)
@@ -261,7 +261,7 @@ fun ToAssigned(
                 value = if (hasTimeSelected) timeFormatter.format(time.time) else "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Hora", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Hora", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 trailingIcon = {
                     IconButton(onClick = { showTimePicker = true }) {
                         Icon(Icons.Default.AccessTime, contentDescription = "Hora", tint = PrimaryBlue)
