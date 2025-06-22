@@ -4,19 +4,13 @@ import androidx.lifecycle.ViewModel
 import me.vitalpaw.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-data class Product(
-    val name: String,
-    val price: Int,
-    val imageResId: Int,
-    var quantity: Int = 1
-)
+import me.vitalpaw.models.Product
 
 class HomeShopViewModel : ViewModel() {
 
     private val _products = MutableStateFlow(
         listOf(
-            Product("Shampoo para perro \"Perfect Coat\" 435 ml", 300, R.drawable.prod7),
+            Product("Shampoo para perro  435 ml", 300, R.drawable.prod7),
             Product("Comida para perro adulto", 1000, R.drawable.prod1),
             Product("Casa para gato", 2500, R.drawable.prod2),
             Product("Juguete para perro", 40, R.drawable.prod3),

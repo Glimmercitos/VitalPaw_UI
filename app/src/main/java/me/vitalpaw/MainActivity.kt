@@ -21,11 +21,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                /*Surface(color = MaterialTheme.colorScheme.background) {
-                    val navController = rememberNavController()
-                    AppNavGraph(navController = navController)*/
-                ShopScreen(navController = rememberNavController())
-
+                val navController = rememberNavController() // 👈 Dentro de setContent
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    AppNavGraph(navController = navController) // 👈 Ahora sí lo ve
+                }
             }
         }
     }

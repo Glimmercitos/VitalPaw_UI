@@ -5,8 +5,10 @@ sealed class NavRoutes(val route: String) {
     object Register : NavRoutes("register")
     object Home : NavRoutes("assigned_appointments")
     object ToAssigned : NavRoutes("to_assigned")
-    object AppointmentDetail : NavRoutes("appointment_detail/{appointmentId}"){
+
+    object AppointmentDetail : NavRoutes("appointment_detail/{appointmentId}") {
         fun createRoute(appointmentId: String) = "appointment_detail/$appointmentId"
     }
-    object HomeShopScreen : NavRoutes("shop_home")
+    object HomeShopScreen : NavRoutes("home_shop")
+    object Cart : NavRoutes("cart")
 }
