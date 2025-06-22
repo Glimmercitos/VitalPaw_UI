@@ -22,4 +22,12 @@ class AppointmentViewModel @Inject constructor(
         appointments.clear()
         appointments.addAll(repository.getAppointments())
     }
+
+    fun getAppointmentByPetId(petId: String): List<Appointment>{
+        return appointments.filter { it.pet.id == petId }
+    }
+
+    fun markAppointmentAsComplete(appointmentId: String){
+
+    }
 }

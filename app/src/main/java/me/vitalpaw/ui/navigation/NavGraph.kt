@@ -14,11 +14,12 @@ import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 import me.vitalpaw.ui.screens.veterinario.BienvenidoScreen
+import me.vitalpaw.ui.screens.veterinario.PetAppointmentsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    AnimatedNavHost(navController = navController, startDestination = NavRoutes.Login.route,
+    AnimatedNavHost(navController = navController, startDestination = NavRoutes.Home.route,
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
@@ -47,6 +48,14 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.ToAssigned.route,enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { ToAssigned(navController) }
+
+        composable(route = NavRoutes.PetAppointment.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId")?:""
+            PetAppointmentsScreen(navController = navController, petId = petId)
+        }
 
         composable(route = NavRoutes.AppointmentDetail.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },

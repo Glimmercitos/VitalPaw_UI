@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import me.vitalpaw.ui.components.AppointmentCard
+import me.vitalpaw.ui.components.Vetcards.AppointmentCard
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodel.AppointmentViewModel
 
@@ -47,7 +47,8 @@ fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewMod
                     appointment -> AppointmentCard(
                         appointment = appointment,
                         onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!))
-                        }
+                        },
+                        onHistoryClick = {navController.navigate(NavRoutes.PetAppointment.createRoute(appointment.pet.id!!))}
                     )
                 }
             }
