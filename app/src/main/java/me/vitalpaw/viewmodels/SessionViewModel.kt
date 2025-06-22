@@ -44,6 +44,9 @@ class SessionViewModel @Inject constructor(
     var user by mutableStateOf<User?>(null)
         private set
 
+    var firebaseToken by mutableStateOf<String?>(null)
+        private set
+
     var bienvenidaError by mutableStateOf<String?>(null)
         private set
 
@@ -73,6 +76,7 @@ class SessionViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val token = authRepository.loginWithFirebase(email, password)
+                firebaseToken = token
                 if (token != null) {
                     val response = authRepository.loginInBackend(token)
                     if (response.isSuccessful) {

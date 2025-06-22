@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.vitalpaw.models.Appointment
+import me.vitalpaw.utils.formatDate
 
 
 @Composable
@@ -55,14 +56,14 @@ fun AppointmentCard(
                     .padding(2.dp)
                     .clip(CircleShape)
             ) {
-                Image(
+                /*Image(
                     painter = painterResource(appointment.pet.imageRes ),
                     contentDescription = "Foto de ${appointment.pet.name}",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(CircleShape)
-                )
+                )*/
             }
 
             Column(
@@ -79,7 +80,7 @@ fun AppointmentCard(
                     color = Color.Black
                 )
                 Text(
-                    text = "Fecha: ${appointment.date}",
+                    text = "Fecha: ${formatDate(appointment.date)}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )

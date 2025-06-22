@@ -1,14 +1,23 @@
 package me.vitalpaw.network
 
+import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.User
+import me.vitalpaw.network.request.AppointmentUpdateRequest
+import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.network.request.RegisterRequest
+import me.vitalpaw.network.response.AppointmentUpdateResponse
 import me.vitalpaw.network.response.LoginResponse
+import me.vitalpaw.network.response.MedicalRecordResponse
 import me.vitalpaw.network.response.RegisterResponse
+import me.vitalpaw.network.response.VetAppointmentsResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
     @POST("api/users/register")
@@ -26,4 +35,34 @@ interface ApiService {
     suspend fun getUserData(
         @Header("Authorization") token: String
     ): Response<User>
+    @GET("api/appointments/vet")
+    suspend fun getVetAppointments(
+        @Header("Authorization") token: String
+    ): Response<VetAppointmentsResponse>
+
+    @GET("api/appointments/vet/{id}")
+    suspend fun getAppointmentById(
+        @Header("Authorization") token: String,
+        @Path("id") appointmentId: String
+    ): Response<Appointment>
+    @DELETE("api/appointments/vet/delete/{id}")
+    suspend fun deleteAppointment(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
+
+    @POST("api/medicalRecords/{id}")
+    suspend fun addMedicalRecord(
+        @Header("Authorization") token: String,
+        @Path("id") appointmentId: String,
+        @Body request: MedicalRecordRequest
+    ): Response<MedicalRecordResponse>
+
+
+    @PUT("api/appointments/vet/edit/{id}")
+    suspend fun editAppointment(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body request: AppointmentUpdateRequest
+    ): Response<AppointmentUpdateResponse>
 }

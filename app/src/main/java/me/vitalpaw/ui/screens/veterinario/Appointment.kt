@@ -21,14 +21,21 @@ import androidx.navigation.NavController
 import me.vitalpaw.ui.components.AppointmentCard
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodel.AppointmentViewModel
+import android.util.Log
 
 @Composable
-fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewModel = hiltViewModel()){
-    LaunchedEffect(Unit) {
-        viewModel.loadAppointments()
+fun AppointmentScreen(navController: NavController, token: String,viewModel: AppointmentViewModel = hiltViewModel()){
+    LaunchedEffect(token) {
+        Log.d("AppointmentScreen", "Loading appointments with token: $token")
+        viewModel.loadAppointments(token)
     }
 
+
     val appointments = viewModel.appointments
+    if (viewModel.error != null) {
+        Text("Error: ${viewModel.error}")
+    }
+
 
     Box(modifier = Modifier.fillMaxSize().background(Color.White)){
         if (appointments.isEmpty()){
@@ -36,7 +43,7 @@ fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewMod
                 .fillMaxSize()
                 .background(Color.White),
                 contentAlignment = Alignment.Center){
-                Text(text = "Sin citas asignadas0", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Sin citas asignadas", style = MaterialTheme.typography.titleMedium)
             }
         }else{
             Column(modifier = Modifier
@@ -46,7 +53,7 @@ fun AppointmentScreen(navController: NavController,viewModel: AppointmentViewMod
                 appointments.forEach {
                     appointment -> AppointmentCard(
                         appointment = appointment,
-                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!))
+                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id, token))
                         }
                     )
                 }

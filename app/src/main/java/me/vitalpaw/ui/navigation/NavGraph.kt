@@ -6,17 +6,23 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
+//import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
+import android.util.Log
+import me.vitalpaw.viewmodels.SessionViewModel
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewModel) {
     AnimatedNavHost(navController = navController, startDestination = NavRoutes.Login.route,
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) }
@@ -24,28 +30,37 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.Login.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
-        ) { LoginScreen(navController) }
+        ) { LoginScreen(navController, sessionViewModel) }
 
         composable(NavRoutes.Register.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { Register(navController) }
 
-        composable(NavRoutes.Home.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
-        ) { AppointmentScreen(navController) }
+        composable(
+            route = NavRoutes.Home.route,
+            arguments = listOf(navArgument("token") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+            AppointmentScreen(navController, token)
+        }
+
 
         composable(NavRoutes.ToAssigned.route,enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
-        ) { ToAssigned(navController) }
+        ) { backStackEntry ->
+            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
+
+            ToAssigned(navController, appointmentId, sessionViewModel) }
 
         composable(route = NavRoutes.AppointmentDetail.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { backStackEntry ->
+            val token = backStackEntry.arguments?.getString("token") ?: ""
             val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
-            AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
+            Log.d("NavigationArgs", "TOKEN: $token | APPOINTMENT: $appointmentId") // <--- Agrega este Log
+            AppointmentDetailScreen(navController = navController, appointmentId = appointmentId, token = token, sessionViewModel)
         }
     }
 }

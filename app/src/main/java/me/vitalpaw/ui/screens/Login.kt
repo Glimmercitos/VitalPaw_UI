@@ -58,14 +58,21 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
     val password = viewModel.password
     val showError = viewModel.showError
 
-    if (viewModel.isLoginSuccess) {
+
+    /*if (viewModel.isLoginSuccess) {
         LaunchedEffect(Unit) {
             navController.navigate("bienvenida") {
                 popUpTo("login") { inclusive = true }
             }
         }
+    }*/
+    if (viewModel.isLoginSuccess && viewModel.firebaseToken != null) {
+        LaunchedEffect(viewModel.firebaseToken) {
+            navController.navigate(NavRoutes.Home.createRoute(viewModel.firebaseToken!!)) {
+                popUpTo(NavRoutes.Login.route) { inclusive = true }
+            }
+        }
     }
-
 
     Box(
         modifier = Modifier
@@ -165,11 +172,7 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                 // Botón iniciar sesión
                 Button(
                     onClick = {
-                        if (email.isNotBlank() && password.isNotBlank()) {
-                            navController.navigate(NavRoutes.Home.route)
-                        } else {
-                            viewModel.onLoginClick()
-                        }
+                        viewModel.onLoginClick()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                     shape = RoundedCornerShape(24.dp),

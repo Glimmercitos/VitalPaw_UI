@@ -6,7 +6,7 @@ import me.vitalpaw.R
 import javax.inject.Inject
 
 
-class PetRepository @Inject constructor(
+/*class PetRepository @Inject constructor(
     private val userRepository: UserRepository)
 {
 
@@ -20,4 +20,8 @@ class PetRepository @Inject constructor(
 
         )
     }
+
+
 }
+
+*/

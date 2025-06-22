@@ -45,51 +45,73 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.text.style.TextAlign
 import me.vitalpaw.ui.components.buttons.AsignarCitaButton
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 
 
 @Composable
-fun AppointmentDetailScreen(navController: NavController, appointmentId: String, viewModel: MedicalRecordViewModel = hiltViewModel()
+fun AppointmentDetailScreen(
+    navController: NavController,
+    appointmentId: String,
+    token: String,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
     LaunchedEffect(appointmentId) {
-        viewModel.loadRecordById(appointmentId)
+        viewModel.loadAppointment(token, appointmentId)
     }
 
-    val record by viewModel.record.collectAsState()
-    val recordValue = record ?: run {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Cargando...")
-        }
-        return
-    }
-    val pet = recordValue.pet
+    val appointment = viewModel.appointment
+    val isLoading = viewModel.isLoading
+    val error = viewModel.error
+
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
 
     var errorTitle by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    var succesTitle by remember { mutableStateOf("") }
-    var succesMessage by remember { mutableStateOf("") }
+    var successTitle by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf("") }
 
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Cargando...")
+        }
+        return
+    }
+
+    // Mostrar error
+    if (error != null) {
+        LaunchedEffect(error) {
+            errorTitle = "Error"
+            errorMessage = error
+            showErrorDialog = true
+            viewModel.error = null // resetear error para no mostrar varias veces
+        }
+    }
+
+    if (appointment == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No se encontró la cita.")
+        }
+        return
+    }
+
+    val pet = appointment.pet
 
     fun handleSave() {
-        try {
-            if (recordValue.notes.isBlank() || recordValue.treatment.isBlank()) {
-                errorTitle = "Error al asignar cita"
-                errorMessage = "Campos vacios"
-                throw IllegalArgumentException("campos vacios")
-            }
-            viewModel.saveRecord()
-            succesTitle = "Cita guardada!"
-            succesMessage = "Cita asignada correctamente"
+        if (viewModel.notes.isBlank() || viewModel.treatment.isBlank()) {
+            errorTitle = "Error al asignar cita"
+            errorMessage = "Campos vacíos"
+            showErrorDialog = true
+            return
+        }
+
+        viewModel.saveMedicalRecord(token, appointmentId) {
+            successTitle = "Cita guardada!"
+            successMessage = "Expediente médico guardado correctamente."
             showSuccessDialog = true
 
-        } catch (e: Exception) {
-            if (errorTitle.isEmpty()){
-                errorTitle = "Error al asignar cita"
-                errorMessage = "Vuelve a intentar"
-            }
-            showErrorDialog = true
         }
     }
 
@@ -102,7 +124,7 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
             .padding(horizontal = 30.dp, vertical = 18.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    ) { /*
         Image(
             painter = painterResource(id = pet.imageRes),
             contentDescription = pet.name,
@@ -111,34 +133,34 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
                 .clip(CircleShape)
                 .border(3.dp, Color(0xFF4AA5C8), CircleShape)
         )
-
+*/
         Spacer(Modifier.height(20.dp))
-        DisabledText(pet.name)
+        DisabledText(appointment.pet.name)
         Spacer(Modifier.height(15.dp))
 
         Row(
-            Modifier.fillMaxWidth()
-            .padding(vertical = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
-            DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
+            DisabledTextRow(appointment.pet.species, modifier = Modifier.weight(1f))
+            DisabledTextRow("${appointment.pet.age} ${appointment.pet.unitAge}", modifier = Modifier.weight(1f))
             DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
         }
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(pet.breed)
+        DisabledText(appointment.pet.breed)
         Spacer(Modifier.height(15.dp))
 
-        DisabledText("${pet.weight} Kg")
+        DisabledText("${appointment.pet.weight} Kg")
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(recordValue.service)
+        DisabledText(appointment.service)
         Spacer(Modifier.height(20.dp))
 
-
         OutlinedTextField(
-            value = recordValue.description,
+            value = appointment.description,
             onValueChange = {},
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,8 +178,8 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
         Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = recordValue.notes,
-            onValueChange = { viewModel.updateNotes(it) },
+            value = viewModel.notes,
+            onValueChange = { viewModel.notes = it },
             label = { Text("Notas", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -170,13 +192,11 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
             )
         )
 
-
         Spacer(Modifier.height(20.dp))
 
-
         OutlinedTextField(
-            value = recordValue.treatment,
-            onValueChange = { viewModel.updateTreatment(it) },
+            value = viewModel.treatment,
+            onValueChange = { viewModel.treatment = it },
             label = { Text("Tratamiento", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -192,22 +212,21 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
         Spacer(modifier = Modifier.height(40.dp))
 
         AsignarCitaButton(onClick = {
-            navController.navigate(NavRoutes.ToAssigned.route){
-                popUpTo(NavRoutes.ToAssigned.route){inclusive = true}
+            navController.navigate(NavRoutes.ToAssigned.route) {
+                popUpTo(NavRoutes.ToAssigned.route) { inclusive = true }
             }
         })
 
         Spacer(modifier = Modifier.height(40.dp))
-
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CancelarCitaButton(onClick = {
-                navController.navigate(NavRoutes.Home.route) {
-                    popUpTo(NavRoutes.Home.route) { inclusive = true }
-                }
+                    navController.navigate(NavRoutes.Home.createRoute(sessionViewModel.firebaseToken!!)) {
+                        popUpTo(NavRoutes.Login.route) { inclusive = true }
+                    }
             })
 
             GuardarCitaButton(onClick = { handleSave() })
@@ -216,22 +235,31 @@ fun AppointmentDetailScreen(navController: NavController, appointmentId: String,
 
     ConfirmationDialog(
         show = showSuccessDialog,
-        onDismiss = { showSuccessDialog = false
-            succesTitle = ""
-            succesMessage = ""
-            navController.navigate(NavRoutes.Home.route) {
-                popUpTo(NavRoutes.Home.route) { inclusive = true }
+        onDismiss = {
+            sessionViewModel.firebaseToken?.let { token ->
+                navController.navigate(NavRoutes.Home.createRoute(token)) {
+                    popUpTo(NavRoutes.Home.route) { inclusive = true }
+                }
+            } ?: run {
+                navController.navigate(NavRoutes.Login.route) {
+                    popUpTo(NavRoutes.Login.route) { inclusive = true }
+                }
             }
+            showSuccessDialog = false
+            successTitle = ""
+            successMessage = ""
         },
-        Title = succesTitle,
-        Message = succesMessage
+        Title = successTitle,
+        Message = successMessage
     )
+
 
     ErrorDialog(
         show = showErrorDialog,
-        onDismiss = { showErrorDialog = false
-        errorTitle = ""
-        errorMessage = ""
+        onDismiss = {
+            showErrorDialog = false
+            errorTitle = ""
+            errorMessage = ""
         },
         title = errorTitle,
         message = errorMessage
@@ -275,6 +303,3 @@ fun DisabledTextRow(value: String, modifier: Modifier = Modifier) {
         )
     )
 }
-
-
-

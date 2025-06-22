@@ -1,27 +1,35 @@
 package me.vitalpaw.repository
 
+import android.util.Log
+import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
+import me.vitalpaw.network.ApiService
+import me.vitalpaw.network.request.MedicalRecordRequest
 import javax.inject.Inject
 
 class MedicalRecordRepository @Inject constructor(
-    private val petRepository: PetRepository,
-    private val appointmentRepository: AppointmentRepository
+    private val apiService: ApiService
 ) {
-    fun getMedicalRecordById(appointmentId: String): MedicalRecord {
-        val appointment = appointmentRepository.getAppointments().find { it.id == appointmentId }
-            ?: throw IllegalArgumentException("No se encontró la cita con id: $appointmentId")
-
-        return MedicalRecord(
-            id = "1",
-            notes = "",
-            treatment = "",
-            pet = appointment.pet,
-            appointment = appointment,
-            service = appointment.service,
-            description = appointment.description,
-            date = appointment.date,
-            time = appointment.time
-        )
+    suspend fun saveRecord(token: String, appointmentId: String, request: MedicalRecordRequest): MedicalRecord {
+        val response = apiService.addMedicalRecord("Bearer $token", appointmentId, request)
+        if (response.isSuccessful) {
+            return response.body()?.medicalRecord
+                ?: throw Exception("Error: respuesta del servidor vacía")
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("MedicalRecordRepo", "Error al guardar expediente: ${response.code()} - $errorBody")
+            throw Exception("Error ${response.code()}: ${errorBody ?: "Error desconocido"}")
+        }
     }
 
+    suspend fun getAppointmentById(token: String, appointmentId: String): Appointment {
+        val response = apiService.getAppointmentById("Bearer $token", appointmentId)
+        if (response.isSuccessful) {
+            return response.body() ?: throw Exception("Cita no encontrada")
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("MedicalRecordRepo", "Error al obtener cita: ${response.code()} - $errorBody")
+            throw Exception("Error ${response.code()}: ${errorBody ?: "Error desconocido"}")
+        }
+    }
 }
