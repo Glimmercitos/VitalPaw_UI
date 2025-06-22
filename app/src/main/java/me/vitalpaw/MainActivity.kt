@@ -20,10 +20,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                /*Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    AppNavGraph(navController = navController)
-                }
+                    AppNavGraph(navController = navController)*/
+                RegisterPetScreen(navController = rememberNavController())
+
+
             }
         }
     }
