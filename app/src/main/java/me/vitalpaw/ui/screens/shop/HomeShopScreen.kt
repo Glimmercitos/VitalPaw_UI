@@ -1,6 +1,5 @@
-/*package me.vitalpaw.ui.screens.shop
+package me.vitalpaw.ui.screens.shop
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -12,18 +11,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.ProductItem
+import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
+import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.HomeShopViewModel
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,10 +35,27 @@ fun HomeShopScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("TIENDA", modifier = Modifier.weight(1f))
-                        Icon(painter = painterResource(id = R.drawable.huellacoin), contentDescription = "Coin")
-                        Text("2,500", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 4.dp))
-                        Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", modifier = Modifier.padding(start = 8.dp))
+                        Text(
+                            "TIENDA",
+                            modifier = Modifier.weight(1f),
+                            fontFamily = quicksandFont,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.huellacoin),
+                            contentDescription = "Coin"
+                        )
+                        Text(
+                            "2,500",
+                            fontFamily = quicksandFont,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                        Icon(
+                            Icons.Default.ShoppingCart,
+                            contentDescription = "Carrito",
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 },
                 navigationIcon = {
@@ -52,15 +66,7 @@ fun HomeShopScreen(
             )
         },
         bottomBar = {
-            Button(
-                onClick = { /* Acción canjear */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6699CC))
-            ) {
-                Text("CANJEAR")
-            }
+            RedeemPurchaseButton(onClick = { /* Acción canjear */ })
         }
     ) { innerPadding ->
         LazyColumn(
@@ -81,12 +87,15 @@ fun HomeShopScreen(
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeShopScreenPreview() {
-    // Crea un NavHostController de prueba para el preview
-    val navController = rememberNavController()
+    // Instancia directa del ViewModel con productos por defecto
+    val previewViewModel = remember { HomeShopViewModel() }
 
-    HomeShopScreen(navController = NavHostController(LocalContext.current))
+    HomeShopScreen(
+        viewModel = previewViewModel,
+        onBack = {} // Acción vacía para preview
+    )
 }
-*/

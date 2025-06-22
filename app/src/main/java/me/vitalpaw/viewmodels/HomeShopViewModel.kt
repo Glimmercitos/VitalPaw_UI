@@ -1,10 +1,9 @@
-/*package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels
 
 import androidx.lifecycle.ViewModel
 import me.vitalpaw.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
 
 data class Product(
     val name: String,
@@ -13,7 +12,7 @@ data class Product(
     var quantity: Int = 1
 )
 
-val viewModel: HomeShopViewModel = hiltViewModel() {
+class HomeShopViewModel : ViewModel() {
 
     private val _products = MutableStateFlow(
         listOf(
@@ -43,4 +42,3 @@ val viewModel: HomeShopViewModel = hiltViewModel() {
         }
     }
 }
-*/

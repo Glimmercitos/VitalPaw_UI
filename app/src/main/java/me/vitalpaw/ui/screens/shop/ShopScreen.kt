@@ -24,9 +24,21 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.em
+@Composable
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true, showSystemUi = true)
+fun ShopScreenPreview() {
+    val fakeNavController = androidx.navigation.compose.rememberNavController()
+
+    ShopScreen(navController = fakeNavController)
+}
 
 @Composable
 fun ShopScreen(navController: NavController) {
+
+    val logoHeight = 180.dp
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Fondo
@@ -50,8 +62,8 @@ fun ShopScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo VitalPaw",
                 modifier = Modifier
-                    .height(150.dp)
-                    .padding(bottom = 24.dp)
+                    .height(logoHeight)
+                    .padding(bottom = 10.dp)
             )
 
             // ZONA VISUAL DE LAS 3 IMÁGENES
@@ -61,7 +73,7 @@ fun ShopScreen(navController: NavController) {
                     .height(250.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // pub1 a la izquierda con padding extra
+
                 Image(
                     painter = painterResource(id = R.drawable.pub1),
                     contentDescription = "Imagen Izquierda",
@@ -69,11 +81,12 @@ fun ShopScreen(navController: NavController) {
                         .height(160.dp)
                         .width(120.dp)
                         .align(Alignment.CenterStart)
-                        .padding(end = 24.dp),
+                        .padding(end = 24.dp)
+                        .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
 
-                // pub3 a la derecha con padding extra
+
                 Image(
                     painter = painterResource(id = R.drawable.pub3),
                     contentDescription = "Imagen Derecha",
@@ -81,11 +94,12 @@ fun ShopScreen(navController: NavController) {
                         .height(160.dp)
                         .width(120.dp)
                         .align(Alignment.CenterEnd)
-                        .padding(start = 24.dp),
+                        .padding(start = 24.dp)
+                        .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
 
-                // pub2 en el centro, encima y más grande, con mejor sombra
+
                 Image(
                     painter = painterResource(id = R.drawable.pub2),
                     contentDescription = "Imagen Centro",
@@ -109,7 +123,8 @@ fun ShopScreen(navController: NavController) {
                 text = "HECHO CON AMOR PARA TUS\nMASCOTAS",
                 fontSize = 20.sp,
                 fontFamily = quicksandFont,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                letterSpacing = TextUnit(1.5f, TextUnitType.Sp)
             )
         }
     }
