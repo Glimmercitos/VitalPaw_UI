@@ -11,6 +11,7 @@ import me.vitalpaw.ui.navigation.AppNavGraph
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
+import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 
 
@@ -23,8 +24,7 @@ class MainActivity : ComponentActivity() {
                 /*Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController)*/
-                RegisterPetScreen(navController = rememberNavController())
-
+                ShopScreen(navController = rememberNavController())
 
             }
         }

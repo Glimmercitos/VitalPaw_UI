@@ -8,4 +8,5 @@ sealed class NavRoutes(val route: String) {
     object AppointmentDetail : NavRoutes("appointment_detail/{appointmentId}"){
         fun createRoute(appointmentId: String) = "appointment_detail/$appointmentId"
     }
+    object HomeShopScreen : NavRoutes("shop_home")
 }

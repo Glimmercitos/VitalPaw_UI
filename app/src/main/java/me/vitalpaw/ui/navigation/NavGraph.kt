@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
+//import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
@@ -47,6 +48,11 @@ fun AppNavGraph(navController: NavHostController) {
             val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
             AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
         }
+        /*composable(NavRoutes.HomeShopScreen.route) {
+            HomeShopScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }*/
     }
 }
 
