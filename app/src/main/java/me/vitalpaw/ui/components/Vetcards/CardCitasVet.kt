@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.components
+package me.vitalpaw.ui.components.Vetcards
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,22 +32,23 @@ import me.vitalpaw.utils.formatDate
 @Composable
 fun AppointmentCard(
     appointment: Appointment,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onHistoryClick: () -> Unit = {},
+    onCheckClick:() -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .width(370.dp)
             .padding(8.dp)
-            .height(100.dp)
-            .clickable { onClick() },
+            .height(100.dp),
         shape = RoundedCornerShape(50.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Row( //0xFF4AA5C8
+        Row( //0xFF6980BF
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(Color.White)
-                .border(2.dp, Color(0xFF3695B9), CircleShape)
+                .border(2.dp, Color(0xFF6980BF), CircleShape)
         ) {
             // Imagen circular
             Box(
@@ -69,7 +72,7 @@ fun AppointmentCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
+                    .padding(end = 5.dp)
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -91,23 +94,48 @@ fun AppointmentCard(
                 )
             }
 
-            // Botón con flecha
+            Column(modifier = Modifier.padding(5.dp).padding(end = 3.dp)
+            ){
+                Icon(
+                    imageVector = Icons.Default.History,
+                    contentDescription = "Historial",
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .size(24.dp)
+                        .clickable { onHistoryClick() },
+                    tint = Color(0xFF5E5E5E)
+                )
+
+                Spacer(modifier = Modifier.height(17.dp))
+
+                Icon(
+                    imageVector = Icons.Default.CheckCircleOutline,
+                    contentDescription = "Completada",
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .size(24.dp)
+                        .clickable { onCheckClick() },
+                    tint = Color(0xFF5E5E5E)
+                )
+            }
+
+            // Boton con flecha
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(55.dp)
                     .background(
-                        Color(0xFF3695B9),
+                        Color(0xFF6980BF),
                         shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-                    ),
+                    )
+                    .clickable { onClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = "Ver detalles",
                     tint = Color.White,
-                    modifier = Modifier
-                        .size(40.dp)
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }

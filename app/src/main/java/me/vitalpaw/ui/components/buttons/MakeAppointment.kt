@@ -16,7 +16,7 @@ fun AsignarCitaButton(onClick: () -> Unit) {
 
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3577AC)),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6980BF)),
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .width(370.dp)
