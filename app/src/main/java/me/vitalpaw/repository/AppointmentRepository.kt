@@ -27,6 +27,16 @@ class AppointmentRepository @Inject constructor (
             Appointment(
                 id = "2",
                 owner = owner,
+                pet = pets[0].copy(),
+                service = "Consulta médica",
+                description = "Chequeo general",
+                date = "2025-07-31",
+                time = "10:00 PM",
+                veterinarian = vet
+            ),
+            Appointment(
+                id = "3",
+                owner = owner,
                 pet = pets[1].copy(),
                 service = "Vacunación",
                 description = "Primera dosis de vacunas",

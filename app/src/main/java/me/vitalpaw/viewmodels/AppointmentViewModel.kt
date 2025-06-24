@@ -18,8 +18,20 @@ class AppointmentViewModel @Inject constructor(
         loadAppointments()
     }
 
-     fun loadAppointments() {
+    fun getAppointmentById(appointmentId: String): Appointment? {
+        return appointments.find { it.id == appointmentId }
+    }
+
+    fun loadAppointments() {
         appointments.clear()
         appointments.addAll(repository.getAppointments())
+    }
+
+    fun getAppointmentByPetId(petId: String): List<Appointment>{
+        return appointments.filter { it.pet.id == petId }
+    }
+
+    fun markAppointmentAsComplete(appointmentId: String){
+        appointments.removeAll { it.id == appointmentId }
     }
 }

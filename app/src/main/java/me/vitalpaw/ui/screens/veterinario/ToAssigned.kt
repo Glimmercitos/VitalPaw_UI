@@ -54,6 +54,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
@@ -87,8 +88,15 @@ fun ToAssigned(
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
-    var showSuccessDialog by remember { mutableStateOf(false) }
-    var showErrorDialog by remember { mutableStateOf(false) }
+
+    val errorTitle by viewModel.errorTitle.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val successTitle by viewModel.successTitle.collectAsState()
+    val successMessage by viewModel.successMessage.collectAsState()
+
+    val showSuccessDialog by viewModel.showSuccessDialog.collectAsState()
+    val showErrorDialog by viewModel.showErrorDialog.collectAsState()
 
     val serviceOptions = listOf("Emergencia", "Consulta", "Grooming")
     var expanded by remember { mutableStateOf(false) }
@@ -140,7 +148,7 @@ fun ToAssigned(
                     value = service,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Servicio", fontFamily = quicksandFont, color = TextGray) },
+                    label = { Text("Servicio", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
@@ -200,7 +208,7 @@ fun ToAssigned(
                 value = description,
                 onValueChange = viewModel::onDescriptionChange,
                 placeholder = { Text("", fontFamily = quicksandFont) },
-                label = { Text("Descripción general", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Descripción general", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 singleLine = false,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
@@ -224,7 +232,7 @@ fun ToAssigned(
                 value = if (hasDateSelected) dateFormatter.format(date.time) else "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Fecha", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Fecha", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker = true }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Fecha", tint = PrimaryBlue)
@@ -253,7 +261,7 @@ fun ToAssigned(
                 value = if (hasTimeSelected) timeFormatter.format(time.time) else "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Hora", fontFamily = quicksandFont, color = TextGray) },
+                label = { Text("Hora", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 trailingIcon = {
                     IconButton(onClick = { showTimePicker = true }) {
                         Icon(Icons.Default.AccessTime, contentDescription = "Hora", tint = PrimaryBlue)
@@ -280,10 +288,11 @@ fun ToAssigned(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                CancelarCitaButton { showErrorDialog = true }
-                GuardarCitaButton { showSuccessDialog = true }
+                CancelarCitaButton {navController.popBackStack()}
+                GuardarCitaButton { viewModel.validateAndSave() }
+
             }
         }
 
@@ -315,8 +324,28 @@ fun ToAssigned(
                 onDismiss = { showTimePicker = false }
             )
         }
+        if (showSuccessDialog) {
+            ConfirmationDialog(
+                show = true,
+                onDismiss = {
+                    viewModel.dismissSuccessDialog()
+                    navController.navigate(NavRoutes.Home.route) {
+                        popUpTo(NavRoutes.Home.route) { inclusive = true }
+                    }
+                },
+                Title = successTitle,
+                Message = successMessage
+            )
+        }
 
-//        ConfirmationDialog(show = showSuccessDialog) { showSuccessDialog = false }
-//        ErrorDialog(show = showErrorDialog) { showErrorDialog = false }
+        if (showErrorDialog) {
+            ErrorDialog(
+                show = true,
+                onDismiss = { viewModel.dismissErrorDialog() },
+                title = errorTitle,
+                message = errorMessage
+            )
+        }
+
     }
 }
