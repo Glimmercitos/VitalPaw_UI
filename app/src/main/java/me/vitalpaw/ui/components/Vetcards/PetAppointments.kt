@@ -19,11 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import me.vitalpaw.models.Appointment
+import me.vitalpaw.models.MedicalRecord
 
 @Composable
 fun PetAppointmentCard(
-    appointment: Appointment,
+    record: MedicalRecord,
     onDetailsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -39,15 +39,15 @@ fun PetAppointmentCard(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = "Servicio: ${appointment.service}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Servicio: ${record.service}", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Fecha: ${appointment.date}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Fecha: ${record.date}", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Hora: ${appointment.time}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Hora: ${record.time}", style = MaterialTheme.typography.bodyLarge)
                 Text(
                     text = "Ver detalles",
                     style = MaterialTheme.typography.bodyMedium.copy(

@@ -4,13 +4,16 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
+import me.vitalpaw.models.Pet
 import me.vitalpaw.repository.MedicalRecordRepository
 import javax.inject.Inject
+
 @HiltViewModel
 class MedicalRecordViewModel @Inject constructor(
-    private val repository: MedicalRecordRepository
-) : ViewModel() {
+    val repository: MedicalRecordRepository
+    ) : ViewModel() {
 
     private val _record = MutableStateFlow<MedicalRecord?>(null)
     val record: StateFlow<MedicalRecord?> = _record
@@ -33,9 +36,17 @@ class MedicalRecordViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
 
+    fun getRecordsByPetId(petId: String): List<MedicalRecord> {
+       return repository.getMedicalRecordsByPetId(petId)
+    }
+
     fun loadRecordById(appointmentId: String) {
         _record.value = repository.getMedicalRecordById(appointmentId)
     }
+
+//    fun getPetById(petId: String): Pet? {
+//        return repository.getPetById(petId)
+//    }
 
     fun updateNotes(notes: String) {
         _record.value = _record.value?.copy(notes = notes)
@@ -58,8 +69,7 @@ class MedicalRecordViewModel @Inject constructor(
         _successMessage.value = "Cita asignada correctamente"
         _showSuccessDialog.value = true
     }
-
-    fun dismissSuccessDialog() {
+        fun dismissSuccessDialog() {
         _showSuccessDialog.value = false
         _successTitle.value = ""
         _successMessage.value = ""
@@ -70,6 +80,24 @@ class MedicalRecordViewModel @Inject constructor(
         _errorTitle.value = ""
         _errorMessage.value = ""
     }
+    fun createNewRecordFromAppointment(appointment: Appointment?) {
+        if (appointment == null) return
+
+        val newRecord = MedicalRecord(
+            id = "temp-${appointment.id}",
+            notes = "",
+            treatment = "",
+            pet = appointment.pet,
+            appointment = appointment,
+            service = appointment.service,
+            description = appointment.description,
+            date = appointment.date,
+            time = appointment.time
+        )
+        _record.value = newRecord
+    }
+
+
 }
 
 

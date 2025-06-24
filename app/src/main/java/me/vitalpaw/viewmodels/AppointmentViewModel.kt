@@ -18,7 +18,12 @@ class AppointmentViewModel @Inject constructor(
         loadAppointments()
     }
 
-     fun loadAppointments() {
+    fun getAppointmentById(appointmentId: String): Appointment? {
+        return appointments.find { it.id == appointmentId }
+    }
+
+
+    fun loadAppointments() {
         appointments.clear()
         appointments.addAll(repository.getAppointments())
     }

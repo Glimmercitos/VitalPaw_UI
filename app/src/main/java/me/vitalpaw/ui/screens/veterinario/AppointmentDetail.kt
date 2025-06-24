@@ -42,25 +42,28 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.text.style.TextAlign
 import me.vitalpaw.ui.components.buttons.AsignarCitaButton
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodel.AppointmentViewModel
 
 
 @Composable
 fun AppointmentDetailScreen(
     navController: NavController,
     appointmentId: String,
-    viewModel: MedicalRecordViewModel = hiltViewModel()
+    appointmentViewModel: AppointmentViewModel = hiltViewModel(),
+    medicalRecordViewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
     LaunchedEffect(appointmentId) {
-        viewModel.loadRecordById(appointmentId)
-    }
+        val appointment = appointmentViewModel.getAppointmentById(appointmentId)
+        medicalRecordViewModel.createNewRecordFromAppointment(appointment)}
 
-    val record by viewModel.record.collectAsState()
-    val showSuccessDialog by viewModel.showSuccessDialog.collectAsState()
-    val showErrorDialog by viewModel.showErrorDialog.collectAsState()
-    val successTitle by viewModel.successTitle.collectAsState()
-    val successMessage by viewModel.successMessage.collectAsState()
-    val errorTitle by viewModel.errorTitle.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val record by medicalRecordViewModel.record.collectAsState()
+    val showSuccessDialog by medicalRecordViewModel.showSuccessDialog.collectAsState()
+    val showErrorDialog by medicalRecordViewModel.showErrorDialog.collectAsState()
+    val successTitle by medicalRecordViewModel.successTitle.collectAsState()
+    val successMessage by medicalRecordViewModel.successMessage.collectAsState()
+    val errorTitle by medicalRecordViewModel.errorTitle.collectAsState()
+    val errorMessage by medicalRecordViewModel.errorMessage.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -130,7 +133,7 @@ fun AppointmentDetailScreen(
 
             OutlinedTextField(
                 value = recordValue.notes,
-                onValueChange = { viewModel.updateNotes(it) },
+                onValueChange = { medicalRecordViewModel.updateNotes(it) },
                 label = { Text("Notas", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 shape = RoundedCornerShape(20.dp),
@@ -145,7 +148,7 @@ fun AppointmentDetailScreen(
 
             OutlinedTextField(
                 value = recordValue.treatment,
-                onValueChange = { viewModel.updateTreatment(it) },
+                onValueChange = { medicalRecordViewModel.updateTreatment(it) },
                 label = { Text("Tratamiento", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
                 modifier = Modifier.fillMaxWidth().height(120.dp),
                 shape = RoundedCornerShape(20.dp),
@@ -178,14 +181,14 @@ fun AppointmentDetailScreen(
                     }
                 }
 
-                GuardarCitaButton(onClick = { viewModel.saveRecord() })
+                GuardarCitaButton(onClick = { medicalRecordViewModel.saveRecord() })
             }
         }
 
         ConfirmationDialog(
             show = showSuccessDialog,
             onDismiss = {
-                viewModel.dismissSuccessDialog()
+                medicalRecordViewModel.dismissSuccessDialog()
                 navController.navigate(NavRoutes.Home.route) {
                     popUpTo(NavRoutes.Home.route) { inclusive = true }
                 }
@@ -196,7 +199,7 @@ fun AppointmentDetailScreen(
 
         ErrorDialog(
             show = showErrorDialog,
-            onDismiss = { viewModel.dismissErrorDialog() },
+            onDismiss = { medicalRecordViewModel.dismissErrorDialog() },
             title = errorTitle,
             message = errorMessage
         )
