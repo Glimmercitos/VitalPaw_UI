@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import me.vitalpaw.R
@@ -54,7 +55,9 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -63,17 +66,19 @@ import java.util.Locale
 val PrimaryBlue = Color(0xFF6E7AE6)
 val TextGray = Color(0xFF606060)
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewToAssigned() {
-    ToAssigned(navController = NavHostController(LocalContext.current))
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewToAssigned() {
+//    ToAssigned(navController = NavHostController(LocalContext.current))
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToAssigned(
     navController: NavHostController,
-    viewModel: ToAssignedViewModel = viewModel()
+    appointmentId: String,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    viewModel: ToAssignedViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -90,11 +95,32 @@ fun ToAssigned(
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
 
-    val serviceOptions = listOf("Emergencia", "Consulta", "Grooming")
+    val serviceOptions = listOf("grooming", "consulta médica", "emergencias")
     var expanded by remember { mutableStateOf(false) }
 
     val hasDateSelected = date.timeInMillis != 0L
     val hasTimeSelected = time.timeInMillis != 0L
+
+    var errorTitle by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var successTitle by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf("") }
+
+    fun handleSave() {
+        if (viewModel.description.value.isBlank() || viewModel.selectedService.value.isBlank() || !hasDateSelected  || !hasTimeSelected ) {
+            errorTitle = "Error al asignar cita"
+            errorMessage = "Campos vacíos"
+            showErrorDialog = true
+            return
+        }
+
+        viewModel.updateAppointment(appointmentId) {
+            successTitle = "Cita guardada!"
+            successMessage = "Cita asignada correctamente."
+            showSuccessDialog = true
+
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -282,8 +308,8 @@ fun ToAssigned(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CancelarCitaButton { showErrorDialog = true }
-                GuardarCitaButton { showSuccessDialog = true }
+                CancelarCitaButton { navController.popBackStack() }
+                GuardarCitaButton (onClick = { handleSave() })
             }
         }
 
@@ -316,7 +342,45 @@ fun ToAssigned(
             )
         }
 
-//        ConfirmationDialog(show = showSuccessDialog) { showSuccessDialog = false }
-//        ErrorDialog(show = showErrorDialog) { showErrorDialog = false }
+        ConfirmationDialog(
+            show = showSuccessDialog,
+            onDismiss = {
+                sessionViewModel.firebaseToken?.let { token ->
+                    navController.navigate(NavRoutes.Home.createRoute(token)) {
+                        popUpTo(NavRoutes.Home.route) { inclusive = true }
+                    }
+                } ?: run {
+                    navController.navigate(NavRoutes.Login.route) {
+                        popUpTo(NavRoutes.Login.route) { inclusive = true }
+                    }
+                }
+                showSuccessDialog = false
+                successTitle = ""
+                successMessage = ""
+            },
+            Title = successTitle,
+            Message = successMessage
+        )
+
+
+        ErrorDialog(
+            show = showErrorDialog,
+            onDismiss = {
+                sessionViewModel.firebaseToken?.let { token ->
+                    navController.navigate(NavRoutes.Home.createRoute(token)) {
+                        popUpTo(NavRoutes.Home.route) { inclusive = true }
+                    }
+                } ?: run {
+                    navController.navigate(NavRoutes.Login.route) {
+                        popUpTo(NavRoutes.Login.route) { inclusive = true }
+                    }
+                }
+                showErrorDialog = false
+                errorTitle = ""
+                errorMessage = ""
+            },
+            title = errorTitle,
+            message = errorMessage
+        )
     }
 }

@@ -46,12 +46,19 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
-        composable(NavRoutes.ToAssigned.route,enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        composable(
+            route = NavRoutes.ToAssigned.fullRoute,
+            arguments = listOf(
+                navArgument("appointmentId") { type = NavType.StringType },
+                navArgument("token") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
+            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?: ""
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+            Log.d("NavArgs", "ToAssigned -> appointmentId=$appointmentId, token=$token")
+            ToAssigned(navController, appointmentId)
+        }
 
-            ToAssigned(navController, appointmentId, sessionViewModel) }
 
         composable(route = NavRoutes.AppointmentDetail.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },

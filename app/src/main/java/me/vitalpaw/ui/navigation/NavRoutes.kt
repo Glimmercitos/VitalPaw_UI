@@ -7,7 +7,16 @@ sealed class NavRoutes(val route: String) {
         fun createRoute(token: String) = "assigned_appointments/$token"
     }
 
-    object ToAssigned : NavRoutes("to_assigned")
+
+    object ToAssigned : NavRoutes("to_assigned") {
+        fun createRoute(appointmentId: String, token: String): String {
+            return "to_assigned?appointmentId=$appointmentId&token=$token"
+        }
+
+        const val fullRoute = "to_assigned?appointmentId={appointmentId}&token={token}"
+    }
+
+
     object AppointmentDetail {
         const val route = "appointment_detail?appointmentId={appointmentId}&token={token}"
 

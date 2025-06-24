@@ -212,7 +212,7 @@ fun AppointmentDetailScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         AsignarCitaButton(onClick = {
-            navController.navigate(NavRoutes.ToAssigned.route) {
+            navController.navigate(NavRoutes.ToAssigned.createRoute(appointmentId, sessionViewModel.firebaseToken!!)) {
                 popUpTo(NavRoutes.ToAssigned.route) { inclusive = true }
             }
         })
