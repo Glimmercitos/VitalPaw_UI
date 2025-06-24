@@ -22,7 +22,6 @@ class AppointmentViewModel @Inject constructor(
         return appointments.find { it.id == appointmentId }
     }
 
-
     fun loadAppointments() {
         appointments.clear()
         appointments.addAll(repository.getAppointments())
@@ -33,6 +32,6 @@ class AppointmentViewModel @Inject constructor(
     }
 
     fun markAppointmentAsComplete(appointmentId: String){
-
+        appointments.removeAll { it.id == appointmentId }
     }
 }
