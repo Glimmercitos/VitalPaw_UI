@@ -1,8 +1,9 @@
 package me.vitalpaw.models
 
 data class Product(
+    val id: Int,
     val name: String,
-    val price: Int,
+    val points: Int,
     val imageResId: Int,
-    var quantity: Int = 1
+    val description: String = "Sin descripción"
 )

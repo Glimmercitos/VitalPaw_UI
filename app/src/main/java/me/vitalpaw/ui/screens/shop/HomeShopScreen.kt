@@ -64,13 +64,12 @@ fun HomeShopScreen(
                 ProductItem(
                     imageResId = producto.imageResId,
                     name = producto.name,
-                    price = producto.price,
-                    quantity = producto.quantity,
-                    onIncrement = { viewModel.increment(index) },
-                    onDecrement = { viewModel.decrement(index) }
+                    price = producto.points,
+                    onClick = {
+                        navController.navigate("${NavRoutes.ProductDetail.route}/$index")
+                    }
                 )
             }
-
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 RedeemPurchaseButton(onClick = { /* acción canjear */ })

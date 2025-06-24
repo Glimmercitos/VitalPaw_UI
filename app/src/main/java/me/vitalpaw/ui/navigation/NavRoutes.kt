@@ -9,6 +9,15 @@ sealed class NavRoutes(val route: String) {
     object AppointmentDetail : NavRoutes("appointment_detail/{appointmentId}") {
         fun createRoute(appointmentId: String) = "appointment_detail/$appointmentId"
     }
+
     object HomeShopScreen : NavRoutes("home_shop")
     object Cart : NavRoutes("cart")
+
+    object ProductDetail {
+        const val route = "productDetail"
+    }
+
+    object CartProductDetail : NavRoutes("cart_product_detail/{index}") {
+        fun createRoute(index: Int) = "cart_product_detail/$index"
+    }
 }
