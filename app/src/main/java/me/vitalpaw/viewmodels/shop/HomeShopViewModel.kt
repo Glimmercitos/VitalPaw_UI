@@ -1,8 +1,9 @@
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.shop
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import me.vitalpaw.models.Product
 import me.vitalpaw.repository.ProductRepository

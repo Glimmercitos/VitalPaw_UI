@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.cliente
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

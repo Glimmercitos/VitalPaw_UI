@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.CartViewModel
+import me.vitalpaw.viewmodels.shop.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

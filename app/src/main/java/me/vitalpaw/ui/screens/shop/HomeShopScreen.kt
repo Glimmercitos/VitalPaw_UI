@@ -30,7 +30,7 @@ import me.vitalpaw.ui.components.ProductItem
 import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.HomeShopViewModel
+import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
 @Composable
 fun HomeShopScreen(

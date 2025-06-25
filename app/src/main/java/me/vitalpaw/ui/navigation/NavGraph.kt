@@ -18,8 +18,8 @@ import me.vitalpaw.ui.screens.shop.ProductDetailScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
-import me.vitalpaw.viewmodels.CartViewModel
-import me.vitalpaw.viewmodels.HomeShopViewModel
+import me.vitalpaw.viewmodels.shop.CartViewModel
+import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -77,7 +77,6 @@ fun AppNavGraph(navController: NavHostController) {
             CartProductDetailScreen(
                 navController = navController,
                 cartViewModel = cartViewModel,
-                productIndex = index,
                 onBack = { navController.popBackStack() }
             )
         }

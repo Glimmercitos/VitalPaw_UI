@@ -67,7 +67,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.RegisterPetViewModel
+import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
 
 @Preview(showBackground = true)
 @Composable

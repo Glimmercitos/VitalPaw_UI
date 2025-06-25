@@ -1,5 +1,4 @@
-// RegisterPetViewModel.kt
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.cliente
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

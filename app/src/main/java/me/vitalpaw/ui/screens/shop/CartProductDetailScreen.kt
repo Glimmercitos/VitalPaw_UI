@@ -1,180 +1,200 @@
 package me.vitalpaw.ui.screens.shop
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import me.vitalpaw.models.Product
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import me.vitalpaw.R
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.CartViewModel
+import me.vitalpaw.viewmodels.shop.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartProductDetailScreen(
     navController: NavController,
     cartViewModel: CartViewModel,
-    productIndex: Int,
     onBack: () -> Unit
 ) {
-    val cartItems by cartViewModel.cartItems.collectAsState()
     val context = LocalContext.current
+    val cartItems by cartViewModel.cartItems.collectAsState()
 
-    val productPair = cartItems.getOrNull(productIndex)
-    val prod = productPair?.first
-    val quantity = productPair?.second ?: 0
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Fondo tipo drawable
+        Image(
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-    // Si el producto ya no existe (por ejemplo, tras eliminarlo), navegar atrás
-    if (productPair == null) {
-        LaunchedEffect(Unit) {
-            onBack()
-        }
-        return
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "CARRITO",
-                            fontFamily = quicksandFont,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color.Black
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-            )
-        },
-        containerColor = Color.White
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Producto
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                modifier = Modifier.fillMaxWidth()
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "CARRITO",
+                                fontFamily = quicksandFont,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { onBack() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.Black)
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            },
+            containerColor = Color.Transparent
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                Column(
+                LazyColumn(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .weight(1f)
                 ) {
-                    prod?.let {
-                        Image(
-                            painter = painterResource(id = it.imageResId),
-                            contentDescription = it.name,
-                            modifier = Modifier
-                                .size(180.dp)
-                                .padding(8.dp)
-                        )
+                    if (cartItems.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Tu carrito está vacío",
+                                    fontFamily = quicksandFont,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.LightGray
+                                )
+                            }
+                        }
+                    } else {
+                        itemsIndexed(cartItems) { index, item ->
+                            val product = item.first
+                            val quantity = item.second
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp, horizontal = 8.dp)
+                                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+                                    .background(Color.White, shape = RoundedCornerShape(12.dp))
+                                    .padding(16.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    // 📷 Imagen
+                                    Image(
+                                        painter = painterResource(id = product.imageResId),
+                                        contentDescription = product.name,
+                                        modifier = Modifier
+                                            .size(90.dp)
+                                            .padding(end = 12.dp)
+                                    )
 
-                        Text(
-                            text = it.name,
-                            fontFamily = quicksandFont,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
+                                    // 📝 Info
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = product.name,
+                                            fontFamily = quicksandFont,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                                        Spacer(modifier = Modifier.height(4.dp))
 
-                        Text(
-                            text = it.description,
-                            fontFamily = quicksandFont,
-                            fontSize = 14.sp,
-                            color = Color.DarkGray
-                        )
+                                        Text(
+                                            text = product.description,
+                                            fontFamily = quicksandFont,
+                                            fontSize = 14.sp,
+                                            color = Color.Gray,
+                                            lineHeight = 18.sp
+                                        )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Text(
-                            text = "Cantidad: $quantity",
-                            fontFamily = quicksandFont,
-                            fontSize = 16.sp
-                        )
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            IconButton(onClick = {
+                                                if (quantity > 1)
+                                                    cartViewModel.updateQuantity(product, quantity - 1)
+                                            }) {
+                                                Icon(Icons.Default.Remove, contentDescription = "Restar")
+                                            }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = quantity.toString(),
+                                                fontFamily = quicksandFont,
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
 
-                        Text(
-                            text = "Total: ${it.points * quantity} pts",
-                            fontFamily = quicksandFont,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF005771)
-                        )
-                    }
-                }
-            }
+                                            IconButton(onClick = {
+                                                cartViewModel.updateQuantity(product, quantity + 1)
+                                            }) {
+                                                Icon(Icons.Default.Add, contentDescription = "Sumar")
+                                            }
+                                        }
+                                    }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Botón eliminar
-            Button(
-                onClick = {
-                    prod?.let { product ->
-                        cartViewModel.removeFromCart(product)
-                        Toast.makeText(context, "Producto eliminado del carrito", Toast.LENGTH_SHORT).show()
-                        if (cartViewModel.cartItems.value.isEmpty()) {
-                            navController.popBackStack()
-                        } else {
-                            onBack()
+                                    // 🗑 Eliminar
+                                    IconButton(onClick = {
+                                        cartViewModel.removeFromCart(product)
+                                        Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Eliminar",
+                                            tint = Color.Black
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9534F)),
-                shape = RoundedCornerShape(50),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "ELIMINAR DEL CARRITO",
-                    fontFamily = quicksandFont,
-                    fontSize = 14.sp,
-                    color = Color.White
-                )
+                }
             }
         }
     }
 }
+
+

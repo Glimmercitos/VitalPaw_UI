@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.CartViewModel
-import me.vitalpaw.viewmodels.HomeShopViewModel
+import me.vitalpaw.viewmodels.shop.CartViewModel
+import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

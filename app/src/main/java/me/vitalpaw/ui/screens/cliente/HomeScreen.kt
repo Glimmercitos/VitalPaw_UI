@@ -56,7 +56,7 @@ import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.HomeViewModel
+import me.vitalpaw.viewmodels.cliente.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
