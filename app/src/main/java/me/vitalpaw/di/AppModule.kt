@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideBaseUrl(): String = "http://10.0.2.2:3000/"
+    fun provideBaseUrl(): String = "http://192.168.0.11:3000/"
 
     @Provides
     @Singleton

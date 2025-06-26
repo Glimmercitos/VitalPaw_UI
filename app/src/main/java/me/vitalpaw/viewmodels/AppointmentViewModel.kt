@@ -42,7 +42,7 @@ class AppointmentViewModel @Inject constructor(
     }
 
 
-    fun deleteAppointment(token: String, id: String) {
+    fun markAppointmentAsComplete(token: String, id: String) {
         viewModelScope.launch {
             try {
                 repository.deleteAppointment(token, id)
