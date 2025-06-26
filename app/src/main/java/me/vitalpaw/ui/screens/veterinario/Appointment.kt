@@ -64,37 +64,42 @@ fun AppointmentScreen(navController: NavController, token: String,viewModel: App
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(15.dp)) {
-//                appointments.forEach {
-//                    appointment -> AppointmentCard(
-//                        appointment = appointment,
-//                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!, token)),
-//                        onHistoryClick = {navController.navigate(NavRoutes.PetAppointment.createRoute(appointment.pet.id!!))},
+                appointments.forEach {
+                    appointment ->
+                    Log.d("AppointmentScreen", "Mostrando cita id=${appointment.id} petId=${appointment.pet.id}")
+                    AppointmentCard(
+                        appointment = appointment,
+                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!, token))},
+                        onHistoryClick = {
+                            Log.d("AppointmentScreen", "Navegando a historial petId=${appointment.pet.id}")
+                            Log.d("AppointmentScreen", "TOKEN =${token}")
+                            navController.navigate(NavRoutes.PetAppointment.createRoute(appointment.pet.id!!, token))},
 //                        onCheckClick = { selectedAppointmentId = appointment.id
 //                            showDialog = true
 //                        }
-//                    )
-//                }
+                    )
+                }
             }
         }
     }
 
-    if (showDialog && selectedAppointmentId != null) {
-        MarkAsCompleteDialog(
-            show = showDialog,
-            onDismiss = {
-                showDialog = false
-                selectedAppointmentId = null
-            },
-            onConfirm = {
-                selectedAppointmentId?.let { viewModel.markAppointmentAsComplete(it) }
-                showDialog = false
-                selectedAppointmentId = null
-            },
-            title = "Marcar cita como atendida",
-            message = "¿Seguro de marcar como atendida? La cita será eliminada.",
-            confirmText = "Sí",
-            dismissText = "No"
-        )
-    }
+//    if (showDialog && selectedAppointmentId != null) {
+//        MarkAsCompleteDialog(
+//            show = showDialog,
+//            onDismiss = {
+//                showDialog = false
+//                selectedAppointmentId = null
+//            },
+//            onConfirm = {
+//                selectedAppointmentId?.let { viewModel.markAppointmentAsComplete(it) }
+//                showDialog = false
+//                selectedAppointmentId = null
+//            },
+//            title = "Marcar cita como atendida",
+//            message = "¿Seguro de marcar como atendida? La cita será eliminada.",
+//            confirmText = "Sí",
+//            dismissText = "No"
+//        )
+//    }
 }
 

@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.vitalpaw.models.Appointment
+import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.repository.MedicalRecordRepository
 import javax.inject.Inject
@@ -19,6 +20,9 @@ class MedicalRecordViewModel @Inject constructor(
 ) : ViewModel() {
 
     var appointment by mutableStateOf<Appointment?>(null)
+        private set
+
+    var recordsByPetId by mutableStateOf<List<MedicalRecord>>(emptyList())
         private set
 
     var notes by mutableStateOf("")
@@ -60,4 +64,24 @@ class MedicalRecordViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadRecordsByPetId(token: String, petId: String) {
+        Log.d("MedicalRecordVM", "Cargando historial por petId=$petId y token=$token")
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                val result = repository.getRecordsByPetId(token, petId)
+                recordsByPetId = result
+                error = null
+                Log.d("MedicalRecordVM", "Historial cargado: $result")
+            } catch (e: Exception) {
+                recordsByPetId = emptyList()
+                error = e.message
+                Log.e("MedicalRecordViewModel", "Error al obtener historial por mascota", e)
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
 }

@@ -8,6 +8,7 @@ import me.vitalpaw.network.request.RegisterRequest
 import me.vitalpaw.network.response.AppointmentUpdateResponse
 import me.vitalpaw.network.response.LoginResponse
 import me.vitalpaw.network.response.MedicalRecordResponse
+import me.vitalpaw.network.response.MedicalRecordsResponse
 import me.vitalpaw.network.response.RegisterResponse
 import me.vitalpaw.network.response.VetAppointmentsResponse
 import retrofit2.Response
@@ -58,6 +59,11 @@ interface ApiService {
         @Body request: MedicalRecordRequest
     ): Response<MedicalRecordResponse>
 
+    @GET("api/medicalRecords/getPet/{petId}")
+    suspend fun getMedicalRecordsByPetId(
+        @Header("Authorization") token: String,
+        @Path("petId") petId: String
+    ): Response<MedicalRecordsResponse>
 
     @PUT("api/appointments/vet/edit/{id}")
     suspend fun editAppointment(

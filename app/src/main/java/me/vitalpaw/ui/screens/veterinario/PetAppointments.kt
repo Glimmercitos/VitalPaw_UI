@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,15 +25,27 @@ import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
+import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
 fun PetAppointmentsScreen(
     navController: NavController,
     petId: String,
+    token: String,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
-    val medicalRecords = viewModel.getRecordsByPetId(petId)
-    val petName = medicalRecords.firstOrNull()?.pet?.name ?: "Mascota"
+
+
+    LaunchedEffect(petId) {
+        viewModel.loadRecordsByPetId(token, petId)
+    }
+
+    val medicalRecords = viewModel.recordsByPetId
+    val petName = viewModel.recordsByPetId.firstOrNull()?.pet?.name?: "Mascota"
+//    val petName = medicalRecords.firstOrNull()?.pet?.name ?: "Mascota"
+
+
 
     Box(
         modifier = Modifier
@@ -61,7 +74,7 @@ fun PetAppointmentsScreen(
                     PetAppointmentCard(
                         record = record,
                         onDetailsClick = {
-                            navController.navigate(NavRoutes.PetAppointmentDetail.createRoute(record.appointment?.id!!))
+//                            navController.navigate(NavRoutes.PetAppointmentDetail.createRoute(record.appointment?.id!!))
                         }
                     )
                 }

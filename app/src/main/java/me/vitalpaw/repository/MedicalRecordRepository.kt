@@ -5,6 +5,7 @@ import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.network.ApiService
 import me.vitalpaw.network.request.MedicalRecordRequest
+import me.vitalpaw.network.response.MedicalRecordResponse
 import javax.inject.Inject
 
 class MedicalRecordRepository @Inject constructor(
@@ -32,4 +33,17 @@ class MedicalRecordRepository @Inject constructor(
             throw Exception("Error ${response.code()}: ${errorBody ?: "Error desconocido"}")
         }
     }
+
+    suspend fun getRecordsByPetId(token: String, petId: String): List<MedicalRecord> {
+        val response = apiService.getMedicalRecordsByPetId("Bearer $token", petId)
+        if (response.isSuccessful) {
+            return response.body()?.medicalRecords ?: emptyList()
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("MedicalRecordRepo", "Error al obtener historial: ${response.code()} - $errorBody")
+            throw Exception("Error ${response.code()}: ${errorBody ?: "Error desconocido"}")
+        }
+    }
+
+
 }

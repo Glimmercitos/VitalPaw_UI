@@ -68,7 +68,7 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
     }*/
     if (viewModel.isLoginSuccess && viewModel.firebaseToken != null) {
         LaunchedEffect(viewModel.firebaseToken) {
-            navController.navigate(NavRoutes.Home.createRoute(viewModel.firebaseToken!!)) {
+            navController.navigate(NavRoutes.Bienvenido.createRoute(viewModel.firebaseToken!!)) {
                 popUpTo(NavRoutes.Login.route) { inclusive = true }
             }
         }

@@ -1,5 +1,6 @@
 package me.vitalpaw.ui.screens.veterinario
 
+import androidx.browser.trusted.Token
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,20 +20,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
-fun BienvenidoScreen(navController: NavController) {
+fun BienvenidoScreen(navController: NavController, token: String, sessionViewModel: SessionViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
+        sessionViewModel.loadUserData()
         delay(2000)
-        navController.navigate(NavRoutes.Home.route){
+        navController.navigate(NavRoutes.Home.createRoute(token)){
             popUpTo(NavRoutes.Bienvenido.route){inclusive = true}
         }
     }
+
+
+
+    val name = sessionViewModel.user?.name?: "Veterinaria"
+    val gender = sessionViewModel.user?.gender?: "female"
+
+    val greeting = if (gender == "female") "Bienvenida Dra." else "Bienvenido Dr."
+
     Box(
         modifier = Modifier.fillMaxSize().background(Color.White))
     {
@@ -53,7 +65,7 @@ fun BienvenidoScreen(navController: NavController) {
             )
 
             Text(
-                text = "Bienvenido",
+                text = "$greeting $name",
                 fontSize = 27.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF6980BF),
