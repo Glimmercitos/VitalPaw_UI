@@ -17,9 +17,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,11 +25,9 @@ import androidx.navigation.NavHostController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
-import me.vitalpaw.ui.components.modal.ConfirmationDialog
-import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.ToAssignedViewModel
+import me.vitalpaw.viewmodels.veterinario.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 

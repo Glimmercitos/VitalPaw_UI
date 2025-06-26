@@ -22,7 +22,7 @@ fun GuardarCitaButton(onClick: () -> Unit){
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF19486D)),
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
-            .width(120.dp)
+            .width(140.dp)
             .height(40.dp),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 6.dp,

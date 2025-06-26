@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodel
+package me.vitalpaw.viewmodels.veterinario
 
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateListOf

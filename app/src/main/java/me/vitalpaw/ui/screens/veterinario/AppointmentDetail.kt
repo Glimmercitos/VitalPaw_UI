@@ -26,14 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import me.vitalpaw.viewmodels.MedicalRecordViewModel
+import me.vitalpaw.viewmodels.veterinario.MedicalRecordViewModel
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
-import me.vitalpaw.ui.navigation.NavRoutes
+import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,7 +42,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.text.style.TextAlign
 import me.vitalpaw.ui.components.buttons.AsignarCitaButton
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodel.AppointmentViewModel
+import me.vitalpaw.viewmodels.veterinario.AppointmentViewModel
 
 
 @Composable

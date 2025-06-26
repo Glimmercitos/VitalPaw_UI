@@ -28,8 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
-import me.vitalpaw.ui.navigation.NavRoutes
-import me.vitalpaw.ui.navigation.NavRoutes.Register
+import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
 

@@ -42,6 +42,18 @@ class UserRepository @Inject constructor(){
                 googleId = "google-125",
                 name = "Luis",
                 email = "luis@example.com"
+            ),
+            User(
+                id = "u4",
+                googleId = "google-123",
+                name = "Carlos",
+                email = "manuel@example.com"
+            ),
+            User(
+                id = "u5",
+                googleId = "google-123",
+                name = "Carlos",
+                email = "cesar@example.com"
             )
         )
     }

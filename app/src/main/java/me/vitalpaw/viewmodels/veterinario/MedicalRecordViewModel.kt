@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.veterinario
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
-import me.vitalpaw.models.Pet
 import me.vitalpaw.repository.MedicalRecordRepository
 import javax.inject.Inject
 

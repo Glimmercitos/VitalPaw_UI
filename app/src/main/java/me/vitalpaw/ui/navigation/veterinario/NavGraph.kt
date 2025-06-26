@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.navigation
+package me.vitalpaw.ui.navigation.veterinario
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween

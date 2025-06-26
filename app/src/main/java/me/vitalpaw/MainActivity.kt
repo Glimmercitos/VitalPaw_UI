@@ -7,7 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import me.vitalpaw.ui.navigation.AppNavGraph
+import me.vitalpaw.ui.navigation.administrador.AdminNavGraph
+import me.vitalpaw.ui.navigation.veterinario.AppNavGraph
+import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -17,7 +19,7 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    AppNavGraph(navController = navController)
+                    AdminNavGraph(navController = navController)
                 }
             }
         }
