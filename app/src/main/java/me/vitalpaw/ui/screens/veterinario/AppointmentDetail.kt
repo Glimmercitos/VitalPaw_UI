@@ -84,7 +84,7 @@ fun AppointmentDetailScreen(
                 modifier = Modifier
                     .size(140.dp)
                     .clip(CircleShape)
-                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
+                    .border(3.dp, Color(0xFF3695B9), CircleShape)
             )
 
             Spacer(Modifier.height(20.dp))
@@ -125,7 +125,7 @@ fun AppointmentDetailScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Black,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                    disabledBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -139,8 +139,8 @@ fun AppointmentDetailScreen(
                 shape = RoundedCornerShape(20.dp),
                 textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
+                    focusedBorderColor = Color(0xFF3695B9),
+                    unfocusedBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -154,8 +154,8 @@ fun AppointmentDetailScreen(
                 shape = RoundedCornerShape(20.dp),
                 textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
+                    focusedBorderColor = Color(0xFF3695B9),
+                    unfocusedBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -224,7 +224,7 @@ fun DisabledText(value: String, label: String, modifier: Modifier = Modifier) {
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF6E7AE6)
+            disabledBorderColor = Color(0xFF3695B9)
         )
     )
 }
@@ -244,7 +244,7 @@ fun DisabledTextRow(value: String, label: String, modifier: Modifier = Modifier)
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF6E7AE6)
+            disabledBorderColor = Color(0xFF3695B9)
         )
     )
 }
