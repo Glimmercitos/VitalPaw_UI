@@ -41,9 +41,9 @@ fun BienvenidoScreen(navController: NavController, token: String, sessionViewMod
 
 
     val name = sessionViewModel.user?.name?: "Veterinaria"
-    val gender = sessionViewModel.user?.gender?: "female"
+    val gender = sessionViewModel.user?.gender?: "Female"
 
-    val greeting = if (gender == "female") "Bienvenida Dra." else "Bienvenido Dr."
+    val greeting = if (gender == "Female") "Bienvenida Dra." else "Bienvenido Dr."
 
     Box(
         modifier = Modifier.fillMaxSize().background(Color.White))

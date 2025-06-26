@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.vitalpaw.models.MedicalRecord
+import me.vitalpaw.utils.formatDate
 
 @Composable
 fun PetAppointmentCard(
@@ -41,7 +42,7 @@ fun PetAppointmentCard(
         ) {
             Text(text = "Servicio: ${record.service}", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Fecha: ${record.date}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Fecha: ${formatDate(record.date)}", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

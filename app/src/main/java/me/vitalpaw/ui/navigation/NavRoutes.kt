@@ -34,7 +34,15 @@ sealed class NavRoutes(val route: String) {
             "appointment_detail?appointmentId=$appointmentId&token=$token"
     }
 
-    object PetAppointmentDetail : NavRoutes("pet_appointment_detail/{appointmentId}") {
-        fun createRoute(petAppointmentId: String) = "pet_appointment_detail/$petAppointmentId"
+//    object PetAppointmentDetail : NavRoutes("pet_appointment_detail/{appointmentId}") {
+//        fun createRoute(petAppointmentId: String) = "pet_appointment_detail/$petAppointmentId"
+//    }
+
+    object MedicalRecordDetail {
+        const val route = "medicalRecord_detail?petId={petId}&medicalRecordId={medicalRecordId}&token={token}"
+
+        fun createRoute(petId: String, medicalRecordId: String, token: String): String =
+            "medicalRecord_detail?petId=$petId&medicalRecordId=$medicalRecordId&token=$token"
     }
+
 }

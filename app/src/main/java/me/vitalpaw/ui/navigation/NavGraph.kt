@@ -19,8 +19,7 @@ import android.util.Log
 import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.ui.screens.veterinario.BienvenidoScreen
 import me.vitalpaw.ui.screens.veterinario.PetAppointmentsScreen
-//import me.vitalpaw.ui.screens.veterinario.PetRecordDetailScreen
-
+import me.vitalpaw.ui.screens.veterinario.PetRecordDetailScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -29,6 +28,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
+        //Autenticacion
         composable(NavRoutes.Login.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
@@ -39,6 +39,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { Register(navController) }
 
+        //Inicio
         composable(NavRoutes.Bienvenido.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) },
@@ -49,7 +50,11 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
+        //Citas
+
         composable(
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },
             route = NavRoutes.Home.route,
             arguments = listOf(navArgument("token") { type = NavType.StringType })
         ) { backStackEntry ->
@@ -57,6 +62,15 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             AppointmentScreen(navController, token)
         }
 
+        composable(route = NavRoutes.AppointmentDetail.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) { backStackEntry ->
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
+            Log.d("NavigationArgs", "TOKEN: $token | APPOINTMENT: $appointmentId") // <--- Agrega este Log
+            AppointmentDetailScreen(navController = navController, appointmentId = appointmentId, token = token, sessionViewModel)
+        }
 
         composable(
             route = NavRoutes.ToAssigned.fullRoute,
@@ -71,14 +85,11 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             ToAssigned(navController, appointmentId)
         }
 
-//        composable(NavRoutes.PetAppointment.route) { backStackEntry ->
-//            val petId = backStackEntry.arguments?.getString("petId") ?: ""
-////            val token = backStackEntry.arguments?.getString("token") ?: ""
-//            PetAppointmentsScreen(navController = navController, petId = petId)
-//        }
-
+        //Historial medico
         composable(
             route = NavRoutes.PetAppointment.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },
             arguments = listOf(
                 navArgument("petId") { type = NavType.StringType },
                 navArgument("token") { type = NavType.StringType }
@@ -90,20 +101,15 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
-
-        composable(route = NavRoutes.AppointmentDetail.route,
+        composable(route = NavRoutes.MedicalRecordDetail.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId") ?: ""
             val token = backStackEntry.arguments?.getString("token") ?: ""
-            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
-            Log.d("NavigationArgs", "TOKEN: $token | APPOINTMENT: $appointmentId") // <--- Agrega este Log
-            AppointmentDetailScreen(navController = navController, appointmentId = appointmentId, token = token, sessionViewModel)
+            val medicalRecordId = backStackEntry.arguments?.getString("medicalRecordId") ?:""
+            Log.d("NavigationArgs", " medical record: $medicalRecordId") // <--- Agrega este Log
+            PetRecordDetailScreen(navController = navController, medicalRecordId = medicalRecordId, token = token, petId = petId)
         }
-
-//        composable(NavRoutes.PetAppointmentDetail.route) { backStackEntry ->
-//            val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?: ""
-//            PetRecordDetailScreen(navController = navController, appointmentId = appointmentId)
-//        }
     }
 }

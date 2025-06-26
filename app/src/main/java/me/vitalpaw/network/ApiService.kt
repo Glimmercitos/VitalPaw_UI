@@ -1,6 +1,7 @@
 package me.vitalpaw.network
 
 import me.vitalpaw.models.Appointment
+import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.models.User
 import me.vitalpaw.network.request.AppointmentUpdateRequest
 import me.vitalpaw.network.request.MedicalRecordRequest
@@ -65,10 +66,19 @@ interface ApiService {
         @Path("petId") petId: String
     ): Response<MedicalRecordsResponse>
 
+    @GET("api/medicalRecords/getPet/{petId}/{medicalRecordId}")
+    suspend fun getMedicalRecordById(
+        @Header("Authorization") token: String,
+        @Path("petId") petId: String,
+        @Path("medicalRecordId") medicalRecordId: String
+    ): Response<MedicalRecordResponse>
+
     @PUT("api/appointments/vet/edit/{id}")
     suspend fun editAppointment(
         @Header("Authorization") token: String,
         @Path("id") id: String,
         @Body request: AppointmentUpdateRequest
     ): Response<AppointmentUpdateResponse>
+
+
 }

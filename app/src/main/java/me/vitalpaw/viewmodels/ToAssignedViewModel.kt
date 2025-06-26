@@ -43,6 +43,7 @@ class ToAssignedViewModel @Inject constructor(
     val selectedTime: StateFlow<Calendar> = _selectedTime
 
     var error by mutableStateOf<String?>(null)
+    var isSuccess by mutableStateOf<Boolean>(false)
 
 
     fun onServiceChange(service: String) {
@@ -80,6 +81,7 @@ class ToAssignedViewModel @Inject constructor(
 
                 repository.editAppointment(token, appointmentId, request)
                 onSuccess()
+                isSuccess = true
                 error = null
             } catch (e: Exception) {
                 error = e.message

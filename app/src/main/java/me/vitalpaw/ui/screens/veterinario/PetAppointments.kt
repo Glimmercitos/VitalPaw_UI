@@ -1,5 +1,6 @@
 package me.vitalpaw.ui.screens.veterinario
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -74,7 +75,8 @@ fun PetAppointmentsScreen(
                     PetAppointmentCard(
                         record = record,
                         onDetailsClick = {
-//                            navController.navigate(NavRoutes.PetAppointmentDetail.createRoute(record.appointment?.id!!))
+                            Log.d("PetRecord", "ID recibido: ${record.id}")
+                            navController.navigate(NavRoutes.MedicalRecordDetail.createRoute(petId,record.id, token))
                         }
                     )
                 }

@@ -1,13 +1,15 @@
 package me.vitalpaw.models
 
+import com.google.gson.annotations.SerializedName
+
 data class MedicalRecord(
-    val _id: String? = null,
-    val notes: String,
-    val treatment: String,
+    @SerializedName("_id") val id: String,
+    val notes: String? = null,
+    val treatment: String? = null,
     val pet: Pet,
     val appointment: String,
-    val service: String,
-    val description: String,
+    val service: String? = null,
+    val description: String? = null,
     val date: String,
     val time: String
 )

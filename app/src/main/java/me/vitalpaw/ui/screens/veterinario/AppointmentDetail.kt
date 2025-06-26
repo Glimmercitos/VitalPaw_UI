@@ -135,7 +135,7 @@ fun AppointmentDetailScreen(
         )
 */
         Spacer(Modifier.height(20.dp))
-        DisabledText(appointment.pet.name)
+        DisabledText(appointment.pet.name, "Nombre de la mascota")
         Spacer(Modifier.height(15.dp))
 
         Row(
@@ -150,13 +150,13 @@ fun AppointmentDetailScreen(
         }
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(appointment.pet.breed)
+        DisabledText(appointment.pet.breed, "Raza")
         Spacer(Modifier.height(15.dp))
 
-        DisabledText("${appointment.pet.weight} Kg")
+        DisabledText("${appointment.pet.weight} Kg", "Peso")
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(appointment.service)
+        DisabledText(appointment.service, "Tipo de servicio")
         Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
@@ -267,7 +267,7 @@ fun AppointmentDetailScreen(
 }
 
 @Composable
-fun DisabledText(value: String, modifier: Modifier = Modifier) {
+fun DisabledText(value: String, label: String, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = value,
         onValueChange = {},
@@ -275,12 +275,13 @@ fun DisabledText(value: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth(),
+        label = { Text(label, fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
         shape = RoundedCornerShape(40.dp),
         textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF4AA5C8)
+            disabledBorderColor = Color(0xFF6E7AE6)
         )
     )
 }

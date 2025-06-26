@@ -21,6 +21,8 @@ class MedicalRecordViewModel @Inject constructor(
 
     var appointment by mutableStateOf<Appointment?>(null)
         private set
+    var medicalRecord by mutableStateOf<MedicalRecord?>(null)
+        private set
 
     var recordsByPetId by mutableStateOf<List<MedicalRecord>>(emptyList())
         private set
@@ -83,5 +85,24 @@ class MedicalRecordViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadMedicalRecord(token: String, medicalRecordId: String, petId: String) {
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                Log.d("MedicalRecordVM", "Cargando record con ID=$medicalRecordId y token=$token")
+
+                val result = repository.getMedicalRecordById(token, petId, medicalRecordId)
+                medicalRecord = result
+                error = null
+            } catch (e: Exception) {
+                error = e.message ?: "Error desconocido"
+                Log.e("MedicalRecordVM", "Error al cargar registro médico con ID=$medicalRecordId", e)
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
 
 }

@@ -45,5 +45,18 @@ class MedicalRecordRepository @Inject constructor(
         }
     }
 
+    suspend fun getMedicalRecordById(token: String, petId: String, medicalRecordId: String): MedicalRecord {
+        val response = apiService.getMedicalRecordById("Bearer $token", petId, medicalRecordId)
+        if (response.isSuccessful) {
+            return response.body()?.medicalRecord ?: throw Exception("Registro médico no encontrado")
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("MedicalRecordRepo", "Error al obtener registro médico: ${response.code()} - $errorBody")
+            throw Exception("Error ${response.code()}: ${errorBody ?: "Error desconocido"}")
+        }
+    }
+
+
+
 
 }
