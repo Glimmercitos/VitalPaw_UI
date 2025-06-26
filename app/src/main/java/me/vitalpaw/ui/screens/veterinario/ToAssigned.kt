@@ -61,7 +61,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-val PrimaryBlue = Color(0xFF6E7AE6)
+val PrimaryBlue = Color(0xFF3695B9)
 val TextGray = Color(0xFF606060)
 
 @Preview(showBackground = true)

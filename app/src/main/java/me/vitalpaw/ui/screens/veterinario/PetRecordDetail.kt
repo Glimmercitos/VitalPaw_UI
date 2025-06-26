@@ -68,7 +68,7 @@ fun PetRecordDetailScreen(
                 modifier = Modifier
                     .size(140.dp)
                     .clip(CircleShape)
-                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
+                    .border(3.dp, Color(0xFF3695B9), CircleShape)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -88,7 +88,7 @@ fun PetRecordDetailScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Black,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                    disabledBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -109,7 +109,7 @@ fun PetRecordDetailScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Black,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                    disabledBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -130,7 +130,7 @@ fun PetRecordDetailScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Black,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                    disabledBorderColor = Color(0xFF3695B9)
                 )
             )
 

@@ -47,9 +47,8 @@ fun AppointmentCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(Color.White)
-                .border(2.dp, Color(0xFF6980BF), CircleShape)
+                .border(2.dp, Color(0xFF3695B9), CircleShape)
         ) {
-            // Imagen circular
             Box(
                 modifier = Modifier
                     .padding(8.dp)
@@ -69,31 +68,31 @@ fun AppointmentCard(
             }
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 5.dp)
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f). padding(start = 12.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = appointment.pet.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = Color.Black
                 )
+                Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Fecha: ${appointment.date}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
                 Text(
                     text = "Hora: ${appointment.time}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
             }
 
-            Column(modifier = Modifier.padding(5.dp).padding(end = 3.dp)
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .padding(end = 5.dp)
             ){
                 Icon(
                     imageVector = Icons.Default.History,
@@ -124,7 +123,7 @@ fun AppointmentCard(
                     .fillMaxHeight()
                     .width(55.dp)
                     .background(
-                        Color(0xFF6980BF),
+                        Color(0xFF3695B9),
                         shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
                     )
                     .clickable { onClick() },

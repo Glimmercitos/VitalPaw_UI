@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +43,7 @@ fun PetAppointmentsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(horizontal = 27.dp, vertical = 18.dp)
                 .padding(bottom = 80.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -66,8 +68,14 @@ fun PetAppointmentsScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
+        }
+        Box(modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .padding(horizontal = 27.dp, vertical = 12.dp)
+            .padding(bottom = 7.dp),
+            contentAlignment = Alignment.Center)
+        {
             SalirButton { navController.popBackStack() }
         }
     }

@@ -32,7 +32,7 @@ fun PetAppointmentCard(
             .padding(8.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(2.dp, Color(0xFF6980BF)),
+        border = BorderStroke(2.dp, Color(0xFF3695B9)),
         elevation = 8.dp
     ) {
         Column(
