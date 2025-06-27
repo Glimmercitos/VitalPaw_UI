@@ -18,6 +18,6 @@ class PetRepository @Inject constructor(
             Pet(id = "p2", name = "Lola", species = "Gato", age = 5, breed = "Siberiano", weight = 6.6, gender = false,
                 unitAge = "years", owner = owner, imageRes = R.drawable.gato1),
 
-        )
+            )
     }
 }

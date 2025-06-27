@@ -12,8 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
+import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
-import me.vitalpaw.ui.screens.shop.CartScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
 import me.vitalpaw.ui.screens.shop.ShopDetailScreen
@@ -103,5 +103,9 @@ fun AppNavGraph(navController: NavHostController) {
                 onBack = { navController.popBackStack() }
             )
         }
+        composable("home_cliente") {
+            RegisterPetScreen(navController)
+        }
+
     }
 }

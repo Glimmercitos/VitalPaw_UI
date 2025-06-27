@@ -111,7 +111,8 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
 
     val context = LocalContext.current
     val calendar = remember { java.util.Calendar.getInstance() }
-    val dateFormatter = remember { java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()) }
+    val dateFormatter =
+        remember { java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()) }
     val date = remember { java.util.Calendar.getInstance() }
     val showDatePicker = remember { mutableStateOf(false) }
 
@@ -153,7 +154,11 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = {
+                    navController.navigate("home_cliente") {
+                        popUpTo("register_pet") { inclusive = true }
+                    }
+                }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -258,7 +263,10 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                         focusedTextColor = Color.Black,
                         unfocusedTextColor = Color.Black
                     ),
-                    textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont, color = Color.Black)
+                    textStyle = LocalTextStyle.current.copy(
+                        fontFamily = quicksandFont,
+                        color = Color.Black
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expandedSpecies.value,
@@ -267,7 +275,13 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 ) {
                     speciesOptions.forEach { option ->
                         DropdownMenuItem(
-                            text = { Text(option, fontFamily = quicksandFont, color = Color.Black) },
+                            text = {
+                                Text(
+                                    option,
+                                    fontFamily = quicksandFont,
+                                    color = Color.Black
+                                )
+                            },
                             onClick = {
                                 viewModel.onSpeciesChange(option)
                                 expandedSpecies.value = false
@@ -288,7 +302,11 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 },
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker.value = true }) {
-                        Icon(Icons.Default.CalendarToday, contentDescription = "Fecha", tint = PrimaryBlue)
+                        Icon(
+                            Icons.Default.CalendarToday,
+                            contentDescription = "Fecha",
+                            tint = PrimaryBlue
+                        )
                     }
                 },
                 shape = RoundedCornerShape(12.dp),
@@ -330,7 +348,10 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                         focusedTextColor = Color.Black,
                         unfocusedTextColor = Color.Black
                     ),
-                    textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont, color = Color.Black)
+                    textStyle = LocalTextStyle.current.copy(
+                        fontFamily = quicksandFont,
+                        color = Color.Black
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expandedGender.value,
@@ -339,7 +360,13 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 ) {
                     genderOptions.forEach { option ->
                         DropdownMenuItem(
-                            text = { Text(option, fontFamily = quicksandFont, color = Color.Black) },
+                            text = {
+                                Text(
+                                    option,
+                                    fontFamily = quicksandFont,
+                                    color = Color.Black
+                                )
+                            },
                             onClick = {
                                 viewModel.onGenderChange(option)
                                 expandedGender.value = false
@@ -380,14 +407,17 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                SalirButton { navController.popBackStack() }
-                GuardarCitaButton { showSuccessDialog = true }
+                SalirButton {
+                    navController.navigate("home_cliente") {
+                        popUpTo("register_pet") { inclusive = true }
+                    }
+                }
             }
-        }
 
-        ConfirmationDialog(
-            show = showSuccessDialog,
-            onDismiss = { showSuccessDialog = false }
-        )
+            ConfirmationDialog(
+                show = showSuccessDialog,
+                onDismiss = { showSuccessDialog = false }
+            )
+        }
     }
 }
