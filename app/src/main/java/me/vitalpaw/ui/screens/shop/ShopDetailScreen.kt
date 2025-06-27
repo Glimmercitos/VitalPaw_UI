@@ -23,9 +23,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import me.vitalpaw.R
-import me.vitalpaw.ui.screens.cliente.PrimaryBlue
-import me.vitalpaw.ui.screens.cliente.TextGray
+import me.vitalpaw.ui.components.buttons.CancelarCitaButton
+import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.shop.CartViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 val DeepBlue = Color(0xFF005771)
 
@@ -33,20 +35,18 @@ val DeepBlue = Color(0xFF005771)
 fun ShopDetailScreen(
     navController: NavController,
     onCancel: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    cartViewModel: CartViewModel,
+    onBack: () -> Unit
 ) {
-    val items = listOf(
-        "Arena para gato (2)" to 1600,
-        "Juguete para ave (1)" to 125
-    )
-    val total = items.sumOf { it.second }
+    val cartItems by cartViewModel.cartItems.collectAsState()
+    val totalPoints = cartItems.sumOf { it.first.points * it.second }
     val coinAmount = 2500
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        // Fondo drawable
+    val showDialog = remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
@@ -85,10 +85,8 @@ fun ShopDetailScreen(
                     elevation = CardDefaults.cardElevation(6.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        items.forEachIndexed { index, (name, points) ->
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        cartItems.forEach { (product, quantity) ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -96,13 +94,13 @@ fun ShopDetailScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = name,
+                                    text = "${product.name} ($quantity)",
                                     fontFamily = quicksandFont,
                                     fontSize = 16.sp,
                                     color = Color.Black
                                 )
                                 Text(
-                                    text = "$points pts",
+                                    text = "${product.points * quantity} pts",
                                     fontFamily = quicksandFont,
                                     fontSize = 16.sp,
                                     color = Color.Black
@@ -115,64 +113,88 @@ fun ShopDetailScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.huellacoin),
+                        contentDescription = "Huella Coin",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Total de puntos: ",
+                        text = "Total de puntos: $totalPoints pts",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         fontFamily = quicksandFont,
                         color = DeepBlue
                     )
-                    Text(
-                        text = "$total pts",
-                        fontSize = 16.sp,
-                        fontFamily = quicksandFont,
-                        color = TextGray
-                    )
                 }
 
-                Spacer(modifier = Modifier.weight(1f)) // Mueve los botones hacia abajo
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(
-                        onClick = onCancel,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C7B6F)),
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(50.dp)
-                    ) {
-                        Text(
-                            text = "CANCELAR",
-                            fontFamily = quicksandFont,
-                            fontSize = 14.sp,
-                            color = Color.White
-                        )
+                    CancelarCitaButton { onCancel() }
+                    GuardarCitaButton {
+                        showDialog.value = true
+                        onConfirm()
                     }
+                }
+            }
+        }
 
-                    Spacer(modifier = Modifier.width(24.dp))
-
-                    Button(
-                        onClick = onConfirm,
-                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(50.dp)
+        // 🎉 Diálogo de confirmación de compra
+        if (showDialog.value) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    modifier = Modifier
+                        .width(280.dp)
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = "CONFIRMAR",
-                            fontFamily = quicksandFont,
-                            fontSize = 14.sp,
-                            color = Color.White
+                        Image(
+                            painter = painterResource(id = R.drawable.check),
+                            contentDescription = "Check",
+                            modifier = Modifier.size(48.dp)
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "Compra realizada con éxito",
+                            fontFamily = quicksandFont,
+                            fontSize = 18.sp,
+                            color = Color(0xFF3695B9)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = {
+                                showDialog.value = false
+                                cartViewModel.clearCart()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3695B9)),
+                            shape = RoundedCornerShape(50)
+                        ) {
+                            Text("OK", color = Color.White)
+                        }
                     }
                 }
             }
@@ -203,21 +225,11 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color.Black
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Image(
-                        painter = painterResource(id = R.drawable.huellacoin),
-                        contentDescription = "Huella Coin",
-                        modifier = Modifier.size(20.dp)
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        tint = Color.Black
                     )
                 }
 
@@ -229,24 +241,23 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
                     color = Color.Gray
                 )
 
-                Text(
-                    text = "%,d".format(coinAmount),
-                    fontFamily = quicksandFont,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = Color.Black
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.huellacoin),
+                        contentDescription = "Huella Coin",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "%,d".format(coinAmount),
+                        fontFamily = quicksandFont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                }
             }
         }
     }
 }
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ShopDetailScreenPreview() {
-    val nav = rememberNavController()
-    ShopDetailScreen(
-        navController = nav,
-        onCancel = {},
-        onConfirm = {}
-    )
-}
+

@@ -11,13 +11,20 @@ sealed class NavRoutes(val route: String) {
     }
 
     object HomeShopScreen : NavRoutes("home_shop")
+
+    // Cart declarado una sola vez
     object Cart : NavRoutes("cart")
 
-    object ProductDetail {
-        const val route = "productDetail"
+    // ProductDetail con ruta dinámica (con parámetro)
+    object ProductDetail : NavRoutes("product_detail/{productIndex}") {
+        fun createRoute(productIndex: Int) = "product_detail/$productIndex"
     }
 
     object CartProductDetail : NavRoutes("cart_product_detail/{index}") {
         fun createRoute(index: Int) = "cart_product_detail/$index"
     }
+
+    object ShopSplash : NavRoutes("shop_splash")
+    object HomeShop : NavRoutes("home_shop")
+    object ShopDetail : NavRoutes("shop_detail")
 }

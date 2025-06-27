@@ -23,10 +23,14 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.em
+import kotlinx.coroutines.delay
+import me.vitalpaw.ui.screens.cliente.PrimaryBlue
+
 @Composable
 @androidx.compose.ui.tooling.preview.Preview(showBackground = true, showSystemUi = true)
 fun ShopScreenPreview() {
@@ -127,5 +131,22 @@ fun ShopScreen(navController: NavController) {
                 letterSpacing = TextUnit(1.5f, TextUnitType.Sp)
             )
         }
+    }
+}
+@Composable
+fun ShopScreen(onFinish: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1000)
+        onFinish()
+    }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Cargando tienda...",
+            fontFamily = quicksandFont,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = PrimaryBlue
+        )
     }
 }

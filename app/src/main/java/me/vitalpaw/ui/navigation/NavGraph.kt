@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
@@ -15,6 +16,8 @@ import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.CartScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
+import me.vitalpaw.ui.screens.shop.ShopDetailScreen
+import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
@@ -51,18 +54,25 @@ fun AppNavGraph(navController: NavHostController) {
             AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
         }
 
-        composable(NavRoutes.HomeShopScreen.route) {
-            val shopViewModel = hiltViewModel<HomeShopViewModel>()
+        composable(NavRoutes.ShopSplash.route) {
+            ShopScreen { // muestra solo 1 segundo
+                navController.navigate(NavRoutes.HomeShop.route) {
+                    popUpTo(NavRoutes.ShopSplash.route) { inclusive = true }
+                }
+            }
+        }
+
+        composable(NavRoutes.HomeShop.route) {
             HomeShopScreen(
                 navController = navController,
-                viewModel = shopViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
-        composable("${NavRoutes.ProductDetail.route}/{index}") { backStackEntry ->
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: return@composable
-            val shopViewModel = hiltViewModel<HomeShopViewModel>()
-            val cartViewModel = hiltViewModel<CartViewModel>()
+
+        composable(NavRoutes.ProductDetail.route) { backStackEntry ->
+            val index = backStackEntry.arguments?.getString("productIndex")?.toIntOrNull() ?: 0
+            val shopViewModel: HomeShopViewModel = hiltViewModel()
+            val cartViewModel: CartViewModel = hiltViewModel()
             ProductDetailScreen(
                 navController = navController,
                 shopViewModel = shopViewModel,
@@ -71,9 +81,9 @@ fun AppNavGraph(navController: NavHostController) {
                 onBack = { navController.popBackStack() }
             )
         }
-        composable("cartProductDetail/{index}") { backStackEntry ->
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: return@composable
-            val cartViewModel = hiltViewModel<CartViewModel>()
+
+        composable(NavRoutes.Cart.route) {
+            val cartViewModel: CartViewModel = hiltViewModel()
             CartProductDetailScreen(
                 navController = navController,
                 cartViewModel = cartViewModel,
@@ -81,5 +91,17 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
+        composable(NavRoutes.ShopDetail.route) {
+            val cartViewModel: CartViewModel = hiltViewModel()
+            ShopDetailScreen(
+                navController = navController,
+                onCancel = { navController.popBackStack() },
+                onConfirm = {
+                    // lógica de confirmación
+                },
+                cartViewModel = cartViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
     }
 }

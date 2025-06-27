@@ -187,6 +187,7 @@ fun CartProductDetailScreen(
                                             tint = Color.Black
                                         )
                                     }
+                                    //Boton para confirmar compra pendiente
                                 }
                             }
                         }

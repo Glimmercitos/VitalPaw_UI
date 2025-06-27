@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
@@ -66,7 +67,12 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
     var showMenu by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(0) }
     val promoResIds = listOf(R.drawable.promo1, R.drawable.promo2, R.drawable.promo3, R.drawable.promo4)
-
+    val navController = rememberNavController()
+    Button(onClick = {
+        navController.navigate(NavRoutes.ShopSplash.route)
+    }) {
+        Text("Ir a tienda")
+    }
     LaunchedEffect(Unit) {
         while (true) {
             delay(3000)
