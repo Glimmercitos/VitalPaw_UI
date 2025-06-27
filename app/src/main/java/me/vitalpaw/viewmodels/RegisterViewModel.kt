@@ -5,6 +5,8 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import me.vitalpaw.network.request.RegisterRequest
 import me.vitalpaw.repository.AuthRepository
@@ -15,103 +17,110 @@ class RegisterViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    var name by mutableStateOf("")
-        private set
+    private val _name = MutableStateFlow("")
+    val name: StateFlow<String> = _name
 
-    var email by mutableStateOf("")
-        private set
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email
 
-    var gender by mutableStateOf("")
-        private set
+    private val _gender = MutableStateFlow("")
+    val gender: StateFlow<String> = _gender
 
-    var password by mutableStateOf("")
-        private set
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password
 
-    var confirmPassword by mutableStateOf("")
-        private set
+    private val _confirmPassword = MutableStateFlow("")
+    val confirmPassword: StateFlow<String> = _confirmPassword
 
-    var showError by mutableStateOf(false)
-        private set
+    private val _showError = MutableStateFlow(false)
+    val showError: StateFlow<Boolean> = _showError
 
-    var errorMsg by mutableStateOf("")
-        private set
+    private val _errorMsg = MutableStateFlow("")
+    val errorMsg: StateFlow<String> = _errorMsg
 
-    var isLoading by mutableStateOf(false)
-        private set
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    var isPasswordVisible by mutableStateOf(false)
-        private set
+    private val _isPasswordVisible = MutableStateFlow(false)
+    val isPasswordVisible: StateFlow<Boolean> = _isPasswordVisible
 
-    var isRegisterSuccess by mutableStateOf(false)
-        private set
+    private val _isRegisterSuccess = MutableStateFlow(false)
+    val isRegisterSuccess: StateFlow<Boolean> = _isRegisterSuccess
 
     fun onNameChange(newName: String) {
-        name = newName
-        if (showError) showError = false
+        _name.value = newName
+        if (_showError.value) _showError.value = false
     }
 
     fun onEmailChange(newEmail: String) {
-        email = newEmail
-        if (showError) showError = false
+        _email.value = newEmail
+        if (_showError.value) _showError.value = false
     }
 
     fun onGenderChange(newGender: String) {
-        gender = newGender
-        if (showError) showError = false
+        _gender.value = newGender
+        if (_showError.value) _showError.value = false
     }
 
     fun onPasswordChange(newPassword: String) {
-        password = newPassword
-        if (showError) showError = false
+        _password.value = newPassword
+        if (_showError.value) _showError.value = false
     }
 
     fun onConfirmPasswordChange(newConfirm: String) {
-        confirmPassword = newConfirm
-        if (showError) showError = false
+        _confirmPassword.value = newConfirm
+        if (_showError.value) _showError.value = false
     }
 
     fun onTogglePasswordVisibility() {
-        isPasswordVisible = !isPasswordVisible
+        _isPasswordVisible.value = !_isPasswordVisible.value
     }
 
     fun onRegisterClick() {
-        if (name.isBlank() || email.isBlank() || gender.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-            errorMsg = "Rellena todos los campos"
-            showError = true
+        if (_name.value.isBlank() || _email.value.isBlank() || _gender.value.isBlank() ||
+            _password.value.isBlank() || _confirmPassword.value.isBlank()
+        ) {
+            _errorMsg.value = "Rellena todos los campos"
+            _showError.value = true
             return
         }
 
-        if (password != confirmPassword) {
-            errorMsg = "Las contraseñas no coinciden"
-            showError = true
+        if (_password.value != _confirmPassword.value) {
+            _errorMsg.value = "Las contraseñas no coinciden"
+            _showError.value = true
             return
         }
 
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
-                val token = repository.registerUserFirebase(email, password)
+                val token = repository.registerUserFirebase(_email.value, _password.value)
                 if (token != null) {
-                    val response = repository.registerInBackend(token, RegisterRequest(name, email, gender))
+                    val request = RegisterRequest(
+                        name = _name.value,
+                        email = _email.value,
+                        gender = _gender.value
+                    )
+                    val response = repository.registerInBackend(token, request)
                     if (response.isSuccessful) {
-                        isRegisterSuccess = true
+                        _isRegisterSuccess.value = true
                         Log.d("Registro", "Registro exitoso: ${response.body()?.message}")
                     } else {
                         val errorText = response.errorBody()?.string()
-                        errorMsg = "Error del servidor: ${response.message()}\n$errorText"
-                        showError = true
+                        _errorMsg.value = "Error del servidor: ${response.message()}\n$errorText"
+                        _showError.value = true
                         Log.e("Registro", "Error backend: ${response.code()} $errorText")
                     }
                 } else {
-                    errorMsg = "Token de autenticación inválido"
-                    showError = true
+                    _errorMsg.value = "Token de autenticación inválido"
+                    _showError.value = true
                 }
             } catch (e: Exception) {
-                errorMsg = e.message ?: "Error desconocido"
-                showError = true
+                _errorMsg.value = e.message ?: "Error desconocido"
+                _showError.value = true
                 Log.e("Registro", "Excepción: ", e)
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }

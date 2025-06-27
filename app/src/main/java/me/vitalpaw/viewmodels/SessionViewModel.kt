@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import me.vitalpaw.models.User
@@ -20,89 +22,90 @@ class SessionViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
-    var email by mutableStateOf("")
-        private set
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email
 
-    var password by mutableStateOf("")
-        private set
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password
 
-    var showError by mutableStateOf(false)
-        private set
+    private val _showError = MutableStateFlow(false)
+    val showError: StateFlow<Boolean> = _showError
 
-    var errorMsg by mutableStateOf("")
-        private set
+    private val _errorMsg = MutableStateFlow("")
+    val errorMsg: StateFlow<String> = _errorMsg
 
-    var isPasswordVisible by mutableStateOf(false)
-        private set
+    private val _isPasswordVisible = MutableStateFlow(false)
+    val isPasswordVisible: StateFlow<Boolean> = _isPasswordVisible
 
-    var isLoginSuccess by mutableStateOf(false)
-        private set
+    private val _isLoginSuccess = MutableStateFlow(false)
+    val isLoginSuccess: StateFlow<Boolean> = _isLoginSuccess
 
-    var isLoading by mutableStateOf(false)
-        private set
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    var user by mutableStateOf<User?>(null)
-        private set
+    private val _user = MutableStateFlow<User?>(null)
+    val user: StateFlow<User?> = _user
 
-    var firebaseToken by mutableStateOf<String?>(null)
-        private set
+    private val _firebaseToken = MutableStateFlow<String?>(null)
+    val firebaseToken: StateFlow<String?> = _firebaseToken
 
-    var bienvenidaError by mutableStateOf<String?>(null)
-        private set
+    private val _bienvenidaError = MutableStateFlow<String?>(null)
+    val bienvenidaError: StateFlow<String?> = _bienvenidaError
 
     fun onEmailChange(newEmail: String) {
-        email = newEmail
-        if (showError) showError = false
+        _email.value = newEmail
+        if (_showError.value) _showError.value = false
     }
 
     fun onPasswordChange(newPassword: String) {
-        password = newPassword
-        if (showError) showError = false
+        _password.value = newPassword
+        if (_showError.value) _showError.value = false
     }
 
     fun onTogglePasswordVisibility() {
-        isPasswordVisible = !isPasswordVisible
+        _isPasswordVisible.value = !_isPasswordVisible.value
     }
 
     fun onLoginClick() {
-        if (email.isBlank() || password.isBlank()) {
-            errorMsg = "El correo o la contraseña están en blanco"
-            showError = true
+        if (_email.value.isBlank() || _password.value.isBlank()) {
+            _errorMsg.value = "El correo o la contraseña están en blanco"
+            _showError.value = true
             return
         }
 
-        isLoading = true
+        _isLoading.value = true
 
         viewModelScope.launch {
             try {
-                val token = authRepository.loginWithFirebase(email, password)
-                firebaseToken = token
+                val token = authRepository.loginWithFirebase(_email.value, _password.value)
+                _firebaseToken.value = token
+
                 if (token != null) {
                     val response = authRepository.loginInBackend(token)
                     if (response.isSuccessful) {
-                        isLoginSuccess = true
-                        showError = false
-                        errorMsg = ""
+                        _isLoginSuccess.value = true
+                        _showError.value = false
+                        _errorMsg.value = ""
                     } else {
-                        isLoginSuccess = false
-                        showError = true
-                        errorMsg = "Error en backend: ${response.message()}"
+                        _isLoginSuccess.value = false
+                        _showError.value = true
+                        _errorMsg.value = "Error en backend: ${response.message()}"
                     }
                 } else {
-                    isLoginSuccess = false
-                    showError = true
-                    errorMsg = "No se pudo obtener token de Firebase"
+                    _isLoginSuccess.value = false
+                    _showError.value = true
+                    _errorMsg.value = "No se pudo obtener token de Firebase"
                 }
             } catch (e: HttpException) {
-                showError = true
-                errorMsg = "Error HTTP: ${e.message}"
-                isLoginSuccess = false
+                _showError.value = true
+                _errorMsg.value = "Error HTTP: ${e.message}"
+                _isLoginSuccess.value = false
             } catch (e: Exception) {
-                showError = true
-                errorMsg = "Error: ${e.message}"
-                isLoginSuccess = false
+                _showError.value = true
+                _errorMsg.value = "Error: ${e.message}"
+                _isLoginSuccess.value = false
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }
@@ -110,7 +113,7 @@ class SessionViewModel @Inject constructor(
     fun loadUserData() {
         val firebaseUser = auth.currentUser
         if (firebaseUser == null) {
-            bienvenidaError = "Usuario no autenticado"
+            _bienvenidaError.value = "Usuario no autenticado"
             return
         }
 
@@ -118,23 +121,26 @@ class SessionViewModel @Inject constructor(
             try {
                 val token = firebaseUser.getIdToken(true).await().token
                 if (token != null) {
+                    _firebaseToken.value = token
                     val response = userRepository.getUserData(token)
                     if (response.isSuccessful) {
-                        user = response.body()
-                        bienvenidaError = null
+                        _user.value = response.body()
+                        _bienvenidaError.value = null
                     } else {
-                        bienvenidaError = "Error al obtener datos del usuario"
+                        _bienvenidaError.value = "Error al obtener datos del usuario"
                     }
                 } else {
-                    bienvenidaError = "Token inválido"
+                    _bienvenidaError.value = "Token inválido"
                 }
             } catch (e: Exception) {
-                bienvenidaError = "Error: ${e.message}"
+                _bienvenidaError.value = "Error: ${e.message}"
             }
         }
     }
 
     fun logout() {
         auth.signOut()
+        _firebaseToken.value = null
+        _user.value = null
     }
 }

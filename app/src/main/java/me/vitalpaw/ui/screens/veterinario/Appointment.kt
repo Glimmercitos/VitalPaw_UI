@@ -30,51 +30,72 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
 import android.util.Log
+import me.vitalpaw.viewmodels.SessionViewModel
+import androidx.compose.runtime.collectAsState
 
 @Composable
-fun AppointmentScreen(navController: NavController, token: String,viewModel: AppointmentViewModel = hiltViewModel()){
-    LaunchedEffect(token) {
-        Log.d("AppointmentScreen", "Loading appointments with token: $token")
-        viewModel.loadAppointments(token)
-    }
-
-
-    val appointments = viewModel.appointments
-    if (viewModel.error != null) {
-        Text("Error: ${viewModel.error}")
-    }
+fun AppointmentScreen(
+    navController: NavController,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    viewModel: AppointmentViewModel = hiltViewModel())
+{
+    val token by sessionViewModel.firebaseToken.collectAsState()
+    val appointments by viewModel.appointments.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
     var selectedAppointmentId by remember { mutableStateOf<String?>(null) }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.White)){
-        if (appointments.isEmpty()){
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-                contentAlignment = Alignment.Center){
-                Text(text = "Sin citas asignadas",
+    LaunchedEffect(token) {
+        token?.let {
+            Log.d("AppointmentScreen", "Loading appointments with token: $it")
+            viewModel.loadAppointments(it)
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
+        if (error != null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Error: $error")
+            }
+        } else if (appointments.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Sin citas asignadas",
                     style = MaterialTheme.typography.titleMedium,
                     fontFamily = quicksandFont,
                     color = Color.Gray
                 )
             }
-        }else{
-            Column(modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(15.dp)) {
-                appointments.forEach {
-                        appointment ->
+        } else {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                appointments.forEach { appointment ->
                     Log.d("AppointmentScreen", "Mostrando cita id=${appointment.id} petId=${appointment.pet.id}")
                     AppointmentCard(
                         appointment = appointment,
-                        onClick = {navController.navigate(NavRoutes.AppointmentDetail.createRoute(appointment.id!!, token))},
+                        onClick = {
+                            navController.navigate(
+                                NavRoutes.AppointmentDetail.createRoute(appointment.id)
+                            )
+                        },
                         onHistoryClick = {
                             Log.d("AppointmentScreen", "Navegando a historial petId=${appointment.pet.id}")
                             Log.d("AppointmentScreen", "TOKEN =${token}")
-                            navController.navigate(NavRoutes.PetAppointment.createRoute(appointment.pet.id!!, token))},
-                        onCheckClick = { selectedAppointmentId = appointment.id
+                            token?.let {
+                                navController.navigate(NavRoutes.PetAppointment.createRoute(appointment.pet.id))
+                            }
+                        },
+                        onCheckClick = {
+                            selectedAppointmentId = appointment.id
                             showDialog = true
                         }
                     )
@@ -91,7 +112,11 @@ fun AppointmentScreen(navController: NavController, token: String,viewModel: App
                 selectedAppointmentId = null
             },
             onConfirm = {
-                selectedAppointmentId?.let { viewModel.markAppointmentAsComplete(token, it) }
+                selectedAppointmentId?.let {
+                    token?.let { tkn ->
+                        viewModel.markAppointmentAsComplete(tkn, it)
+                    }
+                }
                 showDialog = false
                 selectedAppointmentId = null
             },
@@ -101,6 +126,5 @@ fun AppointmentScreen(navController: NavController, token: String,viewModel: App
             dismissText = "No"
         )
     }
-
 }
 

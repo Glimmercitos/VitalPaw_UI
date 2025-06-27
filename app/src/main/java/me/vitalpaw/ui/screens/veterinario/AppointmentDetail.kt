@@ -52,17 +52,19 @@ import me.vitalpaw.viewmodels.SessionViewModel
 fun AppointmentDetailScreen(
     navController: NavController,
     appointmentId: String,
-    token: String,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
+    val token by sessionViewModel.firebaseToken.collectAsState()
     LaunchedEffect(appointmentId) {
-        viewModel.loadAppointment(token, appointmentId)
+        viewModel.loadAppointment(token!!, appointmentId)
     }
 
-    val appointment = viewModel.appointment
-    val isLoading = viewModel.isLoading
-    val error = viewModel.error
+    val appointment by viewModel.appointment.collectAsState()
+    val notes by viewModel.notes.collectAsState()
+    val treatment by viewModel.treatment.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -84,9 +86,9 @@ fun AppointmentDetailScreen(
     if (error != null) {
         LaunchedEffect(error) {
             errorTitle = "Error"
-            errorMessage = error
+            errorMessage = error ?: "Error desconocido"
             showErrorDialog = true
-            viewModel.error = null // resetear error para no mostrar varias veces
+            viewModel.clearError() // resetear error para no mostrar varias veces
         }
     }
 
@@ -97,17 +99,17 @@ fun AppointmentDetailScreen(
         return
     }
 
-    val pet = appointment.pet
+    val pet = appointment!!.pet
 
     fun handleSave() {
-        if (viewModel.notes.isBlank() || viewModel.treatment.isBlank()) {
+        if (notes.isBlank() || treatment.isBlank()) {
             errorTitle = "Error al asignar cita"
             errorMessage = "Campos vacíos"
             showErrorDialog = true
             return
         }
 
-        viewModel.saveMedicalRecord(token, appointmentId) {
+        viewModel.saveMedicalRecord(token!!, appointmentId) {
             successTitle = "Cita guardada!"
             successMessage = "Expediente médico guardado correctamente."
             showSuccessDialog = true
@@ -135,7 +137,7 @@ fun AppointmentDetailScreen(
         )
 */
         Spacer(Modifier.height(20.dp))
-        DisabledText(appointment.pet.name, "Nombre de la mascota")
+        DisabledText(pet.name, "Nombre de la mascota")
         Spacer(Modifier.height(15.dp))
 
         Row(
@@ -144,23 +146,23 @@ fun AppointmentDetailScreen(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DisabledTextRow(appointment.pet.species, modifier = Modifier.weight(1f))
-            DisabledTextRow("${appointment.pet.age} ${appointment.pet.unitAge}", modifier = Modifier.weight(1f))
+            DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
+            DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
             DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
         }
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(appointment.pet.breed, "Raza")
+        DisabledText(pet.breed, "Raza")
         Spacer(Modifier.height(15.dp))
 
-        DisabledText("${appointment.pet.weight} Kg", "Peso")
+        DisabledText("${pet.weight} Kg", "Peso")
         Spacer(Modifier.height(15.dp))
 
-        DisabledText(appointment.service, "Tipo de servicio")
+        DisabledText(appointment!!.service, "Tipo de servicio")
         Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = appointment.description,
+            value = appointment!!.description,
             onValueChange = {},
             modifier = Modifier
                 .fillMaxWidth()
@@ -178,8 +180,8 @@ fun AppointmentDetailScreen(
         Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = viewModel.notes,
-            onValueChange = { viewModel.notes = it },
+            value = notes,
+            onValueChange = { viewModel.onNotesChange(it) },
             label = { Text("Notas", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -195,8 +197,8 @@ fun AppointmentDetailScreen(
         Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = viewModel.treatment,
-            onValueChange = { viewModel.treatment = it },
+            value = treatment,
+            onValueChange = { viewModel.onTreatmentChange(it) },
             label = { Text("Tratamiento", fontFamily = quicksandFont) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,7 +214,7 @@ fun AppointmentDetailScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         AsignarCitaButton(onClick = {
-            navController.navigate(NavRoutes.ToAssigned.createRoute(appointmentId, sessionViewModel.firebaseToken!!)) {
+            navController.navigate(NavRoutes.ToAssigned.createRoute(appointmentId)) {
                 popUpTo(NavRoutes.ToAssigned.route) { inclusive = true }
             }
         })
@@ -224,7 +226,7 @@ fun AppointmentDetailScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CancelarCitaButton(onClick = {
-                    navController.navigate(NavRoutes.Home.createRoute(sessionViewModel.firebaseToken!!)) {
+                    navController.navigate(NavRoutes.Home.route) {
                         popUpTo(NavRoutes.Login.route) { inclusive = true }
                     }
             })
@@ -236,8 +238,8 @@ fun AppointmentDetailScreen(
     ConfirmationDialog(
         show = showSuccessDialog,
         onDismiss = {
-            sessionViewModel.firebaseToken?.let { token ->
-                navController.navigate(NavRoutes.Home.createRoute(token)) {
+            token?.let {
+                navController.navigate(NavRoutes.Home.route) {
                     popUpTo(NavRoutes.Home.route) { inclusive = true }
                 }
             } ?: run {

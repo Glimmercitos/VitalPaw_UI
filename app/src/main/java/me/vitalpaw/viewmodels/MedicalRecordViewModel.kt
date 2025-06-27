@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
@@ -19,50 +21,68 @@ class MedicalRecordViewModel @Inject constructor(
     private val repository: MedicalRecordRepository
 ) : ViewModel() {
 
-    var appointment by mutableStateOf<Appointment?>(null)
-        private set
-    var medicalRecord by mutableStateOf<MedicalRecord?>(null)
-        private set
+    private val _appointment = MutableStateFlow<Appointment?>(null)
+    val appointment: StateFlow<Appointment?> = _appointment
 
-    var recordsByPetId by mutableStateOf<List<MedicalRecord>>(emptyList())
-        private set
+    private val _medicalRecord = MutableStateFlow<MedicalRecord?>(null)
+    val medicalRecord: StateFlow<MedicalRecord?> = _medicalRecord
 
-    var notes by mutableStateOf("")
-    var treatment by mutableStateOf("")
+    private val _recordsByPetId = MutableStateFlow<List<MedicalRecord>>(emptyList())
+    val recordsByPetId: StateFlow<List<MedicalRecord>> = _recordsByPetId
 
-    var isLoading by mutableStateOf(false)
-    var error by mutableStateOf<String?>(null)
+    private val _notes = MutableStateFlow("")
+    val notes: StateFlow<String> = _notes
+
+    private val _treatment = MutableStateFlow("")
+    val treatment: StateFlow<String> = _treatment
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+
+    fun onNotesChange(value: String) {
+        _notes.value = value
+    }
+
+    fun onTreatmentChange(value: String) {
+        _treatment.value = value
+    }
+
+    fun clearError() {
+        _error.value = null
+    }
 
     fun loadAppointment(token: String, appointmentId: String) {
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
-
                 val result = repository.getAppointmentById(token, appointmentId)
-                appointment = result
-                error = null
+                _appointment.value = result
+                _error.value = null
             } catch (e: Exception) {
-                error = e.message
+                _error.value = e.message
                 Log.e("MedicalRecordViewModel", "Error al cargar cita", e)
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }
 
     fun saveMedicalRecord(token: String, appointmentId: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
-                val request = MedicalRecordRequest(notes, treatment)
+                val request = MedicalRecordRequest(_notes.value, _treatment.value)
                 repository.saveRecord(token, appointmentId, request)
+                _error.value = null
                 onSuccess()
-                error = null
             } catch (e: Exception) {
-                error = e.message
+                _error.value = e.message
                 Log.e("MedicalRecordViewModel", "Error al guardar expediente médico", e)
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }
@@ -70,36 +90,37 @@ class MedicalRecordViewModel @Inject constructor(
     fun loadRecordsByPetId(token: String, petId: String) {
         Log.d("MedicalRecordVM", "Cargando historial por petId=$petId y token=$token")
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
                 val result = repository.getRecordsByPetId(token, petId)
-                recordsByPetId = result
-                error = null
+                _recordsByPetId.value = result
+                _error.value = null
                 Log.d("MedicalRecordVM", "Historial cargado: $result")
             } catch (e: Exception) {
-                recordsByPetId = emptyList()
-                error = e.message
+                _recordsByPetId.value = emptyList()
+                _error.value = e.message
                 Log.e("MedicalRecordViewModel", "Error al obtener historial por mascota", e)
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }
 
     fun loadMedicalRecord(token: String, medicalRecordId: String, petId: String) {
+        Log.d("MedicalRecordViewModel", "Cargando record con ID: $medicalRecordId y petId: $petId")
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
-                Log.d("MedicalRecordVM", "Cargando record con ID=$medicalRecordId y token=$token")
 
                 val result = repository.getMedicalRecordById(token, petId, medicalRecordId)
-                medicalRecord = result
-                error = null
+                _medicalRecord.value = result
+                Log.d("MedicalRecordViewModel", "Record recibido: $result")
+                _error.value = null
             } catch (e: Exception) {
-                error = e.message ?: "Error desconocido"
+                _error.value = e.message ?: "Error desconocido"
                 Log.e("MedicalRecordVM", "Error al cargar registro médico con ID=$medicalRecordId", e)
             } finally {
-                isLoading = false
+                _isLoading.value = false
             }
         }
     }

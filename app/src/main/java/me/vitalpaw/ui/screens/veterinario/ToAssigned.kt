@@ -1,6 +1,7 @@
 package me.vitalpaw.ui.screens.veterinario
 
 import android.app.DatePickerDialog
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,6 +83,8 @@ fun ToAssigned(
     viewModel: ToAssignedViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val token by sessionViewModel.firebaseToken.collectAsState()
+    Log.d("ToAssigned", "Token actual: $token")
 
     val service by viewModel.selectedService.collectAsState()
     val description by viewModel.description.collectAsState()
@@ -345,8 +349,8 @@ fun ToAssigned(
         ConfirmationDialog(
             show = showSuccessDialog,
             onDismiss = {
-                sessionViewModel.firebaseToken?.let { token ->
-                    navController.navigate(NavRoutes.Home.createRoute(token)) {
+                token?.let {
+                    navController.navigate(NavRoutes.Home.route) {
                         popUpTo(NavRoutes.Home.route) { inclusive = true }
                     }
                 } ?: run {
@@ -366,15 +370,6 @@ fun ToAssigned(
         ErrorDialog(
             show = showErrorDialog,
             onDismiss = {
-                sessionViewModel.firebaseToken?.let { token ->
-                    navController.navigate(NavRoutes.Home.createRoute(token)) {
-                        popUpTo(NavRoutes.Home.route) { inclusive = true }
-                    }
-                } ?: run {
-                    navController.navigate(NavRoutes.Login.route) {
-                        popUpTo(NavRoutes.Login.route) { inclusive = true }
-                    }
-                }
                 showErrorDialog = false
                 errorTitle = ""
                 errorMessage = ""

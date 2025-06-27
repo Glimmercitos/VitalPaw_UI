@@ -43,6 +43,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
@@ -54,11 +56,13 @@ import me.vitalpaw.viewmodels.RegisterViewModel
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = hiltViewModel()){
-    val email = viewModel.email
-    val password = viewModel.password
-    val showError = viewModel.showError
-
-
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val showError by viewModel.showError.collectAsState()
+    val token by viewModel.firebaseToken.collectAsState()
+    val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
+    val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
+    val errorMsg by viewModel.errorMsg.collectAsState()
     /*if (viewModel.isLoginSuccess) {
         LaunchedEffect(Unit) {
             navController.navigate("bienvenida") {
@@ -66,9 +70,9 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
             }
         }
     }*/
-    if (viewModel.isLoginSuccess && viewModel.firebaseToken != null) {
+    if (isLoginSuccess && token != null) {
         LaunchedEffect(viewModel.firebaseToken) {
-            navController.navigate(NavRoutes.Bienvenido.createRoute(viewModel.firebaseToken!!)) {
+            navController.navigate(NavRoutes.Bienvenido.route) {
                 popUpTo(NavRoutes.Login.route) { inclusive = true }
             }
         }
@@ -135,10 +139,10 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
                     isError = showError && password.isBlank(),
-                    visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None
                     else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (viewModel.isPasswordVisible)
+                        val image = if (isPasswordVisible)
                             Icons.Filled.Visibility
                         else
                             Icons.Filled.VisibilityOff
@@ -159,7 +163,7 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                 }
                 if (showError && email.isNotBlank() && password.isNotBlank()) {
                     Text(
-                        text = viewModel.errorMsg,
+                        text = errorMsg,
                         color = Color.Red,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 8.dp)

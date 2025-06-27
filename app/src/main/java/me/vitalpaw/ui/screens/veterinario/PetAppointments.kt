@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,24 +28,31 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.viewmodels.SessionViewModel
+import androidx.compose.runtime.getValue
 
 @Composable
 fun PetAppointmentsScreen(
     navController: NavController,
     petId: String,
-    token: String,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
 
-
-    LaunchedEffect(petId) {
-        viewModel.loadRecordsByPetId(token, petId)
+    LaunchedEffect(Unit) {
+        sessionViewModel.loadUserData()
     }
 
-    val medicalRecords = viewModel.recordsByPetId
-    val petName = viewModel.recordsByPetId.firstOrNull()?.pet?.name?: "Mascota"
-//    val petName = medicalRecords.firstOrNull()?.pet?.name ?: "Mascota"
+    val token by sessionViewModel.firebaseToken.collectAsState()
+
+    LaunchedEffect(token, petId) {
+        token?.let {
+            viewModel.loadRecordsByPetId(it, petId)
+        }
+    }
+
+
+    val medicalRecords by viewModel.recordsByPetId.collectAsState()
+    val petName = medicalRecords.firstOrNull()?.pet?.name ?: "Mascota"
 
 
 
@@ -76,7 +84,7 @@ fun PetAppointmentsScreen(
                         record = record,
                         onDetailsClick = {
                             Log.d("PetRecord", "ID recibido: ${record.id}")
-                            navController.navigate(NavRoutes.MedicalRecordDetail.createRoute(petId,record.id, token))
+                            navController.navigate(NavRoutes.MedicalRecordDetail.createRoute(petId,record.id))
                         }
                     )
                 }

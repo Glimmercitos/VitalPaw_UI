@@ -25,21 +25,37 @@ import androidx.navigation.NavController
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
 fun PetRecordDetailScreen(
     navController: NavController,
-    token: String,
     petId: String,
     medicalRecordId: String,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MedicalRecordViewModel = hiltViewModel()
 ) {
+    val token by sessionViewModel.firebaseToken.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
     LaunchedEffect(medicalRecordId, petId) {
-        viewModel.loadMedicalRecord(token, medicalRecordId, petId)
+        token?.let {
+            viewModel.loadMedicalRecord(it, medicalRecordId, petId)
+        }
     }
 
-    val record = viewModel.medicalRecord
+    val record by viewModel.medicalRecord.collectAsState()
     val scrollState = rememberScrollState()
+
+    if (isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Cargando...", fontFamily = quicksandFont)
+        }
+        return
+    }
 
     if (record == null) {
         Box(
@@ -56,7 +72,8 @@ fun PetRecordDetailScreen(
             )
         }
     } else {
-        val pet = record.pet
+        val safeRecord = record ?: return
+        val pet = safeRecord.pet
 
         Column(
             modifier = Modifier
@@ -77,12 +94,12 @@ fun PetRecordDetailScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            DisabledText(value = record.service ?: "servicio", label = "Tipo de servicio")
+            DisabledText(value = safeRecord.service ?: "servicio", label = "Tipo de servicio")
 
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedTextField(
-                value = record.description ?: "descripcion",
+                value = safeRecord.description ?: "descripcion",
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth().height(100.dp),
@@ -99,7 +116,7 @@ fun PetRecordDetailScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedTextField(
-                value = record.notes ?:"notas",
+                value = safeRecord.notes ?:"notas",
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier
@@ -120,7 +137,7 @@ fun PetRecordDetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
-                value = record.treatment ?:"tratamiento",
+                value = safeRecord.treatment ?:"tratamiento",
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier

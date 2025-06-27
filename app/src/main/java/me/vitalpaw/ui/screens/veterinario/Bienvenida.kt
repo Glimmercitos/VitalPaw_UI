@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,19 +31,20 @@ import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
-fun BienvenidoScreen(navController: NavController, token: String, sessionViewModel: SessionViewModel = hiltViewModel()) {
+fun BienvenidoScreen(navController: NavController, sessionViewModel: SessionViewModel = hiltViewModel()) {
+    val token by sessionViewModel.firebaseToken.collectAsState()
     LaunchedEffect(Unit) {
         sessionViewModel.loadUserData()
         delay(2000)
-        navController.navigate(NavRoutes.Home.createRoute(token)){
+        navController.navigate(NavRoutes.Home.route){
             popUpTo(NavRoutes.Bienvenido.route){inclusive = true}
         }
     }
+    val user = sessionViewModel.user.collectAsState()
 
 
-
-    val name = sessionViewModel.user?.name?: "Veterinaria"
-    val gender = sessionViewModel.user?.gender?: "Female"
+    val name = user.value?.name?: "Veterinaria"
+    val gender = user.value?.gender?: "Female"
 
     val greeting = if (gender == "Female") "Bienvenida Dra." else "Bienvenido Dr."
 

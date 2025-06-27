@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,7 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
+import androidx.compose.runtime.getValue
 
 
 @Composable
@@ -36,12 +38,13 @@ fun Register(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val name = viewModel.name
-    val email = viewModel.email
-    val password = viewModel.password
-    val confirmPassword = viewModel.confirmPassword
-    val showError = viewModel.showError
-    val gender = viewModel.gender
+    val name by viewModel.name.collectAsState()
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val confirmPassword by viewModel.confirmPassword.collectAsState()
+    val showError by viewModel.showError.collectAsState()
+    val gender by viewModel.gender.collectAsState()
+    val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
 
     Box(
         modifier = Modifier
@@ -160,9 +163,9 @@ fun Register(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
                         isError = showError && password.isBlank(),
-                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
                                 Icon(imageVector = icon, contentDescription = "Toggle password")
                             }
@@ -178,9 +181,9 @@ fun Register(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
                         isError = showError && (confirmPassword.isBlank() || password != confirmPassword),
-                        visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val icon = if (viewModel.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { viewModel.onTogglePasswordVisibility() }) {
                                 Icon(imageVector = icon, contentDescription = "Toggle password")
                             }
@@ -204,7 +207,7 @@ fun Register(
                     Button(
                         onClick = {
                             viewModel.onRegisterClick()
-                            if (!viewModel.showError) {
+                            if (!showError) {
                                 navController.navigate(NavRoutes.Login.route) // Puedes cambiar a NavRoutes.Home.route si deseas
                             }
                         },
