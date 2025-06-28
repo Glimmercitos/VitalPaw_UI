@@ -1,26 +1,39 @@
 package me.vitalpaw.ui.screens.shop
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -28,19 +41,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import me.vitalpaw.R
-import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
+import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
+import me.vitalpaw.ui.components.buttons.CancelarCitaButton
+import me.vitalpaw.ui.navigation.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartProductDetailScreen(
     navController: NavController,
-    cartViewModel: CartViewModel,
+    cartViewModel: CartViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -59,7 +73,10 @@ fun CartProductDetailScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
                                 text = "CARRITO",
                                 fontFamily = quicksandFont,
@@ -71,7 +88,11 @@ fun CartProductDetailScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = { onBack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.Black)
+                            Icon(
+                                Icons.Default.ArrowBack,
+                                contentDescription = "Volver",
+                                tint = Color.Black
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -83,7 +104,8 @@ fun CartProductDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -156,9 +178,15 @@ fun CartProductDetailScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             IconButton(onClick = {
                                                 if (quantity > 1)
-                                                    cartViewModel.updateQuantity(product, quantity - 1)
+                                                    cartViewModel.updateQuantity(
+                                                        product,
+                                                        quantity - 1
+                                                    )
                                             }) {
-                                                Icon(Icons.Default.Remove, contentDescription = "Restar")
+                                                Icon(
+                                                    Icons.Default.Remove,
+                                                    contentDescription = "Restar"
+                                                )
                                             }
 
                                             Text(
@@ -171,7 +199,10 @@ fun CartProductDetailScreen(
                                             IconButton(onClick = {
                                                 cartViewModel.updateQuantity(product, quantity + 1)
                                             }) {
-                                                Icon(Icons.Default.Add, contentDescription = "Sumar")
+                                                Icon(
+                                                    Icons.Default.Add,
+                                                    contentDescription = "Sumar"
+                                                )
                                             }
                                         }
                                     }
@@ -179,7 +210,11 @@ fun CartProductDetailScreen(
                                     // 🗑 Eliminar
                                     IconButton(onClick = {
                                         cartViewModel.removeFromCart(product)
-                                        Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Producto eliminado",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Delete,
@@ -187,15 +222,28 @@ fun CartProductDetailScreen(
                                             tint = Color.Black
                                         )
                                     }
-                                    //Boton para confirmar compra pendiente
                                 }
                             }
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                ) {
+                    RedeemPurchaseButton(onClick = {
+                        navController.navigate(NavRoutes.CartRedeemDetail.route)
+                    })
+                }
             }
         }
     }
 }
+
 
 

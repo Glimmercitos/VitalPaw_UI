@@ -20,7 +20,7 @@ sealed class NavRoutes(val route: String) {
     object ProductDetail : NavRoutes("product_detail/{index}") {
         fun createRoute(index: Int) = "product_detail/$index"
     }
-    object CartProductDetail : NavRoutes("cart_product_detail")
-
+    object CartProductDetail : NavRoutes("cartProductDetail")
+    object CartRedeemDetail : NavRoutes("cart_redeem_detail")
 
 }

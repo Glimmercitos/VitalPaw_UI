@@ -5,10 +5,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.common.collect.Multimaps.index
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.cliente.HomeScreen
@@ -82,7 +84,7 @@ fun AppNavGraph(
         ) {
             HomeShopScreen(
                 navController = navController,
-                onBack = { navController.popBackStack() } // Esto soluciona el error
+                onBack = { navController.popBackStack() }
             )
         }
         composable("shop") {
@@ -105,14 +107,45 @@ fun AppNavGraph(
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(NavRoutes.CartProductDetail.route) {
-            val cartViewModel: CartViewModel = hiltViewModel()
+        composable(
+            route = NavRoutes.ProductDetail.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) { backStackEntry ->
+            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
+
+            // 👇 Este bloque es el que compartirá el CartViewModel
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(NavRoutes.HomeShop.route) // ✅ usamos la constante
+            }
+
+            val shopViewModel: HomeShopViewModel = hiltViewModel()
+            val cartViewModel: CartViewModel = hiltViewModel(parentEntry) // ✅ instancia compartida
+
+            ProductDetailScreen(
+                navController = navController,
+                shopViewModel = shopViewModel,
+                cartViewModel = cartViewModel,
+                productIndex = index,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = NavRoutes.CartProductDetail.route,
+            enterTransition = { fadeIn(animationSpec = tween(500)) },
+            exitTransition = { fadeOut(animationSpec = tween(500)) }
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(NavRoutes.HomeShop.route) // 👈
+            }
+
+            val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
+
             CartProductDetailScreen(
                 navController = navController,
                 cartViewModel = cartViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
-
     }
 }

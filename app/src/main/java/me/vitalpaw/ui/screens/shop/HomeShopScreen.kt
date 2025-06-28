@@ -72,12 +72,6 @@ fun HomeShopScreen(
                     }
                 )
             }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                RedeemPurchaseButton(onClick = { /* acción canjear */ })
-                Spacer(modifier = Modifier.height(24.dp))
-            }
         }
     }
 }
@@ -144,11 +138,12 @@ fun HomeShopTopBar(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    IconButton(onClick = onCartClick) {
+                    IconButton(onClick = {
+                        onCartClick() // ✅ CORRECTO: usa el callback en lugar de llamar a navController directamente
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "Carrito",
-                            tint = Color.Black
+                            contentDescription = "Ver carrito"
                         )
                     }
                 }

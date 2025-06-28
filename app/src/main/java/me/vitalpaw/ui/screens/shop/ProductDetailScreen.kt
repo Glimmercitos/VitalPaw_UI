@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
@@ -32,8 +33,8 @@ import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
-    shopViewModel: HomeShopViewModel,
-    cartViewModel: CartViewModel,
+    shopViewModel: HomeShopViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel(),
     productIndex: Int,
     onBack: () -> Unit
 ) {
