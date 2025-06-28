@@ -106,6 +106,5 @@ fun AppNavGraph(navController: NavHostController) {
         composable("home_cliente") {
             RegisterPetScreen(navController)
         }
-
     }
 }
