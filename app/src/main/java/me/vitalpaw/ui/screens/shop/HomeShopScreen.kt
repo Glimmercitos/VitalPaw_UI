@@ -47,7 +47,9 @@ fun HomeShopScreen(
             HomeShopTopBar(
                 coinAmount = coinAmount,
                 onBackClick = { onBack() },
-                onCartClick = {}
+                onCartClick = {
+                    navController.navigate(NavRoutes.CartProductDetail.route)
+                }
             )
         },
         bottomBar = {}
@@ -66,9 +68,11 @@ fun HomeShopScreen(
                     name = producto.name,
                     price = producto.points,
                     onClick = {
+                        navController.navigate(NavRoutes.ProductDetail.createRoute(index))
                     }
                 )
             }
+
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 RedeemPurchaseButton(onClick = { /* acción canjear */ })

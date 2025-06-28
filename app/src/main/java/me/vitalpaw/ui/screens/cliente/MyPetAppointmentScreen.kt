@@ -35,7 +35,7 @@ import me.vitalpaw.ui.components.MyPetAppointmentCard
 import me.vitalpaw.ui.components.buttons.AddAppointmentButton
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodel.MyAppointmentsPetViewModel
+import me.vitalpaw.viewmodels.cliente.MyAppointmentsPetViewModel
 
 @Composable
 fun MyPetAppointmentScreenContent(
