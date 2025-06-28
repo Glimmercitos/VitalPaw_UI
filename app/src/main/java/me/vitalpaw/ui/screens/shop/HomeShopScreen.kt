@@ -47,7 +47,7 @@ fun HomeShopScreen(
             HomeShopTopBar(
                 coinAmount = coinAmount,
                 onBackClick = { onBack() },
-                onCartClick = { navController.navigate(NavRoutes.Cart.route) }
+                onCartClick = {}
             )
         },
         bottomBar = {}
@@ -66,7 +66,6 @@ fun HomeShopScreen(
                     name = producto.name,
                     price = producto.points,
                     onClick = {
-                        navController.navigate("${NavRoutes.ProductDetail.route}/$index")
                     }
                 )
             }

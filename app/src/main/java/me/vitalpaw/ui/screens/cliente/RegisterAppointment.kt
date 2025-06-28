@@ -54,6 +54,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
@@ -115,7 +116,11 @@ fun RegisterAppointment(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = {
+                    navController.navigate(NavRoutes.ToAssigned.route) {
+                        popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
+                    }
+                }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = TextGray)
                 }
                 Text(
@@ -282,7 +287,11 @@ fun RegisterAppointment(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CancelarCitaButton { showErrorDialog = true }
+                CancelarCitaButton {
+                    navController.navigate(NavRoutes.HomeClient.route) {
+                        popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
+                    }
+                }
                 GuardarCitaButton { showSuccessDialog = true }
             }
         }

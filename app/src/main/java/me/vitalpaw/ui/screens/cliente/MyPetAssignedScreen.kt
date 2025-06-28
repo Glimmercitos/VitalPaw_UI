@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.cards.AppointmentPetCard
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.MyPetAssignedViewModel
 
@@ -121,8 +122,8 @@ fun MyPetAssignedScreen(
             contentAlignment = Alignment.BottomCenter
         ) {
             SalirButton {
-                navController.navigate("register_pet") {
-                    popUpTo("my_pet_assigned") { inclusive = true }
+                navController.navigate(NavRoutes.HomeClient.route) {
+                    popUpTo(NavRoutes.MyPetAssigned.route) { inclusive = true }
                 }
             }
         }

@@ -66,6 +66,7 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
 
@@ -155,9 +156,7 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconButton(onClick = {
-                    navController.navigate("home_cliente") {
-                        popUpTo("register_pet") { inclusive = true }
-                    }
+                    navController.popBackStack()
                 }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
@@ -408,8 +407,8 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 SalirButton {
-                    navController.navigate("home_cliente") {
-                        popUpTo("register_pet") { inclusive = true }
+                    navController.navigate(NavRoutes.HomeClient.route) {
+                        popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
                     }
                 }
             }

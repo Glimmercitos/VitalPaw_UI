@@ -1,4 +1,4 @@
-package me.vitalpaw.repository
+package me.vitalpaw.repository.cliente
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

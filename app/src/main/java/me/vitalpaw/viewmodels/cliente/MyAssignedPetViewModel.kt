@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import me.vitalpaw.models.Pet
-import me.vitalpaw.repository.MyPetAssignedRepository
+import me.vitalpaw.repository.cliente.MyPetAssignedRepository
 
 @HiltViewModel
 class MyPetAssignedViewModel @Inject constructor(

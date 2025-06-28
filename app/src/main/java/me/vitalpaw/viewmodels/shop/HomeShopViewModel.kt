@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import me.vitalpaw.models.Product
-import me.vitalpaw.repository.ProductRepository
+import me.vitalpaw.repository.cliente.ProductRepository
 
 class HomeShopViewModel : ViewModel() {
 

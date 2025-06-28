@@ -1,8 +1,9 @@
-package me.vitalpaw.repository
+package me.vitalpaw.repository.cliente
 
 import me.vitalpaw.R
 import me.vitalpaw.models.Pet
 import me.vitalpaw.models.User
+import me.vitalpaw.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

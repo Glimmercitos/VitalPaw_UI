@@ -5,31 +5,31 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
-import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
-import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
-import me.vitalpaw.ui.screens.shop.HomeShopScreen
-import me.vitalpaw.ui.screens.shop.ProductDetailScreen
-import me.vitalpaw.ui.screens.shop.ShopDetailScreen
+import me.vitalpaw.ui.screens.cliente.HomeScreen
+import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
+import me.vitalpaw.ui.screens.cliente.RegisterAppointment
 import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
-import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
-import me.vitalpaw.viewmodels.shop.CartViewModel
-import me.vitalpaw.viewmodels.shop.HomeShopViewModel
+import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+fun AppNavGraph(
+    navController: NavHostController,
+    startDestination: String = NavRoutes.Login.route
+)
+{
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.Login.route,
+        //startDestination = NavRoutes.Login.route,
+        startDestination = startDestination,
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
@@ -41,8 +41,8 @@ fun AppNavGraph(navController: NavHostController) {
             Register(navController)
         }
 
-        composable(NavRoutes.Home.route) {
-            AppointmentScreen(navController)
+        composable(NavRoutes.HomeClient.route) {
+            HomeScreen(navController = navController)
         }
 
         composable(NavRoutes.ToAssigned.route) {
@@ -54,57 +54,22 @@ fun AppNavGraph(navController: NavHostController) {
             AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
         }
 
-        composable(NavRoutes.ShopSplash.route) {
-            ShopScreen { // muestra solo 1 segundo
-                navController.navigate(NavRoutes.HomeShop.route) {
-                    popUpTo(NavRoutes.ShopSplash.route) { inclusive = true }
-                }
-            }
+        composable(NavRoutes.Shop.route) {
+            ShopScreen(navController)
         }
 
-        composable(NavRoutes.HomeShop.route) {
-            HomeShopScreen(
-                navController = navController,
-                onBack = { navController.popBackStack() }
-            )
+        composable(NavRoutes.MyPetAssigned.route) {
+            MyPetAssignedScreen(navController = navController)
         }
 
-        composable(NavRoutes.ProductDetail.route) { backStackEntry ->
-            val index = backStackEntry.arguments?.getString("productIndex")?.toIntOrNull() ?: 0
-            val shopViewModel: HomeShopViewModel = hiltViewModel()
-            val cartViewModel: CartViewModel = hiltViewModel()
-            ProductDetailScreen(
-                navController = navController,
-                shopViewModel = shopViewModel,
-                cartViewModel = cartViewModel,
-                productIndex = index,
-                onBack = { navController.popBackStack() }
-            )
+        composable(NavRoutes.RegisterAppointment.route) {
+            RegisterAppointment(navController)
         }
 
-        composable(NavRoutes.Cart.route) {
-            val cartViewModel: CartViewModel = hiltViewModel()
-            CartProductDetailScreen(
-                navController = navController,
-                cartViewModel = cartViewModel,
-                onBack = { navController.popBackStack() }
-            )
+        composable(NavRoutes.MyPetAppointment.route) {
+            MyPetAppointmentScreen(navController = navController)
         }
 
-        composable(NavRoutes.ShopDetail.route) {
-            val cartViewModel: CartViewModel = hiltViewModel()
-            ShopDetailScreen(
-                navController = navController,
-                onCancel = { navController.popBackStack() },
-                onConfirm = {
-                    // lógica de confirmación
-                },
-                cartViewModel = cartViewModel,
-                onBack = { navController.popBackStack() }
-            )
-        }
-        composable("home_cliente") {
-            RegisterPetScreen(navController)
-        }
+        // Añade más rutas si necesitas ShopDetail, ProductDetail, Cart, etc.
     }
 }
