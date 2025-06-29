@@ -219,21 +219,25 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                             .padding(vertical = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+                    MenuItem("Registrar mascotas") {
+                        navController.navigate(NavRoutes.RegisterPet.route)
+                        showMenu = false
+                    }
                     MenuItem("Mis mascotas") {
                         navController.navigate(NavRoutes.MyPetAssigned.route)
                         showMenu = false
                     }
                     MenuItem("Agendar cita") {
-                        navController.navigate(NavRoutes.ToAssigned.route)
-                        showMenu = false
-                    }
-                    MenuItem("Tienda") {
-                        navController.navigate(NavRoutes.Shop.route)
+                        navController.navigate(NavRoutes.RegisterAppointment.route)
                         showMenu = false
                     }
                     MenuItem("Mis citas") {
                         showMenu = false
                         navController.navigate(NavRoutes.MyPetAppointment.route)
+                    }
+                    MenuItem("Tienda") {
+                        navController.navigate(NavRoutes.Shop.route)
+                        showMenu = false
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(

@@ -37,7 +37,7 @@ class RegisterPetViewModel : ViewModel() {
     fun onGenderChange(value: String) { _gender.value = value }
     fun onBreedChange(value: String) { _breed.value = value }
     fun onWeightChange(value: String) { _weight.value = value }
-    fun onImageChange(uri: Uri) { _imageUri.value = uri }
+    fun onImageChange(uri: Uri?) { _imageUri.value = uri }
 
     fun showSuccessDialog() { _showSuccessDialog.value = true }
     fun dismissSuccessDialog() { _showSuccessDialog.value = false }

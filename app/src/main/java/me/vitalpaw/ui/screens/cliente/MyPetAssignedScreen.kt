@@ -30,7 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.SalirButton
-import me.vitalpaw.ui.components.cards.AppointmentPetCard
+import me.vitalpaw.ui.components.AppointmentPetCard
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.MyPetAssignedViewModel

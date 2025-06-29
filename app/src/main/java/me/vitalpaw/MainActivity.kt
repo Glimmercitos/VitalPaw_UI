@@ -9,19 +9,19 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import me.vitalpaw.ui.navigation.AppNavGraph
 import me.vitalpaw.ui.navigation.NavRoutes
-// Asegúrate que este sea el nombre de tu tema
+//import me.vitalpaw.ui.theme.VitalPawTheme // Asegúrate que este sea el nombre de tu tema
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            //VitalPawTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController, startDestination = NavRoutes.HomeClient.route)
-
-            }
+                }
+            //}
         }
     }
 }

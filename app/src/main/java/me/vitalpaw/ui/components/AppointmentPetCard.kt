@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.components.cards
+package me.vitalpaw.ui.components
 
 import android.widget.Toast
 import androidx.compose.foundation.Image

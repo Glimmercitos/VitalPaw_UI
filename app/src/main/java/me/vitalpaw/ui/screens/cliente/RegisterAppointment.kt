@@ -117,7 +117,7 @@ fun RegisterAppointment(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    navController.navigate(NavRoutes.ToAssigned.route) {
+                    navController.navigate(NavRoutes.HomeClient.route) {
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
                 }) {
@@ -130,9 +130,6 @@ fun RegisterAppointment(
                     color = TextGray,
                     fontWeight = FontWeight.Medium
                 )
-                IconButton(onClick = { /* Menú futuro */ }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menú", tint = TextGray)
-                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -288,7 +285,7 @@ fun RegisterAppointment(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 CancelarCitaButton {
-                    navController.navigate(NavRoutes.HomeClient.route) {
+                    navController.navigate(NavRoutes.Home.route) {
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
                 }

@@ -20,6 +20,7 @@ import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
@@ -38,7 +39,7 @@ fun AppNavGraph(
     AnimatedNavHost(
         navController = navController,
         //startDestination = NavRoutes.Login.route,
-        startDestination = startDestination,
+        startDestination = NavRoutes.HomeClient.route,
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
@@ -63,6 +64,7 @@ fun AppNavGraph(
             AppointmentDetailScreen(navController = navController, appointmentId = appointmentId)
         }
 
+        //Cliente
         composable(NavRoutes.Shop.route) {
             ShopScreen(navController)
         }
@@ -73,6 +75,13 @@ fun AppNavGraph(
 
         composable(NavRoutes.RegisterAppointment.route) {
             RegisterAppointment(navController)
+        }
+        composable(NavRoutes.Home.route) {
+            HomeScreen(navController)
+        }
+
+        composable(NavRoutes.RegisterPet.route) {
+            RegisterPetScreen(navController)
         }
 
         composable(NavRoutes.MyPetAppointment.route) {
@@ -148,13 +157,10 @@ fun AppNavGraph(
             )
         }
         composable(NavRoutes.CartRedeemDetail.route) { backStackEntry ->
-            // ✅ Este es el que debe compartirse desde HomeShop
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(NavRoutes.HomeShop.route)
             }
-
             val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
-
             ShopDetailScreen(
                 navController = navController,
                 cartViewModel = cartViewModel,

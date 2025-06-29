@@ -66,6 +66,7 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
@@ -99,6 +100,7 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
     }
 
     var showSuccessDialog by remember { mutableStateOf(false) }
+    var showErrorDialog by remember { mutableStateOf(false) }
     val expandedSpecies = remember { mutableStateOf(false) }
     val expandedGender = remember { mutableStateOf(false) }
 
@@ -404,19 +406,50 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 SalirButton {
                     navController.navigate(NavRoutes.HomeClient.route) {
                         popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
                     }
                 }
-            }
+                GuardarCitaButton {
+                    if (
+                        nameState.value.isNotBlank() &&
+                        speciesState.value.isNotBlank() &&
+                        genderState.value.isNotBlank() &&
+                        birthDate.value.isNotBlank() &&
+                        breedState.value.isNotBlank()
+                    ) {
+                        // Todo está lleno, mostrar confirmación y limpiar
+                        showSuccessDialog = true
+                        viewModel.onImageChange(null)
+                        viewModel.onNameChange("")
+                        viewModel.onSpeciesChange("")
+                        viewModel.onGenderChange("")
+                        viewModel.onAgeChange("")
+                        viewModel.onBreedChange("")
+                    } else {
+                        // Hay campos vacíos
+                        showErrorDialog = true
+                    }
+                }
 
+            }
             ConfirmationDialog(
                 show = showSuccessDialog,
-                onDismiss = { showSuccessDialog = false }
+                onDismiss = { showSuccessDialog = false },
+                Title = "¡Éxito!",
+                Message = "Perfil de Mascota creado con éxito"
             )
+
+            ErrorDialog(
+                show = showErrorDialog,
+                onDismiss = { showErrorDialog = false },// ✅ Correcto
+                title = "Error al registrar perfil",
+                message = "Campos vacíos"
+            )
+
         }
     }
 }
