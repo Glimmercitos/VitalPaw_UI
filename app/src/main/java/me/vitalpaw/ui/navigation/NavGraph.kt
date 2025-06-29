@@ -23,6 +23,7 @@ import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
+import me.vitalpaw.ui.screens.shop.ShopDetailScreen
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
@@ -114,13 +115,12 @@ fun AppNavGraph(
         ) { backStackEntry ->
             val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
 
-            // 👇 Este bloque es el que compartirá el CartViewModel
             val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(NavRoutes.HomeShop.route) // ✅ usamos la constante
+                navController.getBackStackEntry(NavRoutes.HomeShop.route)
             }
 
             val shopViewModel: HomeShopViewModel = hiltViewModel()
-            val cartViewModel: CartViewModel = hiltViewModel(parentEntry) // ✅ instancia compartida
+            val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
 
             ProductDetailScreen(
                 navController = navController,
@@ -145,6 +145,26 @@ fun AppNavGraph(
                 navController = navController,
                 cartViewModel = cartViewModel,
                 onBack = { navController.popBackStack() }
+            )
+        }
+        composable(NavRoutes.CartRedeemDetail.route) { backStackEntry ->
+            // ✅ Este es el que debe compartirse desde HomeShop
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(NavRoutes.HomeShop.route)
+            }
+
+            val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
+
+            ShopDetailScreen(
+                navController = navController,
+                cartViewModel = cartViewModel,
+                onBack = { navController.popBackStack() },
+                onCancel = { navController.popBackStack() },
+                onConfirm = {
+                    navController.navigate(NavRoutes.HomeShop.route) {
+                        popUpTo(NavRoutes.CartProductDetail.route) { inclusive = true }
+                    }
+                }
             )
         }
     }

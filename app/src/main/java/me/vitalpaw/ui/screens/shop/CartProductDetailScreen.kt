@@ -229,7 +229,6 @@ fun CartProductDetailScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
