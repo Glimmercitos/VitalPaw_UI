@@ -36,4 +36,19 @@ sealed class NavRoutes(val route: String) {
             "medicalRecord_detail?petId=$petId&medicalRecordId=$medicalRecordId"
     }
 
+    //Cliente
+
+    object HomeClient : NavRoutes("home_client")
+    object Shop : NavRoutes("shop")
+    object MyPetAssigned : NavRoutes("my_pet_assigned")
+    object RegisterAppointment : NavRoutes("register_appointment")
+    object RegisterPet : NavRoutes("register_pet")
+    object MyPetAppointment : NavRoutes("my_pet_appointment")
+    object HomeShop : NavRoutes("home_shop")
+    object ProductDetail : NavRoutes("product_detail/{index}") {
+        fun createRoute(index: Int) = "product_detail/$index"
+    }
+    object CartProductDetail : NavRoutes("cartProductDetail")
+    object CartRedeemDetail : NavRoutes("cart_redeem_detail")
+
 }

@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.cliente
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -28,14 +28,17 @@ class RegisterPetViewModel : ViewModel() {
     private val _imageUri = MutableStateFlow<Uri?>(null)
     val imageUri: StateFlow<Uri?> = _imageUri
 
+    private val _showSuccessDialog = MutableStateFlow(false)
+    val showSuccessDialog: StateFlow<Boolean> = _showSuccessDialog
 
-    // Setters
     fun onNameChange(value: String) { _name.value = value }
     fun onSpeciesChange(value: String) { _species.value = value }
     fun onAgeChange(value: String) { _age.value = value }
     fun onGenderChange(value: String) { _gender.value = value }
     fun onBreedChange(value: String) { _breed.value = value }
     fun onWeightChange(value: String) { _weight.value = value }
-
     fun onImageChange(uri: Uri) { _imageUri.value = uri }
+
+    fun showSuccessDialog() { _showSuccessDialog.value = true }
+    fun dismissSuccessDialog() { _showSuccessDialog.value = false }
 }

@@ -52,11 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
-import me.vitalpaw.viewmodels.HomeViewModel
+import me.vitalpaw.viewmodels.cliente.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,13 +68,17 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
     var currentPage by remember { mutableStateOf(0) }
     val promoResIds = listOf(R.drawable.promo1, R.drawable.promo2, R.drawable.promo3, R.drawable.promo4)
 
+    Button(onClick = {
+        navController.navigate(NavRoutes.Shop.route) // ✅ usa la ruta correcta
+    }) {
+        Text("Ir a tienda")
+    }
     LaunchedEffect(Unit) {
         while (true) {
             delay(3000)
             currentPage = (currentPage + 1) % promoResIds.size
         }
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -108,9 +113,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Promociones",
                 fontFamily = quicksandFont,
@@ -119,9 +122,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(id = promoResIds[currentPage]),
@@ -133,7 +134,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                     contentScale = ContentScale.Fit
                 )
             }
-
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
@@ -153,9 +153,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Nuestros Servicios",
                 fontFamily = quicksandFont,
@@ -164,25 +162,20 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             ServiceItem(
                 icon = R.drawable.home1,
                 title = "Grooming",
                 description = "Baño, corte y limpieza profesional para consentir a tu mascota.",
                 onClick = { navController.navigate(NavRoutes.ToAssigned.route) }
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             ServiceItem(
                 icon = R.drawable.home2,
                 title = "Consulta",
                 description = "Revisión médica general y especializada para tu mascota.",
                 onClick = { }
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
             ServiceItem(
@@ -226,14 +219,22 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                             .padding(vertical = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    MenuItem("Registrar mascota") { showMenu = false }
-                    MenuItem("Mis mascotas") { showMenu = false }
+                    MenuItem("Mis mascotas") {
+                        navController.navigate(NavRoutes.MyPetAssigned.route)
+                        showMenu = false
+                    }
                     MenuItem("Agendar cita") {
                         navController.navigate(NavRoutes.ToAssigned.route)
                         showMenu = false
                     }
-                    MenuItem("Tienda") { showMenu = false }
-                    MenuItem("Mis citas") { showMenu = false }
+                    MenuItem("Tienda") {
+                        navController.navigate(NavRoutes.Shop.route)
+                        showMenu = false
+                    }
+                    MenuItem("Mis citas") {
+                        showMenu = false
+                        navController.navigate(NavRoutes.MyPetAppointment.route)
+                    }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = { showMenu = false },
@@ -247,11 +248,9 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
         }
     }
 }
-
 @Composable
 fun MenuItem(text: String, onClick: () -> Unit) {
-    Text(
-        text = text,
+    Text( text = text,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
@@ -264,7 +263,6 @@ fun MenuItem(text: String, onClick: () -> Unit) {
         fontSize = 16.sp
     )
 }
-
 @Composable
 fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Unit) {
     var isHovered by remember { mutableStateOf(false) }
@@ -278,7 +276,6 @@ fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Un
         targetValue = if (isHovered) 0.95f else 1f,
         label = "alpha"
     )
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
