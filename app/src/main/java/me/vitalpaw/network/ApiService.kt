@@ -2,8 +2,10 @@ package me.vitalpaw.network
 
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
+import me.vitalpaw.models.Pet
 import me.vitalpaw.models.User
 import me.vitalpaw.network.request.AppointmentUpdateRequest
+import me.vitalpaw.network.request.CreateAppointmentRequest
 import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.network.request.RegisterRequest
 import me.vitalpaw.network.response.AppointmentUpdateResponse
@@ -80,5 +82,15 @@ interface ApiService {
         @Body request: AppointmentUpdateRequest
     ): Response<AppointmentUpdateResponse>
 
+    @POST("api/appointments/create")
+    suspend fun createAppointment(
+        @Header("Authorization") token: String,
+        @Body request: CreateAppointmentRequest
+    ): Response<AppointmentUpdateResponse>
+
+    @GET("api/pets/my-pets")
+    suspend fun getMyPets(
+        @Header("Authorization") token: String
+    ): Response<List<Pet>>
 
 }

@@ -43,14 +43,14 @@ fun AppointmentPetCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Imagen circular
-        Image(
-            painter = painterResource(id = pet.imageRes),
-            contentDescription = "Imagen de mascota",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-        )
+//        Image(
+//            painter = painterResource(id = pet.imageRes),
+//            contentDescription = "Imagen de mascota",
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .size(60.dp)
+//                .clip(CircleShape)
+//        )
 
         Spacer(modifier = Modifier.width(12.dp))
 

@@ -45,6 +45,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
@@ -60,6 +62,7 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
     val password by viewModel.password.collectAsState()
     val showError by viewModel.showError.collectAsState()
     val token by viewModel.firebaseToken.collectAsState()
+    val userRole by viewModel.userRole.collectAsState()
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
     val errorMsg by viewModel.errorMsg.collectAsState()
@@ -70,10 +73,22 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
             }
         }
     }*/
-    if (isLoginSuccess && token != null) {
-        LaunchedEffect(viewModel.firebaseToken) {
-            navController.navigate(NavRoutes.Bienvenido.route) {
-                popUpTo(NavRoutes.Login.route) { inclusive = true }
+    val shouldNavigate by remember(isLoginSuccess, token, userRole) {
+        mutableStateOf(isLoginSuccess && token != null && userRole.isNotBlank())
+    }
+
+    LaunchedEffect(shouldNavigate) {
+        if (shouldNavigate) {
+            when (userRole) {
+                "cliente" -> navController.navigate(NavRoutes.HomeClient.route) {
+                    popUpTo(NavRoutes.Login.route) { inclusive = true }
+                }
+                "veterinario" -> navController.navigate(NavRoutes.Bienvenido.route) {
+                    popUpTo(NavRoutes.Login.route) { inclusive = true }
+                }
+                else -> {
+                    // Fallback opcional: podrías mostrar un error o navegar a una pantalla de error
+                }
             }
         }
     }

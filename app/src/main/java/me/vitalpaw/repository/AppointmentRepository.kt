@@ -5,53 +5,9 @@ import me.vitalpaw.network.ApiService
 import me.vitalpaw.network.request.AppointmentUpdateRequest
 import javax.inject.Inject
 import android.util.Log
+import me.vitalpaw.network.request.CreateAppointmentRequest
 
 
-/*class AppointmentRepository @Inject constructor (
-    private val userRepository: UserRepository,
-    private val petRepository: PetRepository
-) {
-
-    fun getAppointments(): List<Appointment> {
-        val owner = userRepository.getCurrentUser()
-        val vet = userRepository.getVeterinarian()
-        val pets = petRepository.getPets()
-
-        return listOf(
-            Appointment(
-                id = "1",
-                owner = owner,
-                pet = pets[0].copy(),
-                service = "Consulta médica",
-                description = "Chequeo general",
-                date = "2025-06-28",
-                time = "10:00 AM",
-                veterinarian = vet
-            ),
-            Appointment(
-                id = "2",
-                owner = owner,
-                pet = pets[0].copy(),
-                service = "Consulta médica",
-                description = "Chequeo general",
-                date = "2025-07-31",
-                time = "10:00 PM",
-                veterinarian = vet
-            ),
-            Appointment(
-                id = "3",
-                owner = owner,
-                pet = pets[1].copy(),
-                service = "Vacunación",
-                description = "Primera dosis de vacunas",
-                date = "2025-07-18",
-                time = "1:00 PM",
-                veterinarian = vet
-            )
-        )
-    }
-
-}*/
 class AppointmentRepository @Inject constructor(
     private val apiService: ApiService
 ) {
@@ -75,5 +31,17 @@ class AppointmentRepository @Inject constructor(
         val response = apiService.editAppointment("Bearer $token", id, data)
         if (!response.isSuccessful) throw Exception("No se pudo editar la cita")
     }
-}
 
+
+    suspend fun createAppointment(token: String, request: CreateAppointmentRequest): Appointment {
+        val response = apiService.createAppointment("Bearer $token", request)
+        if (response.isSuccessful) {
+            return response.body()?.appointment ?: throw Exception("No se recibió la cita")
+        } else {
+            val errorBody = response.errorBody()?.string()
+            throw Exception("Error al crear cita: ${response.code()} - $errorBody")
+        }
+    }
+
+
+}

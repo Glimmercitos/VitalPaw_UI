@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import me.vitalpaw.models.Pet
 import me.vitalpaw.network.request.AppointmentUpdateRequest
+import me.vitalpaw.network.request.CreateAppointmentRequest
 import me.vitalpaw.repository.AppointmentRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -42,6 +44,9 @@ class ToAssignedViewModel @Inject constructor(
     )
     val selectedTime: StateFlow<Calendar> = _selectedTime
 
+    private var _selectedPet = MutableStateFlow<Pet?>(null)
+    var selectedPet: StateFlow<Pet?> = _selectedPet
+
     var error by mutableStateOf<String?>(null)
     var isSuccess by mutableStateOf<Boolean>(false)
 
@@ -60,6 +65,9 @@ class ToAssignedViewModel @Inject constructor(
 
     fun onTimeChange(time: Calendar) {
         _selectedTime.value = time
+    }
+    fun onPetSelected(pet: Pet) {
+        _selectedPet.value = pet
     }
 
     fun updateAppointment(appointmentId: String, onSuccess: () -> Unit) {
@@ -89,5 +97,39 @@ class ToAssignedViewModel @Inject constructor(
             }
         }
     }
+    fun createAppointment(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val user = auth.currentUser
+                val token = user?.getIdToken(false)?.await()?.token
+                if (token.isNullOrEmpty()) throw Exception("Token no válido")
+
+                val pet = _selectedPet.value ?: throw Exception("Debe seleccionar una mascota")
+
+                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(_selectedDate.value.time)
+                val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(_selectedTime.value.time)
+
+                val request = CreateAppointmentRequest(
+                    petId = pet.id,
+                    service = _selectedService.value,
+                    description = _description.value,
+                    date = dateStr,
+                    time = timeStr
+                )
+
+                repository.createAppointment(token, request)
+                onSuccess()
+                isSuccess = true
+                error = null
+            } catch (e: Exception) {
+                error = e.message
+                Log.e("ToAssignedViewModel", "Error al crear cita", e)
+            }
+        }
+    }
+
+
+
+
 
 }

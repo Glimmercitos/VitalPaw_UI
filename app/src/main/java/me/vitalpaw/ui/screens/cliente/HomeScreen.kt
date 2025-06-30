@@ -50,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -57,11 +58,16 @@ import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.cliente.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, sessionViewModel: SessionViewModel = hiltViewModel(),viewModel: HomeViewModel = viewModel()) {
+
+    LaunchedEffect(Unit) {
+        sessionViewModel.loadUserData()
+    }
     val promotions by viewModel.promotions.collectAsState()
     val scrollState = rememberScrollState()
     var showMenu by remember { mutableStateOf(false) }
@@ -224,7 +230,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                         showMenu = false
                     }
                     MenuItem("Agendar cita") {
-                        navController.navigate(NavRoutes.ToAssigned.route)
+                        navController.navigate(NavRoutes.RegisterAppointment.route){
+                            popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
+                        }
+
                         showMenu = false
                     }
                     MenuItem("Tienda") {
@@ -237,7 +246,11 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
-                        onClick = { showMenu = false },
+                        onClick = { showMenu = false
+                                  sessionViewModel.logout()
+                                navController.navigate(NavRoutes.Login.route) {
+                                    popUpTo(0) { inclusive = true }
+                                }},
                         shape = RoundedCornerShape(24.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCBDFF4))
                     ) {

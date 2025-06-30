@@ -18,8 +18,9 @@ import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
-import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
+import me.vitalpaw.ui.screens.cliente.HomeScreen
+//import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+//import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
 import me.vitalpaw.ui.screens.cliente.RegisterAppointment
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
@@ -51,7 +52,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { Register(navController) }
 
-        //Inicio
+        //Inicio Veterinario
         composable(NavRoutes.Bienvenido.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) },
@@ -109,21 +110,29 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             PetRecordDetailScreen(navController = navController,petId = petId, medicalRecordId = medicalRecordId, sessionViewModel )
         }
         //cliente
+        //Inicio CLiente
+        composable(NavRoutes.HomeClient.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },
+        ) { HomeScreen(navController, sessionViewModel) }
+
         composable(NavRoutes.Shop.route) {
             ShopScreen(navController)
         }
 
-        composable(NavRoutes.MyPetAssigned.route) {
-            MyPetAssignedScreen(navController = navController)
+//        composable(NavRoutes.MyPetAssigned.route) {
+//            MyPetAssignedScreen(navController = navController)
+//        }
+
+        composable(NavRoutes.RegisterAppointment.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },) {
+            RegisterAppointment(navController, sessionViewModel)
         }
 
-        composable(NavRoutes.RegisterAppointment.route) {
-            RegisterAppointment(navController)
-        }
-
-        composable(NavRoutes.MyPetAppointment.route) {
-            MyPetAppointmentScreen(navController = navController)
-        }
+//        composable(NavRoutes.MyPetAppointment.route) {
+//            MyPetAppointmentScreen(navController = navController)
+//        }
 
         composable("home_shop",
             enterTransition = { fadeIn(animationSpec = tween(300)) },

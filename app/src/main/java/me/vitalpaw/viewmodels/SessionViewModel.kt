@@ -28,6 +28,9 @@ class SessionViewModel @Inject constructor(
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password
 
+    private val _userRole = MutableStateFlow("")
+    val userRole: StateFlow<String> = _userRole
+
     private val _showError = MutableStateFlow(false)
     val showError: StateFlow<Boolean> = _showError
 
@@ -86,6 +89,7 @@ class SessionViewModel @Inject constructor(
                         _isLoginSuccess.value = true
                         _showError.value = false
                         _errorMsg.value = ""
+                        loadUserData() // <- AÑADIR AQUÍ
                     } else {
                         _isLoginSuccess.value = false
                         _showError.value = true
@@ -125,6 +129,7 @@ class SessionViewModel @Inject constructor(
                     val response = userRepository.getUserData(token)
                     if (response.isSuccessful) {
                         _user.value = response.body()
+                        _userRole.value = response.body()?.role ?: ""
                         _bienvenidaError.value = null
                     } else {
                         _bienvenidaError.value = "Error al obtener datos del usuario"
@@ -142,5 +147,15 @@ class SessionViewModel @Inject constructor(
         auth.signOut()
         _firebaseToken.value = null
         _user.value = null
+        _email.value = ""
+        _password.value = ""
+        _userRole.value = ""
+        _isLoginSuccess.value = false
+        _showError.value = false
+        _errorMsg.value = ""
+        _isPasswordVisible.value = false
+        _isLoading.value = false
+        _bienvenidaError.value = null
     }
+
 }

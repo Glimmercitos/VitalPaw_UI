@@ -31,6 +31,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,9 +47,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import me.vitalpaw.R
+import me.vitalpaw.models.Pet
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
@@ -56,10 +59,13 @@ import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodel.PetViewModel
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.util.Log
 
 val PrimaryBlue = Color(0xFF6E7AE6)
 val TextGray = Color(0xFF606060)
@@ -74,28 +80,68 @@ fun PreviewRegisterAppointment() {
 @Composable
 fun RegisterAppointment(
     navController: NavHostController,
-    viewModel: ToAssignedViewModel = viewModel()
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    petViewModel: PetViewModel = hiltViewModel(),
+    viewModel: ToAssignedViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
+    val token by sessionViewModel.firebaseToken.collectAsState()
+
+
+    val pets by petViewModel.pets.collectAsState()
+    LaunchedEffect(token, pets) {
+        token?.let {
+            Log.d("RegisterAppointment", "Token recibido: $it")
+            petViewModel.loadMyPets(it)
+            Log.d("RegisterAppointment", "Mascotas en pantalla: $pets")
+        }
+    }
+    val petError by petViewModel.error.collectAsState()
+    val petLoading by petViewModel.isLoading.collectAsState()
 
     val service by viewModel.selectedService.collectAsState()
     val description by viewModel.description.collectAsState()
     val date by viewModel.selectedDate.collectAsState()
     val time by viewModel.selectedTime.collectAsState()
+    val selectedPet by viewModel.selectedPet.collectAsState()
 
     val dateFormatter = remember { SimpleDateFormat("dd/MM/yy", Locale.getDefault()) }
     val timeFormatter = remember { SimpleDateFormat("h:mm a", Locale.getDefault()) }
 
+    var expandedPets by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
 
-    val serviceOptions = listOf("Emergencia", "Consulta", "Grooming")
+    var errorTitle by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var successTitle by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf("") }
+
+    val serviceOptions = listOf("grooming", "consulta médica", "emergencias")
     var expanded by remember { mutableStateOf(false) }
 
     val hasDateSelected = date.timeInMillis != 0L
     val hasTimeSelected = time.timeInMillis != 0L
+
+    fun handleSave() {
+        if (viewModel.description.value.isBlank() || viewModel.selectedService.value.isBlank() || viewModel.selectedPet.value == null || !hasDateSelected || !hasTimeSelected) {
+            errorTitle = "Error al asignar cita"
+            errorMessage = "Campos vacíos"
+            showErrorDialog = true
+            return
+        }
+
+        viewModel.createAppointment() {
+            successTitle = "Cita guardada!"
+            successMessage = "Cita agendada correctamente."
+            showSuccessDialog = true
+
+        }
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -134,6 +180,81 @@ fun RegisterAppointment(
                     Icon(Icons.Default.Menu, contentDescription = "Menú", tint = TextGray)
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // --- AÑADE EL SELECTOR DE MASCOTA PRIMERO ---
+            ExposedDropdownMenuBox(
+                expanded = expandedPets,
+                onExpandedChange = { expandedPets = !expandedPets }
+            ) {
+                OutlinedTextField(
+                    value = selectedPet?.name ?: "",
+                    onValueChange = {},
+                    readOnly = true,
+                    label = {
+                        Text(
+                            "Selecciona una mascota",
+                            fontFamily = quicksandFont,
+                            color = TextGray
+                        )
+                    },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPets)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(12.dp),
+                    placeholder = {
+                        Text(
+                            "Selecciona una mascota",
+                            fontFamily = quicksandFont,
+                            color = Color.Gray
+                        )
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = PrimaryBlue,
+                        unfocusedBorderColor = PrimaryBlue,
+                        cursorColor = PrimaryBlue,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    textStyle = LocalTextStyle.current.copy(
+                        fontFamily = quicksandFont,
+                        fontSize = 16.sp,
+                        color = TextGray
+                    )
+                )
+                ExposedDropdownMenu(
+                    expanded = expandedPets,
+                    onDismissRequest = { expandedPets = false },
+                    modifier = Modifier
+                        .background(Color(0xFFF5F8FA), shape = RoundedCornerShape(12.dp))
+                        .padding(vertical = 4.dp)
+                ) {
+                    pets.forEach { pet ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = pet.name,
+                                    fontFamily = quicksandFont,
+                                    color = Color.Black,
+                                    fontSize = 16.sp
+                                )
+                            },
+                            onClick = {
+                                viewModel.onPetSelected(pet)
+                                expandedPets = false
+
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                                .background(Color.Transparent)
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -154,7 +275,11 @@ fun RegisterAppointment(
                         .menuAnchor(),
                     shape = RoundedCornerShape(12.dp),
                     placeholder = {
-                        Text("Selecciona un servicio", fontFamily = quicksandFont, color = Color.Gray)
+                        Text(
+                            "Selecciona un servicio",
+                            fontFamily = quicksandFont,
+                            color = Color.Gray
+                        )
                     },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = PrimaryBlue,
@@ -205,7 +330,13 @@ fun RegisterAppointment(
                 value = description,
                 onValueChange = viewModel::onDescriptionChange,
                 placeholder = { Text("", fontFamily = quicksandFont) },
-                label = { Text("Descripción general", fontFamily = quicksandFont, color = TextGray) },
+                label = {
+                    Text(
+                        "Descripción general",
+                        fontFamily = quicksandFont,
+                        color = TextGray
+                    )
+                },
                 singleLine = false,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
@@ -232,7 +363,11 @@ fun RegisterAppointment(
                 label = { Text("Fecha", fontFamily = quicksandFont, color = TextGray) },
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker = true }) {
-                        Icon(Icons.Default.CalendarToday, contentDescription = "Fecha", tint = PrimaryBlue)
+                        Icon(
+                            Icons.Default.CalendarToday,
+                            contentDescription = "Fecha",
+                            tint = PrimaryBlue
+                        )
                     }
                 },
                 shape = RoundedCornerShape(12.dp),
@@ -261,7 +396,11 @@ fun RegisterAppointment(
                 label = { Text("Hora", fontFamily = quicksandFont, color = TextGray) },
                 trailingIcon = {
                     IconButton(onClick = { showTimePicker = true }) {
-                        Icon(Icons.Default.AccessTime, contentDescription = "Hora", tint = PrimaryBlue)
+                        Icon(
+                            Icons.Default.AccessTime,
+                            contentDescription = "Hora",
+                            tint = PrimaryBlue
+                        )
                     }
                 },
                 shape = RoundedCornerShape(12.dp),
@@ -292,48 +431,72 @@ fun RegisterAppointment(
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
                 }
-                GuardarCitaButton { showSuccessDialog = true }
+                GuardarCitaButton {
+                    handleSave()
+                }
             }
-        }
 
-        if (showDatePicker) {
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(
-                context,
-                { _, year, month, day ->
-                    calendar.set(year, month, day)
-                    viewModel.onDateChange(calendar)
-                    showDatePicker = false
-                },
-                date.get(Calendar.YEAR),
-                date.get(Calendar.MONTH),
-                date.get(Calendar.DAY_OF_MONTH)
-            ).apply {
-                setOnDismissListener { showDatePicker = false }
-                show()
+            if (showDatePicker) {
+                val calendar = Calendar.getInstance()
+                DatePickerDialog(
+                    context,
+                    { _, year, month, day ->
+                        calendar.set(year, month, day)
+                        viewModel.onDateChange(calendar)
+                        showDatePicker = false
+                    },
+                    date.get(Calendar.YEAR),
+                    date.get(Calendar.MONTH),
+                    date.get(Calendar.DAY_OF_MONTH)
+                ).apply {
+                    setOnDismissListener { showDatePicker = false }
+                    show()
+                }
             }
-        }
 
-        if (showTimePicker) {
-            TimePickerDialog(
-                initialTime = time,
-                onTimeSelected = {
-                    viewModel.onTimeChange(it)
-                    showTimePicker = false
+            if (showTimePicker) {
+                TimePickerDialog(
+                    initialTime = time,
+                    onTimeSelected = {
+                        viewModel.onTimeChange(it)
+                        showTimePicker = false
+                    },
+                    onDismiss = { showTimePicker = false }
+                )
+            }
+
+            ConfirmationDialog(
+                show = showSuccessDialog,
+                onDismiss = {
+                    token?.let {
+                        navController.navigate(NavRoutes.HomeClient.route) {
+                            popUpTo(NavRoutes.HomeClient.route) { inclusive = true }
+                        }
+                    } ?: run {
+                        navController.navigate(NavRoutes.Login.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = true }
+                        }
+                    }
+                    showSuccessDialog = false
+                    successTitle = ""
+                    successMessage = ""
                 },
-                onDismiss = { showTimePicker = false }
+                Title = successTitle,
+                Message = successMessage
             )
+
+
+            ErrorDialog(
+                show = showErrorDialog,
+                onDismiss = {
+                    showErrorDialog = false
+                    errorTitle = ""
+                    errorMessage = ""
+                },
+                title = errorTitle,
+                message = errorMessage
+            )
+
         }
-
-        ConfirmationDialog(
-            show = showSuccessDialog,
-            onDismiss = { showSuccessDialog = false }
-        )
-
-        ErrorDialog(
-            show = showErrorDialog,
-            onDismiss = { showErrorDialog = false }
-        )
-
     }
 }

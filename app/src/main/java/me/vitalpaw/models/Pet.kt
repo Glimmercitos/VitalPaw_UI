@@ -9,7 +9,7 @@ data class Pet(
     val weight: Double,
     val gender: Boolean, // true = macho, false = hembra
     val unitAge: String? = null, // "months" o "years"
-    val owner: User,
+    val owner: String,
     //val createdAt: String? = null,
     //val imageRes: Int
 //    val updatedAt: String? = null
