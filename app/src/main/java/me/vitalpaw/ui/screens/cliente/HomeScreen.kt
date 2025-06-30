@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
+import me.vitalpaw.ui.components.SideMenuDrawer
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.HomeViewModel
@@ -66,7 +67,8 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
     val scrollState = rememberScrollState()
     var showMenu by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(0) }
-    val promoResIds = listOf(R.drawable.promo1, R.drawable.promo2, R.drawable.promo3, R.drawable.promo4)
+    val promoResIds =
+        listOf(R.drawable.promo1, R.drawable.promo2, R.drawable.promo3, R.drawable.promo4)
 
     Button(onClick = {
         navController.navigate(NavRoutes.Shop.route) // ✅ usa la ruta correcta
@@ -196,145 +198,101 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
             )
         }
         if (showMenu) {
-            Surface(
+            SideMenuDrawer(
+                navController = navController,
+                showMenu = showMenu,
+                onClose = { showMenu = false }
+            )
+        }
+    }
+}
+        @Composable
+        fun MenuItem(text: String, onClick: () -> Unit) {
+            Text(
+                text = text,
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(0.5f)
-                    .align(Alignment.TopEnd),
-                color = Color.White,
-                shadowElevation = 12.dp,
-                shape = RoundedCornerShape(topStart = 32.dp, bottomStart = 32.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable { onClick() }
+                    .background(Color(0xFFF4FAFD))
+                    .padding(vertical = 14.dp, horizontal = 12.dp),
+                fontFamily = quicksandFont,
+                color = Color(0xFF19486D),
+                fontSize = 16.sp
+            )
+        }
+
+        @Composable
+        fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Unit) {
+            var isHovered by remember { mutableStateOf(false) }
+            var pressed by remember { mutableStateOf(false) }
+
+            val scale by animateFloatAsState(
+                targetValue = if (pressed || isHovered) 0.97f else 1f,
+                label = "scale"
+            )
+            val alpha by animateFloatAsState(
+                targetValue = if (isHovered) 0.95f else 1f,
+                label = "alpha"
+            )
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        this.alpha = alpha
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                pressed = true
+                                tryAwaitRelease()
+                                pressed = false
+                                onClick()
+                            }
+                        )
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                isHovered = true
+                                tryAwaitRelease()
+                                isHovered = false
+                            }
+                        )
+                    },
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFCBDFF4)),
+                elevation = CardDefaults.cardElevation(6.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.logo),
-                        contentDescription = "Logo VitalPaw",
-                        modifier = Modifier
-                            .height(130.dp)
-                            .padding(vertical = 16.dp)
+                        painter = painterResource(id = icon),
+                        contentDescription = title,
+                        modifier = Modifier.size(64.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MenuItem("Registrar mascotas") {
-                        navController.navigate(NavRoutes.RegisterPet.route)
-                        showMenu = false
-                    }
-                    MenuItem("Mis mascotas") {
-                        navController.navigate(NavRoutes.MyPetAssigned.route)
-                        showMenu = false
-                    }
-                    MenuItem("Agendar cita") {
-                        navController.navigate(NavRoutes.RegisterAppointment.route)
-                        showMenu = false
-                    }
-                    MenuItem("Mis citas") {
-                        showMenu = false
-                        navController.navigate(NavRoutes.MyPetAppointment.route)
-                    }
-                    MenuItem("Tienda") {
-                        navController.navigate(NavRoutes.Shop.route)
-                        showMenu = false
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = { showMenu = false },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCBDFF4))
-                    ) {
-                        Text("Cerrar sesión", color = Color(0xFF19486D), fontFamily = quicksandFont)
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = title,
+                            fontFamily = quicksandFont,
+                            fontSize = 16.sp,
+                            color = Color(0xFF19486D)
+                        )
+                        Text(
+                            text = description,
+                            fontFamily = quicksandFont,
+                            fontSize = 14.sp,
+                            color = Color(0xFF606060)
+                        )
                     }
                 }
             }
         }
-    }
-}
-@Composable
-fun MenuItem(text: String, onClick: () -> Unit) {
-    Text( text = text,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { onClick() }
-            .background(Color(0xFFF4FAFD))
-            .padding(vertical = 14.dp, horizontal = 12.dp),
-        fontFamily = quicksandFont,
-        color = Color(0xFF19486D),
-        fontSize = 16.sp
-    )
-}
-@Composable
-fun ServiceItem(icon: Int, title: String, description: String, onClick: () -> Unit) {
-    var isHovered by remember { mutableStateOf(false) }
-    var pressed by remember { mutableStateOf(false) }
 
-    val scale by animateFloatAsState(
-        targetValue = if (pressed || isHovered) 0.97f else 1f,
-        label = "scale"
-    )
-    val alpha by animateFloatAsState(
-        targetValue = if (isHovered) 0.95f else 1f,
-        label = "alpha"
-    )
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                this.alpha = alpha
-            }
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        pressed = true
-                        tryAwaitRelease()
-                        pressed = false
-                        onClick()
-                    }
-                )
-            }
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        isHovered = true
-                        tryAwaitRelease()
-                        isHovered = false
-                    }
-                )
-            },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFCBDFF4)),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Image(
-                painter = painterResource(id = icon),
-                contentDescription = title,
-                modifier = Modifier.size(64.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = title,
-                    fontFamily = quicksandFont,
-                    fontSize = 16.sp,
-                    color = Color(0xFF19486D)
-                )
-                Text(
-                    text = description,
-                    fontFamily = quicksandFont,
-                    fontSize = 14.sp,
-                    color = Color(0xFF606060)
-                )
-            }
-        }
-    }
-}
+
