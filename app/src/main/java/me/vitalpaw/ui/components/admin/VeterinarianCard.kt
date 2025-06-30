@@ -4,14 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircleOutline
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,19 +28,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import me.vitalpaw.models.Appointment
-
+import me.vitalpaw.R
+import me.vitalpaw.models.User
 
 @Composable
-fun AdminAppoinmentCard(
-    appointment: Appointment,
-//    onClick: () -> Unit,
-) {
+fun VeterinarianCard(
+    user: User,
+    onEditClick: () -> Unit)
+{
     Card(
         modifier = Modifier
-            .width(340.dp)
+            .width(350.dp)
             .padding(8.dp)
-            .height(100.dp),
+            .height(110.dp),
         shape = RoundedCornerShape(50.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -46,7 +49,8 @@ fun AdminAppoinmentCard(
             modifier = Modifier
                 .background(Color.White)
                 .border(2.dp, Color(0xFF3695B9), CircleShape)
-        ) {
+                .height(110.dp)
+            ) {
             Box(
                 modifier = Modifier
                     .padding(8.dp)
@@ -56,8 +60,8 @@ fun AdminAppoinmentCard(
                     .clip(CircleShape)
             ) {
                 Image(
-                    painter = painterResource(appointment.pet.imageRes ),
-                    contentDescription = "Foto de ${appointment.pet.name}",
+                    painter = painterResource(id = R.drawable.defaultuserimage),
+                    contentDescription = "Avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -68,45 +72,31 @@ fun AdminAppoinmentCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 20.dp)
+                    .padding(end = 10.dp)
                     .padding(5.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = appointment.pet.name,
+                    text = user.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color.Black
                 )
                 Text(
-                    text = "Fecha: ${appointment.date}",
+                    text = user.email,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
                 Text(
-                    text = "Hora: ${appointment.time}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray
+                    text = "editar veterinario",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color(0XFFE65964),
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier.clickable { onEditClick() }
                 )
             }
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxHeight()
-//                    .width(55.dp)
-//                    .background(
-//                        Color(0xFF6980BF),
-//                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-//                    )
-//                    .clickable { onClick() },
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = "Ver detalles",
-//                    tint = Color.White,
-//                    modifier = Modifier.size(40.dp)
-//                )
-//            }
         }
     }
+
 }

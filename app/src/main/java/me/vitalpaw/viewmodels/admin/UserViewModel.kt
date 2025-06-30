@@ -65,6 +65,11 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun getUserById(id: String): User? {
+        return userRepository.getAllUsers().find { it.id == id }
+    }
+
+
     fun confirmRoleChange(context: Context) {
         selectedUser.value?.let { user ->
             val newRole = if (user.role == "veterinario") "cliente" else "veterinario"

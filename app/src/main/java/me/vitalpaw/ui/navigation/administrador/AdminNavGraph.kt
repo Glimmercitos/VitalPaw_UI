@@ -7,12 +7,15 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
+import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -23,7 +26,7 @@ fun AdminNavGraph(navController: NavHostController){
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.AssignVetRol.route,
+        startDestination = NavRoutes.AllVets.route,
         enterTransition = { defaultEnterTransition },
         exitTransition = { defaultExitTransition }
     ){
@@ -36,8 +39,21 @@ fun AdminNavGraph(navController: NavHostController){
         composable(NavRoutes.AdminHome.route)
         { AllAppointmentsScreen(navController) }
 
-        composable(NavRoutes.AssignVetRol.route)
-        { AssignVeterinarianScreen(navController)}
+        composable(
+            route = NavRoutes.AllVets.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            AllVeterinarianScreen(navController = navController, userId = userId)
+        }
+
+        composable(
+            route = NavRoutes.AssignVetRol.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            AssignVeterinarianScreen(navController = navController, userId = userId)
+        }
 
     }
 }

@@ -37,6 +37,7 @@ import me.vitalpaw.ui.theme.quicksandFont
 @Composable
 fun AssignVeterinarianScreen(
     navController: NavController,
+    userId: String,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -45,6 +46,13 @@ fun AssignVeterinarianScreen(
     val selectedUser by viewModel.selectedUser
     val isVet = viewModel.isVeterinarian()
     var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(userId) {
+        userId?.let {
+            val user = viewModel.getUserById(it)
+            user?.let { viewModel.selectUser(it) }
+        }
+    }
 
     MarkAsCompleteDialog(
         show =  showDialog,
@@ -163,8 +171,8 @@ fun AssignVeterinarianScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SalirButton {
-                navController.navigate(NavRoutes.AdminHome.route) {
-                    popUpTo(NavRoutes.AdminHome.route) { inclusive = true }
+                navController.navigate(NavRoutes.AllVets.route) {
+                    popUpTo(NavRoutes.AllVets.route) { inclusive = true }
                 }
             }
 

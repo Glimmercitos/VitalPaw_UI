@@ -17,5 +17,10 @@ sealed class NavRoutes(val route: String) {
     }
     //Admin
     object AdminHome : NavRoutes("all_appointments")
-    object AssignVetRol : NavRoutes("assign-vet-rol")
+    object AllVets : NavRoutes("edit_vet_rol/{userId}") {
+        fun createRoute(userId: String) = "edit_vet_rol/$userId"
+    }
+    object AssignVetRol : NavRoutes("assign_vet_rol/{userId}"){
+        fun createRoute(userId : String) = "assign_vet_rol/$userId"
+    }
 }

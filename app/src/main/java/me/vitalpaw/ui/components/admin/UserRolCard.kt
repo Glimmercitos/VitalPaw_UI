@@ -58,7 +58,7 @@ fun UserRolCard(
                     text = "Rol: ${user.role}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = quicksandFont,
-                    color = if (user.role == "veterinario") Color(0xFF4B877B) else Color(0xFF0277BD)
+                    color = if (user.role == "veterinario") Color(0xFF4B877B) else Color(0xFF3695B9)
                 )
             }
         }

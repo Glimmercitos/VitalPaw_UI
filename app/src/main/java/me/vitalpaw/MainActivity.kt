@@ -8,8 +8,9 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import me.vitalpaw.ui.navigation.administrador.AdminNavGraph
-import me.vitalpaw.ui.navigation.veterinario.AppNavGraph
+//import me.vitalpaw.ui.navigation.veterinario.AppNavGraph
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
