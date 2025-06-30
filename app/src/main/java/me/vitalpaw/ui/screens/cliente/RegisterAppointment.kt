@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import me.vitalpaw.R
@@ -57,6 +59,7 @@ import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.ToAssignedViewModel
+import me.vitalpaw.viewmodels.cliente.RegisterAppointmentViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -77,7 +80,10 @@ fun RegisterAppointment(
     viewModel: ToAssignedViewModel = viewModel()
 ) {
     val context = LocalContext.current
-
+    val viewModel: RegisterAppointmentViewModel = hiltViewModel()
+    val pets by viewModel.petList.collectAsState()
+    val selectedPet by viewModel.selectedPet.collectAsState()
+    var expandedPets by remember { mutableStateOf(false) }
     val service by viewModel.selectedService.collectAsState()
     val description by viewModel.description.collectAsState()
     val date by viewModel.selectedDate.collectAsState()
@@ -112,9 +118,11 @@ fun RegisterAppointment(
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center // CENTRA EL TEXTO
             ) {
                 IconButton(onClick = {
                     navController.navigate(NavRoutes.HomeClient.route) {
@@ -123,6 +131,7 @@ fun RegisterAppointment(
                 }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = TextGray)
                 }
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "REGISTRAR CITA",
                     fontFamily = quicksandFont,
@@ -131,6 +140,67 @@ fun RegisterAppointment(
                     fontWeight = FontWeight.Medium
                 )
             }
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+            ExposedDropdownMenuBox(
+                expanded = expandedPets,
+                onExpandedChange = { expandedPets = !expandedPets }
+            ) {
+                OutlinedTextField(
+                    value = selectedPet?.name ?: "",
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Mascotas", fontFamily = quicksandFont, color = TextGray) },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPets)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(12.dp),
+                    placeholder = {
+                        Text("Selecciona una mascota", fontFamily = quicksandFont, color = Color.Gray)
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = PrimaryBlue,
+                        unfocusedBorderColor = PrimaryBlue,
+                        cursorColor = PrimaryBlue,
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    ),
+                    textStyle = LocalTextStyle.current.copy(
+                        fontFamily = quicksandFont,
+                        fontSize = 16.sp,
+                        color = TextGray
+                    )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expandedPets,
+                    onDismissRequest = { expandedPets = false },
+                    modifier = Modifier
+                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                ) {
+                    pets.forEach { pet ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    pet.name,
+                                    fontFamily = quicksandFont,
+                                    color = Color.Black,
+                                    fontSize = 16.sp
+                                )
+                            },
+                            onClick = {
+                                viewModel.onPetSelected(pet)
+                                expandedPets = false
+                            }
+                        )
+                    }
+                }
+            }
+
 
             Spacer(modifier = Modifier.height(20.dp))
 
