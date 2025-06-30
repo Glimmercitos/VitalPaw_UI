@@ -93,4 +93,16 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Response<List<Pet>>
 
+    @GET("api/appointments/my-appointments")
+    suspend fun getMyAppointments(
+        @Header("Authorization") token: String
+    ): Response<List<Appointment>>
+
+
+    @DELETE("api/appointments/client/delete/{id}")
+    suspend fun deleteAppointmentClient(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
+
 }

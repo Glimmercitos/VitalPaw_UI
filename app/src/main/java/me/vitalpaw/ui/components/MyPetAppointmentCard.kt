@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,20 +26,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.vitalpaw.models.Appointment
-
+import me.vitalpaw.utils.formatDate
 
 @Composable
 fun MyPetAppointmentCard(
     appointment: Appointment,
-    onClick: () -> Unit
+    onDeleteClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .width(370.dp)
             .padding(8.dp)
-            .height(100.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(50.dp),
+            .height(100.dp),
+        shape = RoundedCornerShape(55.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row( //0xFF4AA5C8
@@ -66,12 +67,8 @@ fun MyPetAppointmentCard(
             }
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp)
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f).padding(start = 12.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = appointment.pet.name,
@@ -79,37 +76,60 @@ fun MyPetAppointmentCard(
                     color = Color.Black
                 )
                 Text(
-                    text = "Fecha: ${appointment.date}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "Servicio: ${appointment.service}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "Fecha: ${formatDate(appointment.date)}",
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
                 Text(
                     text = "Hora: ${appointment.time}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
             }
 
-            // Botón con flecha
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .width(55.dp)
-                    .background(
-                        Color(0xFF3695B9),
-                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    .padding(5.dp)
+                    .padding(end = 5.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = "Ver detalles",
-                    tint = Color.White,
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
                     modifier = Modifier
-                        .size(40.dp)
+                        .padding(end = 10.dp)
+                        .size(24.dp)
+                        .clickable { onDeleteClick() },
+                    tint = Color(0xFF5E5E5E)
                 )
+
+//            // Botón con flecha
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxHeight()
+//                    .width(55.dp)
+//                    .background(
+//                        Color(0xFF3695B9),
+//                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
+//                    ),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.KeyboardArrowRight,
+//                    contentDescription = "Ver detalles",
+//                    tint = Color.White,
+//                    modifier = Modifier
+//                        .size(40.dp)
+//                )
+//            }
             }
         }
     }
-}
 
+}

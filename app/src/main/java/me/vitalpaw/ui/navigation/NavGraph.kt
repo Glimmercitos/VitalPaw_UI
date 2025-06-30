@@ -19,6 +19,7 @@ import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.vitalpaw.ui.screens.cliente.HomeScreen
+import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 //import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 //import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
 import me.vitalpaw.ui.screens.cliente.RegisterAppointment
@@ -116,23 +117,30 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             exitTransition = { fadeOut(animationSpec = tween(300)) },
         ) { HomeScreen(navController, sessionViewModel) }
 
-        composable(NavRoutes.Shop.route) {
-            ShopScreen(navController)
-        }
-
-//        composable(NavRoutes.MyPetAssigned.route) {
-//            MyPetAssignedScreen(navController = navController)
-//        }
-
+        //Cita Cliente
         composable(NavRoutes.RegisterAppointment.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) },) {
             RegisterAppointment(navController, sessionViewModel)
         }
 
-//        composable(NavRoutes.MyPetAppointment.route) {
-//            MyPetAppointmentScreen(navController = navController)
+
+
+        composable(NavRoutes.MyPetAppointment.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }) {
+            MyPetAppointmentScreen(navController, sessionViewModel)
+        }
+
+//        composable(NavRoutes.MyPetAssigned.route) {
+//            MyPetAssignedScreen(navController = navController)
 //        }
+
+
+        composable(NavRoutes.Shop.route) {
+            ShopScreen(navController)
+        }
+
 
         composable("home_shop",
             enterTransition = { fadeIn(animationSpec = tween(300)) },

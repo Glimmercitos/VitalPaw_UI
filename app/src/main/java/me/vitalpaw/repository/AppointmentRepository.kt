@@ -5,6 +5,7 @@ import me.vitalpaw.network.ApiService
 import me.vitalpaw.network.request.AppointmentUpdateRequest
 import javax.inject.Inject
 import android.util.Log
+import me.vitalpaw.models.Pet
 import me.vitalpaw.network.request.CreateAppointmentRequest
 
 
@@ -43,5 +44,25 @@ class AppointmentRepository @Inject constructor(
         }
     }
 
+    suspend fun getMyAppointments(token: String): List<Appointment> {
+        val response = apiService.getMyAppointments("Bearer $token")
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("Appointment", "Error HTTP: ${response.code()} - $errorBody")
+            throw Exception("Error al obtener citas del usuario")
+        }
+    }
 
+    suspend fun deleteClientAppointment(token: String, id: String) {
+        val response = apiService.deleteAppointmentClient("Bearer $token", id)
+        if (!response.isSuccessful) {
+            // Loguear detalles del error HTTP
+            val errorBody = response.errorBody()?.string() ?: "Error desconocido"
+            Log.e("AppointmentRepository", "Error HTTP al eliminar cita: ${response.code()} - $errorBody")
+            throw Exception("No se pudo eliminar la cita: HTTP ${response.code()}")
+        }
+
+    }
 }
