@@ -39,12 +39,8 @@ fun AdminNavGraph(navController: NavHostController){
         composable(NavRoutes.AdminHome.route)
         { AllAppointmentsScreen(navController) }
 
-        composable(
-            route = NavRoutes.AllVets.route,
-            arguments = listOf(navArgument("userId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId") ?: ""
-            AllVeterinarianScreen(navController = navController, userId = userId)
+        composable(NavRoutes.AllVets.route) {
+            AllVeterinarianScreen(navController = navController)
         }
 
         composable(

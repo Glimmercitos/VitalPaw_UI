@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,10 +39,10 @@ fun VeterinarianCard(
 {
     Card(
         modifier = Modifier
-            .width(350.dp)
+            .width(340.dp)
             .padding(8.dp)
             .height(110.dp),
-        shape = RoundedCornerShape(50.dp),
+        shape = RoundedCornerShape(55.dp),  // en 55 no 50 para evitar desbordamiento de la card
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row( //0xFF3695B9
@@ -72,7 +73,7 @@ fun VeterinarianCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 10.dp)
+                    .padding(end = 15.dp)
                     .padding(5.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -82,11 +83,15 @@ fun VeterinarianCard(
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color.Black
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = user.email,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = "editar veterinario",
                     style = MaterialTheme.typography.bodyMedium.copy(

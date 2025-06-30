@@ -30,7 +30,6 @@ import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 fun AllVeterinarianScreen(
     viewModel: VeterinarianViewModel = hiltViewModel(),
     navController: NavController,
-    userId: String
 ) {
     LaunchedEffect(Unit) {
         viewModel.loadVeterinarians()
@@ -41,7 +40,7 @@ fun AllVeterinarianScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(start = 10.dp),
+            .padding(start = 4.dp),
     ) {
         if (veterinarians.isEmpty()) {
             Box(
