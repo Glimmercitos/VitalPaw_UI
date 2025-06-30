@@ -23,6 +23,8 @@ import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
+import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
+import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
 
@@ -238,71 +240,50 @@ fun ShopDetailScreen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     CancelarCitaButton { onCancel() }
 
                     if (cartItems.isNotEmpty() && remainingPoints >= 0) {
-                        GuardarCitaButton {
-                            showDialog.value = true
-                            onConfirm()
+                        Button(
+                            onClick = {
+                                showDialog.value = true
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF19486D)),
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(40.dp),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 6.dp,
+                                pressedElevation = 2.dp
+                            )
+                        ) {
+                            Text(
+                                text = "CANJEAR",
+                                fontFamily = quicksandFont,
+                                color = Color.White
+                            )
                         }
-                    } else {
-                        GuardarCitaButton { }
                     }
                 }
             }
         }
 
         if (showDialog.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier
-                        .width(280.dp)
-                        .padding(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.check),
-                            contentDescription = "Check",
-                            modifier = Modifier.size(48.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Compra realizada con éxito",
-                            fontFamily = quicksandFont,
-                            fontSize = 18.sp,
-                            color = Color(0xFF3695B9)
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = {
-                                showDialog.value = false
-                                cartViewModel.clearCart()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3695B9)),
-                            shape = RoundedCornerShape(50)
-                        ) {
-                            Text("OK", color = Color.White)
-                        }
-                    }
-                }
-            }
+            ConfirmationDialog(
+                show = true,
+                onDismiss = {
+                    cartViewModel.clearCart()    // 1. Limpia el carrito
+                    showDialog.value = false     // 2. Cierra el diálogo
+                },
+                Title = "Compra realizada con éxito",
+                Message = "Gracias por canjear tus VitalCoins"
+            )
         }
     }
 }
