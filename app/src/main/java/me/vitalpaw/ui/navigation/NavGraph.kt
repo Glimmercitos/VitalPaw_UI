@@ -20,9 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
 //import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 //import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
 import me.vitalpaw.ui.screens.cliente.RegisterAppointment
+import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
@@ -132,9 +134,13 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             MyPetAppointmentScreen(navController, sessionViewModel)
         }
 
-//        composable(NavRoutes.MyPetAssigned.route) {
-//            MyPetAssignedScreen(navController = navController)
-//        }
+        composable(NavRoutes.MyPetAssigned.route) {
+            MyPetAssignedScreen(navController = navController)
+        }
+
+        composable(NavRoutes.RegisterPet.route) {
+            RegisterPetScreen(navController)
+        }
 
 
         composable(NavRoutes.Shop.route) {

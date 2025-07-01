@@ -57,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -64,17 +65,19 @@ import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.flow.StateFlow
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
+import me.vitalpaw.ui.components.buttons.GuardarMascota
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterPetScreen() {
-    RegisterPetScreen(navController = NavHostController(LocalContext.current))
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRegisterPetScreen() {
+//    RegisterPetScreen(navController = NavHostController(LocalContext.current))
+//}
 
 @Composable
 fun <T> rememberStateFromFlow(flow: StateFlow<T>): State<T> {
@@ -86,19 +89,26 @@ fun <T> rememberStateFromFlow(flow: StateFlow<T>): State<T> {
 }
 
 @Composable
-fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewModel = viewModel()) {
+fun RegisterPetScreen(
+    navController: NavController,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    viewModel: RegisterPetViewModel = hiltViewModel()
+) {
     val imageUriState = rememberStateFromFlow(viewModel.imageUri)
     val nameState = rememberStateFromFlow(viewModel.name)
     val speciesState = rememberStateFromFlow(viewModel.species)
     val genderState = rememberStateFromFlow(viewModel.gender)
     val breedState = rememberStateFromFlow(viewModel.breed)
-    val birthDate = rememberStateFromFlow(viewModel.age)
+    val birthDateState = rememberStateFromFlow(viewModel.birthDate)
+    val weightState = rememberStateFromFlow(viewModel.weight)
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { viewModel.onImageChange(it) }
     }
 
     var showSuccessDialog by remember { mutableStateOf(false) }
+    var errorDialogMessage by remember { mutableStateOf<String?>(null) }
+
     val expandedSpecies = remember { mutableStateOf(false) }
     val expandedGender = remember { mutableStateOf(false) }
 
@@ -111,18 +121,20 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
     val genderOptions = listOf("Macho", "Hembra")
 
     val context = LocalContext.current
+
     val calendar = remember { java.util.Calendar.getInstance() }
     val dateFormatter =
         remember { java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()) }
     val date = remember { java.util.Calendar.getInstance() }
     val showDatePicker = remember { mutableStateOf(false) }
+    val isSubmitting by rememberStateFromFlow(viewModel.isSubmitting)
 
     if (showDatePicker.value) {
         android.app.DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
                 date.set(year, month, dayOfMonth)
-                viewModel.onAgeChange(dateFormatter.format(date.time))
+                viewModel.onBirthDateChange(dateFormatter.format(date.time))
                 showDatePicker.value = false
             },
             date.get(java.util.Calendar.YEAR),
@@ -132,6 +144,28 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
             datePicker.maxDate = System.currentTimeMillis()
         }.show()
     }
+
+    fun handleSave() {
+        if (viewModel.name.value.isBlank() ||
+            viewModel.species.value.isBlank() ||
+            viewModel.gender.value.isBlank() ||
+            viewModel.birthDate.value.isBlank()
+        ) {
+            errorDialogMessage = "Por favor, completa todos los campos obligatorios."
+            return
+        }
+
+        viewModel.createPet(
+            context,
+            onSuccess = {
+                showSuccessDialog = true
+            },
+            onError = { msg ->
+                errorDialogMessage = msg
+            }
+        )
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -293,7 +327,7 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = birthDate.value,
+                value = birthDateState.value,
                 onValueChange = {},
                 readOnly = true,
                 label = {
@@ -400,6 +434,21 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 )
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = weightState.value,
+                onValueChange = viewModel::onWeightChange,
+                label = { Text("Peso", fontFamily = quicksandFont) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF6E7AE6),
+                    unfocusedBorderColor = Color(0xFF6E7AE6)
+                ),
+                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont)
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(
@@ -411,12 +460,34 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                         popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
                     }
                 }
+
+                GuardarMascota(
+                    enabled = !isSubmitting,
+                    onClick = { handleSave() }
+                )
+
             }
 
-            ConfirmationDialog(
-                show = showSuccessDialog,
-                onDismiss = { showSuccessDialog = false }
-            )
-        }
+            }
+
+        ConfirmationDialog(
+            show = showSuccessDialog,
+            onDismiss = {
+                showSuccessDialog = false
+                navController.navigate(NavRoutes.HomeClient.route) {
+                    popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
+                }
+            },
+            Title = "¡Éxito!",
+            Message = "Mascota registrada correctamente"
+        )
+
+        ConfirmationDialog(
+            show = errorDialogMessage != null,
+            onDismiss = { errorDialogMessage = null },
+            Title = "Error",
+            Message = errorDialogMessage ?: "Error desconocido"
+        )
+
     }
 }

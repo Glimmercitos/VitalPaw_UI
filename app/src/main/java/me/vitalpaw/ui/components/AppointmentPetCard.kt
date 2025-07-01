@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import me.vitalpaw.models.Pet
 import me.vitalpaw.R
 
@@ -43,14 +44,14 @@ fun AppointmentPetCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Imagen circular
-//        Image(
-//            painter = painterResource(id = pet.imageRes),
-//            contentDescription = "Imagen de mascota",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .size(60.dp)
-//                .clip(CircleShape)
-//        )
+        AsyncImage(
+            model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+            contentDescription = "Foto de ${pet.name}",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(60.dp)
+                .clip(CircleShape)
+        )
 
         Spacer(modifier = Modifier.width(12.dp))
 

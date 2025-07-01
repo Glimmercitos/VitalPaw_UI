@@ -6,21 +6,27 @@ import me.vitalpaw.models.Pet
 import me.vitalpaw.models.User
 import me.vitalpaw.network.request.AppointmentUpdateRequest
 import me.vitalpaw.network.request.CreateAppointmentRequest
+import me.vitalpaw.network.request.CreatePetRequest
 import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.network.request.RegisterRequest
 import me.vitalpaw.network.response.AppointmentUpdateResponse
 import me.vitalpaw.network.response.LoginResponse
 import me.vitalpaw.network.response.MedicalRecordResponse
 import me.vitalpaw.network.response.MedicalRecordsResponse
+import me.vitalpaw.network.response.PetUpdateResponse
 import me.vitalpaw.network.response.RegisterResponse
 import me.vitalpaw.network.response.VetAppointmentsResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
@@ -104,5 +110,26 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<Unit>
+
+    @Multipart
+    @POST("api/pets/create")
+    suspend fun createPet(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part("species") species: RequestBody,
+        @Part("breed") breed: RequestBody,
+        @Part("gender") gender: RequestBody,
+        @Part("age") age: RequestBody,
+        @Part("weight") weight: RequestBody,
+        @Part("unitAge") unitAge: RequestBody,
+        @Part image: MultipartBody.Part? = null
+    ): Response<PetUpdateResponse>
+
+    @DELETE("api/pets/delete/user/{id}")
+    suspend fun deleteUserPet(
+        @Header("Authorization") token: String,
+        @Path("id") petId: String
+    ): Response<Unit>
+
 
 }

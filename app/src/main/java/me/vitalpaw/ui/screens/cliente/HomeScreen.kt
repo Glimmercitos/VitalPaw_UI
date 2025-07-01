@@ -225,6 +225,10 @@ fun HomeScreen(navController: NavController, sessionViewModel: SessionViewModel 
                             .padding(vertical = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+                    MenuItem("Registrar mascotas") {
+                        navController.navigate(NavRoutes.RegisterPet.route)
+                        showMenu = false
+                    }
                     MenuItem("Mis mascotas") {
                         navController.navigate(NavRoutes.MyPetAssigned.route)
                         showMenu = false

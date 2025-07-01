@@ -10,6 +10,7 @@
     import me.vitalpaw.repository.PetRepository
     import javax.inject.Inject
     import android.util.Log
+    import kotlinx.coroutines.flow.update
 
     @HiltViewModel
     class PetViewModel @Inject constructor(
@@ -30,6 +31,7 @@
                 _isLoading.value = true
                 try {
                     val result = repository.getMyPets(token)
+                    Log.d("PetViewModel", "Respuesta del servidor: $result")
                     _pets.value = result
                     _error.value = null
                     Log.d("PetViewModel", "Mascotas recibidas: ${result.size}")
@@ -38,6 +40,18 @@
                     Log.e("PetViewModel", "Error al cargar mascotas: ${e.message}")
                 } finally {
                     _isLoading.value = false
+                }
+            }
+        }
+
+        fun deleteClientPet(token: String, id: String) {
+            viewModelScope.launch {
+                try {
+                    repository.deleteClientPet(token, id)
+                    _pets.update { it.filterNot { appt -> appt.id == id } }
+                } catch (e: Exception) {
+                    Log.e("PetVM", "Error al eliminar mascota: ${e.message}")
+                    _error.value = e.message
                 }
             }
         }
