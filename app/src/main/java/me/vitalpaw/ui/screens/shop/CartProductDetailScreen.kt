@@ -1,5 +1,6 @@
 package me.vitalpaw.ui.screens.shop
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,22 +45,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.navigation.NavRoutes
+import me.vitalpaw.viewmodels.SessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartProductDetailScreen(
     navController: NavController,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     cartViewModel: CartViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val token by sessionViewModel.firebaseToken.collectAsState()
     val cartItems by cartViewModel.cartItems.collectAsState()
+
+    LaunchedEffect(token) {
+        token?.let {
+            Log.d("carrito", "Token recibido: $it")
+            cartViewModel.loadCart(it)
+            Log.d("carrito", "products en pantalla: ${cartItems}")
+        }
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Fondo tipo drawable
@@ -145,14 +160,14 @@ fun CartProductDetailScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    // 📷 Imagen
-                                    Image(
-                                        painter = painterResource(id = product.imageResId),
+                                    AsyncImage(
+                                        model = product.image,  // URL de la imagen
                                         contentDescription = product.name,
                                         modifier = Modifier
                                             .size(90.dp)
                                             .padding(end = 12.dp)
                                     )
+
 
                                     // 📝 Info
                                     Column(modifier = Modifier.weight(1f)) {
@@ -180,7 +195,8 @@ fun CartProductDetailScreen(
                                                 if (quantity > 1)
                                                     cartViewModel.updateQuantity(
                                                         product,
-                                                        quantity - 1
+                                                        quantity - 1,
+                                                        token!!
                                                     )
                                             }) {
                                                 Icon(
@@ -197,7 +213,7 @@ fun CartProductDetailScreen(
                                             )
 
                                             IconButton(onClick = {
-                                                cartViewModel.updateQuantity(product, quantity + 1)
+                                                cartViewModel.updateQuantity(product, quantity + 1, token!!)
                                             }) {
                                                 Icon(
                                                     Icons.Default.Add,
@@ -209,7 +225,7 @@ fun CartProductDetailScreen(
 
                                     // 🗑 Eliminar
                                     IconButton(onClick = {
-                                        cartViewModel.removeFromCart(product)
+                                        cartViewModel.removeFromCart(product, token!!)
                                         Toast.makeText(
                                             context,
                                             "Producto eliminado",

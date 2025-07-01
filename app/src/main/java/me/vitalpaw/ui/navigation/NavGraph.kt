@@ -28,6 +28,7 @@ import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
 import me.vitalpaw.ui.screens.shop.ProductDetailScreen
+import me.vitalpaw.ui.screens.shop.ShopDetailScreen
 import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.ui.screens.veterinario.BienvenidoScreen
@@ -127,7 +128,6 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
-
         composable(NavRoutes.MyPetAppointment.route,
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }) {
@@ -143,63 +143,52 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
+        //inicio de tienda
         composable(NavRoutes.Shop.route) {
             ShopScreen(navController)
         }
 
-
+        composable("shop") {
+            ShopScreen(navController = navController)
+        }
+        //Productos de tienda
         composable("home_shop",
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) {
             HomeShopScreen(
                 navController = navController,
+                sessionViewModel = sessionViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
-        composable("shop") {
-            ShopScreen(navController = navController)
-        }
+//        composable(NavRoutes.MyPetAssigned.route) {
+//            MyPetAssignedScreen(navController = navController)
+//        }
+
         composable(
             route = NavRoutes.ProductDetail.route,
+            arguments = listOf(
+                navArgument("productId") {
+                    nullable = false
+                    type = NavType.StringType
+                }
+            ),
             enterTransition = { fadeIn(animationSpec = tween(300)) },
             exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { backStackEntry ->
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
-            val shopViewModel: HomeShopViewModel = hiltViewModel()
-            val cartViewModel: CartViewModel = hiltViewModel()
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+
 
             ProductDetailScreen(
                 navController = navController,
-                shopViewModel = shopViewModel,
-                cartViewModel = cartViewModel,
-                productIndex = index,
+                productId = productId,
+                sessionViewModel = sessionViewModel, // si lo necesitas inyectado explícitamente
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(
-            route = NavRoutes.ProductDetail.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
-        ) { backStackEntry ->
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
 
-            // 👇 Este bloque es el que compartirá el CartViewModel
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(NavRoutes.HomeShop.route) // ✅ usamos la constante
-            }
-
-            val shopViewModel: HomeShopViewModel = hiltViewModel()
-            val cartViewModel: CartViewModel = hiltViewModel(parentEntry) // ✅ instancia compartida
-
-            ProductDetailScreen(
-                navController = navController,
-                shopViewModel = shopViewModel,
-                cartViewModel = cartViewModel,
-                productIndex = index,
-                onBack = { navController.popBackStack() }
-            )
-        }
+        //carrito
         composable(
             route = NavRoutes.CartProductDetail.route,
             enterTransition = { fadeIn(animationSpec = tween(500)) },
@@ -209,14 +198,55 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
                 navController.getBackStackEntry(NavRoutes.HomeShop.route) // 👈
             }
 
-            val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
-
             CartProductDetailScreen(
                 navController = navController,
-                cartViewModel = cartViewModel,
+                sessionViewModel = sessionViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
+
+        composable(NavRoutes.CartRedeemDetail.route) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(NavRoutes.HomeShop.route)
+            }
+            val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
+            ShopDetailScreen(
+                navController = navController,
+                sessionViewModel = sessionViewModel,
+                onBack = { navController.popBackStack() },
+                onCancel = { navController.popBackStack() },
+                onConfirm = {
+                    navController.navigate(NavRoutes.HomeShop.route) {
+                        popUpTo(NavRoutes.CartProductDetail.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+//        composable(
+//            route = NavRoutes.ProductDetail.route,
+//            enterTransition = { fadeIn(animationSpec = tween(300)) },
+//            exitTransition = { fadeOut(animationSpec = tween(300)) }
+//        ) { backStackEntry ->
+//            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
+//
+//            // 👇 Este bloque es el que compartirá el CartViewModel
+//            val parentEntry = remember(backStackEntry) {
+//                navController.getBackStackEntry(NavRoutes.HomeShop.route) // ✅ usamos la constante
+//            }
+//
+//            val shopViewModel: HomeShopViewModel = hiltViewModel()
+//            val cartViewModel: CartViewModel = hiltViewModel(parentEntry) // ✅ instancia compartida
+//
+//            ProductDetailScreen(
+//                navController = navController,
+//                shopViewModel = shopViewModel,
+//                cartViewModel = cartViewModel,
+//                productIndex = index,
+//                onBack = { navController.popBackStack() }
+//            )
+//        }
+
 
     }
 }

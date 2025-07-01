@@ -71,11 +71,11 @@ fun CartScreen(
                             modifier = Modifier.padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Image(
-                                painter = painterResource(id = product.imageResId),
-                                contentDescription = product.name,
-                                modifier = Modifier.size(64.dp)
-                            )
+//                            Image(
+//                                painter = painterResource(id = product.imageResId),
+//                                contentDescription = product.name,
+//                                modifier = Modifier.size(64.dp)
+//                            )
 
                             Spacer(modifier = Modifier.width(16.dp))
 
@@ -93,7 +93,7 @@ fun CartScreen(
                             }
 
                             Text(
-                                text = "${product.points * quantity} pts",
+                                text = "${product.priceInVitalCoins * quantity} pts",
                                 fontFamily = quicksandFont,
                                 fontSize = 14.sp
                             )

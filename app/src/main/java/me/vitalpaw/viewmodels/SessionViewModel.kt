@@ -34,6 +34,9 @@ class SessionViewModel @Inject constructor(
     private val _showError = MutableStateFlow(false)
     val showError: StateFlow<Boolean> = _showError
 
+    private val _vitalCoins = MutableStateFlow(0)
+    val vitalCoins: StateFlow<Int> = _vitalCoins
+
     private val _errorMsg = MutableStateFlow("")
     val errorMsg: StateFlow<String> = _errorMsg
 
@@ -54,6 +57,12 @@ class SessionViewModel @Inject constructor(
 
     private val _bienvenidaError = MutableStateFlow<String?>(null)
     val bienvenidaError: StateFlow<String?> = _bienvenidaError
+
+
+    fun setVitalCoins(newAmount: Int) {
+        _vitalCoins.value = newAmount
+    }
+
 
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
@@ -130,6 +139,7 @@ class SessionViewModel @Inject constructor(
                     if (response.isSuccessful) {
                         _user.value = response.body()
                         _userRole.value = response.body()?.role ?: ""
+                        _vitalCoins.value = response.body()?.vitalCoins ?: 0 // <--- Aquí asignas vitalCoins
                         _bienvenidaError.value = null
                     } else {
                         _bienvenidaError.value = "Error al obtener datos del usuario"
