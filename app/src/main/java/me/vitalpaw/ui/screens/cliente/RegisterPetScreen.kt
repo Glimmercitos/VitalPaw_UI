@@ -66,6 +66,7 @@ import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
@@ -148,28 +149,12 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
                 .padding(16.dp),
             verticalArrangement = Arrangement.Top
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "REGISTRA TU MASCOTA",
-                    fontSize = 16.sp,
-                    fontFamily = quicksandFont,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+            // Aquí reemplazamos el código de Row y lo sustituimos por TopBar
+            TopBar(
+                title = "REGISTRA TU MASCOTA",
+                onBackClick = { navController.popBackStack() }
+            )
 
             Box(
                 modifier = Modifier

@@ -48,6 +48,7 @@ import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +62,6 @@ fun CartProductDetailScreen(
     val cartItems by cartViewModel.cartItems.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Fondo tipo drawable
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
@@ -69,180 +69,131 @@ fun CartProductDetailScreen(
             contentScale = ContentScale.Crop
         )
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            TopBar(
+                title = "CARRITO",
+                onBackClick = { onBack() }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                if (cartItems.isEmpty()) {
+                    item {
                         Box(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillParentMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "CARRITO",
+                                text = "Tu carrito está vacío",
                                 fontFamily = quicksandFont,
-                                fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
-                                color = Color.Gray
+                                fontWeight = FontWeight.Medium,
+                                color = Color.LightGray
                             )
                         }
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { onBack() }) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = "Volver",
-                                tint = Color.Black
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-                )
-            },
-            containerColor = Color.Transparent
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    if (cartItems.isEmpty()) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Tu carrito está vacío",
-                                    fontFamily = quicksandFont,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color.LightGray
-                                )
-                            }
-                        }
-                    } else {
-                        itemsIndexed(cartItems) { index, item ->
-                            val product = item.first
-                            val quantity = item.second
+                    }
+                } else {
+                    itemsIndexed(cartItems) { _, item ->
+                        val product = item.first
+                        val quantity = item.second
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp, horizontal = 8.dp)
-                                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
-                                    .background(Color.White, shape = RoundedCornerShape(12.dp))
-                                    .padding(16.dp)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp, horizontal = 8.dp)
+                                .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+                                .background(Color.White, shape = RoundedCornerShape(12.dp))
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    // 📷 Imagen
-                                    Image(
-                                        painter = painterResource(id = product.imageResId),
-                                        contentDescription = product.name,
-                                        modifier = Modifier
-                                            .size(90.dp)
-                                            .padding(end = 12.dp)
+                                Image(
+                                    painter = painterResource(id = product.imageResId),
+                                    contentDescription = product.name,
+                                    modifier = Modifier
+                                        .size(90.dp)
+                                        .padding(end = 12.dp)
+                                )
+
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = product.name,
+                                        fontFamily = quicksandFont,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
                                     )
 
-                                    // 📝 Info
-                                    Column(modifier = Modifier.weight(1f)) {
+                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    Text(
+                                        text = product.description,
+                                        fontFamily = quicksandFont,
+                                        fontSize = 14.sp,
+                                        color = Color.Gray,
+                                        lineHeight = 18.sp
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        IconButton(onClick = {
+                                            if (quantity > 1)
+                                                cartViewModel.updateQuantity(product, quantity - 1)
+                                        }) {
+                                            Icon(Icons.Default.Remove, contentDescription = "Restar")
+                                        }
+
                                         Text(
-                                            text = product.name,
+                                            text = quantity.toString(),
                                             fontFamily = quicksandFont,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.SemiBold
                                         )
 
-                                        Spacer(modifier = Modifier.height(4.dp))
-
-                                        Text(
-                                            text = product.description,
-                                            fontFamily = quicksandFont,
-                                            fontSize = 14.sp,
-                                            color = Color.Gray,
-                                            lineHeight = 18.sp
-                                        )
-
-                                        Spacer(modifier = Modifier.height(8.dp))
-
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            IconButton(onClick = {
-                                                if (quantity > 1)
-                                                    cartViewModel.updateQuantity(
-                                                        product,
-                                                        quantity - 1
-                                                    )
-                                            }) {
-                                                Icon(
-                                                    Icons.Default.Remove,
-                                                    contentDescription = "Restar"
-                                                )
-                                            }
-
-                                            Text(
-                                                text = quantity.toString(),
-                                                fontFamily = quicksandFont,
-                                                fontSize = 16.sp,
-                                                fontWeight = FontWeight.SemiBold
-                                            )
-
-                                            IconButton(onClick = {
-                                                cartViewModel.updateQuantity(product, quantity + 1)
-                                            }) {
-                                                Icon(
-                                                    Icons.Default.Add,
-                                                    contentDescription = "Sumar"
-                                                )
-                                            }
+                                        IconButton(onClick = {
+                                            cartViewModel.updateQuantity(product, quantity + 1)
+                                        }) {
+                                            Icon(Icons.Default.Add, contentDescription = "Sumar")
                                         }
                                     }
+                                }
 
-                                    // 🗑 Eliminar
-                                    IconButton(onClick = {
-                                        cartViewModel.removeFromCart(product)
-                                        Toast.makeText(
-                                            context,
-                                            "Producto eliminado",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = "Eliminar",
-                                            tint = Color.Black
-                                        )
-                                    }
+                                IconButton(onClick = {
+                                    cartViewModel.removeFromCart(product)
+                                    Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
+                                }) {
+                                    Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Black)
                                 }
                             }
                         }
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                ) {
-                    RedeemPurchaseButton(onClick = {
-                        navController.navigate(NavRoutes.CartRedeemDetail.route)
-                    })
-                }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                RedeemPurchaseButton(onClick = {
+                    navController.navigate(NavRoutes.CartRedeemDetail.route)
+                })
             }
         }
     }
 }
-
-
-

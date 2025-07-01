@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.AppointmentPetCard
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.MyPetAssignedViewModel
@@ -68,22 +69,10 @@ fun MyPetAssignedScreen(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "MIS MASCOTAS",
-                style = MaterialTheme.typography.bodyMedium,
-                fontFamily = quicksandFont,
-                color = Color.Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color(0xFFF5F5F5),
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .padding(vertical = 20.dp),
-                textAlign = TextAlign.Center
+            TopBar(
+                title = "MIS MASCOTAS",
+                onBackClick = { navController.popBackStack() }
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             if (assignedPets.isEmpty()) {
                 Box(

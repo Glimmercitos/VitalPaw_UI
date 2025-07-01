@@ -56,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.SideMenuDrawer
+import me.vitalpaw.ui.components.topbar.HomeTopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.HomeViewModel
@@ -92,29 +93,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                 .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color(0xFF19486D))
-                Text(
-                    text = "HOME",
-                    fontSize = 20.sp,
-                    fontFamily = quicksandFont,
-                    color = Color(0xFF19486D)
-                )
-                IconButton(
-                    onClick = { showMenu = true },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Menu,
-                        contentDescription = "Menú",
-                        tint = Color(0xFF19486D),
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            HomeTopBar(onMenuClick = { showMenu = true })
+
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Promociones",

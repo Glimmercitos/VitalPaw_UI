@@ -56,6 +56,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.icons.TimePickerDialog
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
 import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.ToAssignedViewModel
@@ -66,12 +67,6 @@ import java.util.Locale
 
 val PrimaryBlue = Color(0xFF6E7AE6)
 val TextGray = Color(0xFF606060)
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterAppointment() {
-    RegisterAppointment(navController = NavHostController(LocalContext.current))
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,32 +112,16 @@ fun RegisterAppointment(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center // CENTRA EL TEXTO
-            ) {
-                IconButton(onClick = {
+            Spacer(modifier = Modifier.height(16.dp))
+            TopBar(
+                title = "REGISTRAR CITA",
+                onBackClick = {
                     navController.navigate(NavRoutes.HomeClient.route) {
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = TextGray)
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "REGISTRAR CITA",
-                    fontFamily = quicksandFont,
-                    fontSize = 20.sp,
-                    color = TextGray,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(20.dp))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             ExposedDropdownMenuBox(
                 expanded = expandedPets,
                 onExpandedChange = { expandedPets = !expandedPets }

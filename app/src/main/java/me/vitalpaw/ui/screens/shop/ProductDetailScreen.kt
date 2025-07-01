@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.R
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.viewmodels.shop.HomeShopViewModel
@@ -45,7 +46,6 @@ fun ProductDetailScreen(
 
     producto?.let {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Fondo tipo drawable como en otras vistas
             Image(
                 painter = painterResource(id = R.drawable.fondo),
                 contentDescription = null,
@@ -53,134 +53,115 @@ fun ProductDetailScreen(
                 contentScale = ContentScale.Crop
             )
 
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = "PRODUCTO",
-                                    fontFamily = quicksandFont,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = Color.Black
-                                )
-                            }
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { onBack() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.Black)
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-                    )
-                },
-                containerColor = Color.Transparent
-            ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                TopBar(
+                    title = "PRODUCTO",
+                    onBackClick = { onBack() }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Card(
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        modifier = Modifier.fillMaxWidth()
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
+                        Image(
+                            painter = painterResource(id = it.imageResId),
+                            contentDescription = it.name,
                             modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                                .size(200.dp)
+                                .padding(vertical = 16.dp)
+                        )
+
+                        Text(
+                            text = it.name,
+                            fontFamily = quicksandFont,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Image(
-                                painter = painterResource(id = it.imageResId),
-                                contentDescription = it.name,
-                                modifier = Modifier
-                                    .size(200.dp)
-                                    .padding(vertical = 16.dp)
+                                painter = painterResource(id = R.drawable.huellacoin),
+                                contentDescription = "Huella Coin",
+                                modifier = Modifier.size(20.dp)
                             )
+
+                            Spacer(modifier = Modifier.width(4.dp))
 
                             Text(
-                                text = it.name,
+                                text = "${it.points} pts",
                                 fontFamily = quicksandFont,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 20.sp
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF005771)
                             )
+                        }
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.huellacoin),
-                                    contentDescription = "Huella Coin",
-                                    modifier = Modifier.size(20.dp)
-                                )
+                        Text(
+                            text = it.description,
+                            fontFamily = quicksandFont,
+                            fontSize = 15.sp,
+                            color = Color.DarkGray
+                        )
 
-                                Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(onClick = { if (quantity > 1) quantity-- }) {
+                                    Icon(Icons.Default.Remove, contentDescription = "Restar")
+                                }
 
                                 Text(
-                                    text = "${it.points} pts",
+                                    text = quantity.toString(),
                                     fontFamily = quicksandFont,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color(0xFF005771)
+                                    fontSize = 20.sp
                                 )
+
+                                IconButton(onClick = { quantity++ }) {
+                                    Icon(Icons.Default.Add, contentDescription = "Sumar")
+                                }
                             }
 
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Text(
-                                text = it.description,
-                                fontFamily = quicksandFont,
-                                fontSize = 15.sp,
-                                color = Color.DarkGray
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
+                            IconButton(
+                                onClick = {
+                                    cartViewModel.addToCart(it, quantity)
+                                    Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show()
+                                },
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .background(Color.White, shape = RoundedCornerShape(50))
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    IconButton(onClick = { if (quantity > 1) quantity-- }) {
-                                        Icon(Icons.Default.Remove, contentDescription = "Restar")
-                                    }
-
-                                    Text(
-                                        text = quantity.toString(),
-                                        fontFamily = quicksandFont,
-                                        fontSize = 20.sp
-                                    )
-
-                                    IconButton(onClick = { quantity++ }) {
-                                        Icon(Icons.Default.Add, contentDescription = "Sumar")
-                                    }
-                                }
-
-                                IconButton(
-                                    onClick = {
-                                        cartViewModel.addToCart(it, quantity)
-                                        Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show()
-                                    },
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .background(Color.White, shape = RoundedCornerShape(50))
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.ShoppingCart,
-                                        contentDescription = "Agregar al carrito",
-                                        tint = Color.Black
-                                    )
-                                }
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart,
+                                    contentDescription = "Agregar al carrito",
+                                    tint = Color.Black
+                                )
                             }
                         }
                     }
@@ -189,4 +170,3 @@ fun ProductDetailScreen(
         }
     }
 }
-

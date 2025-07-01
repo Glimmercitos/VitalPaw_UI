@@ -27,7 +27,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.ProductItem
-import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.HomeShopViewModel
@@ -110,13 +109,14 @@ fun HomeShopTopBar(
                         tint = Color.Black
                     )
                 }
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
                     text = "TIENDA",
                     fontFamily = quicksandFont,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {

@@ -66,7 +66,7 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
                     fontFamily = quicksandFont,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
