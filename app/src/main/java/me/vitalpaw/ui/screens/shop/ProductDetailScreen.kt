@@ -24,8 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
@@ -33,14 +35,23 @@ import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
+    productId: String,
     shopViewModel: HomeShopViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     cartViewModel: CartViewModel = hiltViewModel(),
-    productIndex: Int,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val productos by shopViewModel.products.collectAsState()
-    val producto = productos.getOrNull(productIndex)
+    val token by sessionViewModel.firebaseToken.collectAsState()
+    val producto by shopViewModel.product.collectAsState()
+
+    LaunchedEffect(token, productId) {
+        val currentToken = token
+        if (currentToken != null) {
+            shopViewModel.loadProductById(currentToken, productId)
+        }
+    }
+
     var quantity by remember { mutableStateOf(1) }
 
     producto?.let {
@@ -97,12 +108,13 @@ fun ProductDetailScreen(
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Image(
-                                painter = painterResource(id = it.imageResId),
+                            AsyncImage(
+                                model = it.image,
                                 contentDescription = it.name,
                                 modifier = Modifier
                                     .size(200.dp)
-                                    .padding(vertical = 16.dp)
+                                    .padding(vertical = 16.dp),
+                                contentScale = ContentScale.Crop
                             )
 
                             Text(
@@ -126,7 +138,7 @@ fun ProductDetailScreen(
                                 Spacer(modifier = Modifier.width(4.dp))
 
                                 Text(
-                                    text = "${it.points} pts",
+                                    text = "${it.priceInVitalCoins} pts",
                                     fontFamily = quicksandFont,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Medium,
@@ -168,7 +180,7 @@ fun ProductDetailScreen(
 
                                 IconButton(
                                     onClick = {
-                                        cartViewModel.addToCart(it, quantity)
+                                        cartViewModel.addToCart(token!!,it._id, quantity)
                                         Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show()
                                     },
                                     modifier = Modifier

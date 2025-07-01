@@ -40,6 +40,15 @@ sealed class NavRoutes(val route: String) {
 
     object MyPetAppointment : NavRoutes("my_pet_appointment")
 
+    object ProductDetail {
+        const val route = "product_detail?productId={productId}"
+
+        fun createRoute(productId: String): String {
+            return "product_detail?productId=$productId"
+        }
+    }
+
+
     //Cliente
 
     object HomeClient : NavRoutes("home_client")
@@ -48,9 +57,9 @@ sealed class NavRoutes(val route: String) {
 
     object RegisterPet : NavRoutes("register_pet")
     object HomeShop : NavRoutes("home_shop")
-    object ProductDetail : NavRoutes("product_detail/{index}") {
-        fun createRoute(index: Int) = "product_detail/$index"
-    }
+
+
+
     object CartProductDetail : NavRoutes("cartProductDetail")
     object CartRedeemDetail : NavRoutes("cart_redeem_detail")
 

@@ -2,6 +2,7 @@
 
 package me.vitalpaw.ui.screens.shop
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -30,23 +32,33 @@ import me.vitalpaw.ui.components.ProductItem
 import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 
 @Composable
 fun HomeShopScreen(
     navController: NavController,
-    viewModel: HomeShopViewModel = viewModel(),
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    viewModel: HomeShopViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
+    val token by sessionViewModel.firebaseToken.collectAsState()
     val productos by viewModel.products.collectAsState()
-    val coinAmount = 2500 // Puedes reemplazarlo por un valor del ViewModel si lo tienes.
+    val coinAmount by sessionViewModel.vitalCoins.collectAsState() // Puedes reemplazarlo por un valor del ViewModel si lo tienes.
 
+    LaunchedEffect(token) {
+        token?.let {
+            Log.d("tienda", "Token recibido: $it")
+            viewModel.loadCatalog(it)
+            Log.d("TIENDA", "products en pantalla: ${productos.size}")
+        }
+    }
     Scaffold(
         containerColor = Color.White,
         topBar = {
             HomeShopTopBar(
                 coinAmount = coinAmount,
-                onBackClick = { onBack() },
+                onBackClick = { navController.navigate(NavRoutes.HomeClient.route)},
                 onCartClick = {
                     navController.navigate(NavRoutes.CartProductDetail.route)
                 }
@@ -62,13 +74,13 @@ fun HomeShopScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            itemsIndexed(productos) { index, producto ->
+            itemsIndexed(productos) { _, producto ->
                 ProductItem(
-                    imageResId = producto.imageResId,
+                    image = producto.image,
                     name = producto.name,
-                    price = producto.points,
+                    price = producto.priceInVitalCoins,
                     onClick = {
-                        navController.navigate(NavRoutes.ProductDetail.createRoute(index))
+                        navController.navigate(NavRoutes.ProductDetail.createRoute(producto._id))
                     }
                 )
             }
@@ -153,15 +165,15 @@ fun HomeShopTopBar(
 }
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomeShopScreenPreview() {
-    val nav = rememberNavController()
-    val previewViewModel = remember { HomeShopViewModel() }
-
-    HomeShopScreen(
-        navController = nav,
-        viewModel = previewViewModel,
-        onBack = {}
-    )
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun HomeShopScreenPreview() {
+//    val nav = rememberNavController()
+//    val previewViewModel = remember { HomeShopViewModel() }
+//
+//    HomeShopScreen(
+//        navController = nav,
+//        viewModel = previewViewModel,
+//        onBack = {}
+//    )
+//}

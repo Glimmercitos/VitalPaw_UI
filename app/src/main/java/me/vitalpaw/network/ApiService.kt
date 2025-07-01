@@ -3,12 +3,17 @@ package me.vitalpaw.network
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.models.Pet
+import me.vitalpaw.models.Product
 import me.vitalpaw.models.User
+import me.vitalpaw.network.request.AddToCartRequest
 import me.vitalpaw.network.request.AppointmentUpdateRequest
 import me.vitalpaw.network.request.CreateAppointmentRequest
 import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.network.request.RegisterRequest
+import me.vitalpaw.network.request.UpdateCartItemRequest
 import me.vitalpaw.network.response.AppointmentUpdateResponse
+import me.vitalpaw.network.response.CartResponse
+import me.vitalpaw.network.response.CheckoutResponse
 import me.vitalpaw.network.response.LoginResponse
 import me.vitalpaw.network.response.MedicalRecordResponse
 import me.vitalpaw.network.response.MedicalRecordsResponse
@@ -104,5 +109,46 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<Unit>
+
+    @GET("api/shop/catalog")
+    suspend fun getCatalog(
+        @Header("Authorization") token: String
+    ): Response<List<Product>>
+
+    @GET("api/shop/catalog/{id}")
+    suspend fun getProductById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<Product>
+
+    @POST("api/shop/cart")
+    suspend fun addToCart(
+        @Header("Authorization") token: String,
+        @Body body:AddToCartRequest
+    ): Response<Unit>
+
+    @GET("api/shop/cart")
+    suspend fun getCart(
+        @Header("Authorization") token: String
+    ): Response<CartResponse>
+
+    @PUT("api/shop/cart/{productId}")
+    suspend fun updateCart(
+        @Header("Authorization") token: String,
+        @Path("productId") id: String,
+        @Body request: UpdateCartItemRequest
+    ): Response<Unit>
+
+    @DELETE("api/shop/cart/{productId}")
+    suspend fun removeCartItem(
+        @Header("Authorization") token: String,
+        @Path("productId") productId: String
+    ): Response<Unit>
+
+    @POST("api/shop/checkout")
+    suspend fun checkout(
+        @Header("Authorization") token: String
+    ): Response<CheckoutResponse>
+
 
 }

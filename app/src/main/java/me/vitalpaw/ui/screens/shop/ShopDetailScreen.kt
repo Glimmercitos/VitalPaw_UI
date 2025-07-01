@@ -17,190 +17,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
+import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
+import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.components.modal.ErrorDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.shop.CartViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 val DeepBlue = Color(0xFF005771)
-
-@Composable
-fun ShopDetailScreen(
-    navController: NavController,
-    onCancel: () -> Unit,
-    onConfirm: () -> Unit,
-    cartViewModel: CartViewModel,
-    onBack: () -> Unit
-) {
-    val cartItems by cartViewModel.cartItems.collectAsState()
-    val totalPoints = cartItems.sumOf { it.first.points * it.second }
-    val coinAmount = 2500
-
-    val showDialog = remember { mutableStateOf(false) }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        Image(
-            painter = painterResource(id = R.drawable.fondo),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Scaffold(
-            topBar = {
-                ShopDetailTopBar(coinAmount = coinAmount) {
-                    navController.popBackStack()
-                }
-            },
-            containerColor = Color.Transparent
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Detalle de compra",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = quicksandFont,
-                    color = DeepBlue
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(6.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        cartItems.forEach { (product, quantity) ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "${product.name} ($quantity)",
-                                    fontFamily = quicksandFont,
-                                    fontSize = 16.sp,
-                                    color = Color.Black
-                                )
-                                Text(
-                                    text = "${product.points * quantity} pts",
-                                    fontFamily = quicksandFont,
-                                    fontSize = 16.sp,
-                                    color = Color.Black
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.huellacoin),
-                        contentDescription = "Huella Coin",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Total de puntos: $totalPoints pts",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = quicksandFont,
-                        color = DeepBlue
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    CancelarCitaButton { onCancel() }
-                    GuardarCitaButton {
-                        showDialog.value = true
-                        onConfirm()
-                    }
-                }
-            }
-        }
-
-        // 🎉 Diálogo de confirmación de compra
-        if (showDialog.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier
-                        .width(280.dp)
-                        .padding(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.check),
-                            contentDescription = "Check",
-                            modifier = Modifier.size(48.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Compra realizada con éxito",
-                            fontFamily = quicksandFont,
-                            fontSize = 18.sp,
-                            color = Color(0xFF3695B9)
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = {
-                                showDialog.value = false
-                                cartViewModel.clearCart()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3695B9)),
-                            shape = RoundedCornerShape(50)
-                        ) {
-                            Text("OK", color = Color.White)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
@@ -238,7 +71,7 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
                     fontFamily = quicksandFont,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -261,3 +94,229 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
     }
 }
 
+@Composable
+fun ShopDetailScreen(
+    navController: NavController,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel(),
+    onBack: () -> Unit,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    val cartItems by cartViewModel.cartItems.collectAsState()
+    val token by sessionViewModel.firebaseToken.collectAsState()
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(token) {
+        token?.let {
+            cartViewModel.loadCart(it)
+        }
+    }
+
+    val totalPoints = cartItems.sumOf { it.first.priceInVitalCoins * it.second }
+    val coinAmount by sessionViewModel.vitalCoins.collectAsState()
+    val remainingPoints = coinAmount - totalPoints
+    val showDialog = remember { mutableStateOf(false) }
+    val showError = remember { mutableStateOf(false) }
+
+    // Log para verificar
+    LaunchedEffect(cartItems) {
+        println("🛒 Productos en ShopDetailScreen:")
+        cartItems.forEach {
+            println("Producto: ${it.first.name}, cantidad: ${it.second}")
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.fondo),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Scaffold(
+            topBar = {
+                ShopDetailTopBar(coinAmount = coinAmount) {
+                    onBack()
+                }
+            },
+            containerColor = Color.Transparent
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Detalle de compra",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = quicksandFont,
+                    color = DeepBlue
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(6.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        if (cartItems.isEmpty()) {
+                            Text(
+                                text = "No hay productos en el carrito",
+                                fontFamily = quicksandFont,
+                                fontSize = 16.sp,
+                                color = Color.Gray
+                            )
+                        } else {
+                            cartItems.forEachIndexed { index, (product, quantity) ->
+                                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                    Text(
+                                        text = "Item ${index + 1}",
+                                        fontFamily = quicksandFont,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Text(
+                                        text = "Nombre: ${product.name}",
+                                        fontFamily = quicksandFont,
+                                        fontSize = 16.sp,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = "Cantidad: $quantity",
+                                        fontFamily = quicksandFont,
+                                        fontSize = 16.sp,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = "Subtotal: ${product.priceInVitalCoins * quantity} pts",
+                                        fontFamily = quicksandFont,
+                                        fontSize = 16.sp,
+                                        color = Color.Black
+                                    )
+                                    Divider(color = Color.LightGray, thickness = 1.dp)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.huellacoin),
+                        contentDescription = "Huella Coin",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Total de puntos: $totalPoints pts",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = quicksandFont,
+                        color = DeepBlue
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Puntos restantes: $remainingPoints pts",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = quicksandFont,
+                    color = if (remainingPoints >= 0) DeepBlue else Color.Red
+                )
+
+                if (remainingPoints < 0) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Puntos insuficientes para realizar la compra.",
+                        fontSize = 14.sp,
+                        fontFamily = quicksandFont,
+                        color = Color.Red
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        24.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CancelarCitaButton { onCancel() }
+
+                    if (cartItems.isNotEmpty() && remainingPoints >= 0) {
+                        Button(
+                            onClick = {
+                                token?.let {
+                                    scope.launch {
+                                        val res = cartViewModel.checkout(it)
+                                        if (res.isSuccessful) {
+                                            val newCoins = res.body()?.vitalCoinsRestantes ?: coinAmount
+                                            sessionViewModel.setVitalCoins(newCoins)
+                                            cartViewModel.clearCart()
+                                            showDialog.value = true
+                                        } else {
+                                            showError.value = true
+                                        }
+                                    }
+                                }
+                                showDialog.value = true
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF19486D)),
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(40.dp),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 6.dp,
+                                pressedElevation = 2.dp
+                            )
+                        ) {
+                            Text(
+                                text = "CANJEAR",
+                                fontFamily = quicksandFont,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (showDialog.value) {
+                ConfirmationDialog(
+                    show = true,
+                    onDismiss = {
+                        cartViewModel.clearCart()    // 1. Limpia el carrito
+                        showDialog.value = false // 2. Cierra el diálogo
+                        navController.navigate(NavRoutes.Shop.route)
+                    },
+                    Title = "Compra realizada con éxito",
+                    Message = "Gracias por canjear tus VitalCoins"
+                )
+            }
+        }
+    }
+}

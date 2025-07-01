@@ -14,12 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import me.vitalpaw.R
 import me.vitalpaw.ui.theme.quicksandFont
 
 @Composable
 fun ProductItem(
-    imageResId: Int,
+    image: String?,
     name: String,
     price: Int,
     onClick: () -> Unit = {}
@@ -44,8 +45,8 @@ fun ProductItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = imageResId),
+            AsyncImage(
+                model = image,  // URL de la imagen
                 contentDescription = null,
                 modifier = Modifier.size(80.dp)
             )
@@ -75,7 +76,7 @@ fun ProductItem(
 @Composable
 fun PreviewProductItem() {
     ProductItem(
-        imageResId = R.drawable.prod3,
+        image = "https://veterinariaelcountry.com/wp-content/uploads/Juguete-Para-Gato-Raton-De-Cuerda-11-Cm.jpg'",
         name = "Juguete para perro",
         price = 40
     )
