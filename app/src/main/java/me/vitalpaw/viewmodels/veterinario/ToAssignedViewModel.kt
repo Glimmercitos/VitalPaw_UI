@@ -1,4 +1,4 @@
-package me.vitalpaw.viewmodels
+package me.vitalpaw.viewmodels.veterinario
 
 import android.util.Log
 import androidx.compose.runtime.getValue
