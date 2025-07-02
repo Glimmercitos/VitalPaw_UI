@@ -341,13 +341,20 @@ fun RegisterAppointment(
                 GuardarCitaButton { showSuccessDialog = true }
             }
         }
-
         if (showDatePicker) {
             val calendar = Calendar.getInstance()
             DatePickerDialog(
                 context,
                 { _, year, month, day ->
-                    calendar.set(year, month, day)
+                    // Establecer la fecha correctamente y resetear la hora a 00:00:00
+                    calendar.set(Calendar.YEAR, year)
+                    calendar.set(Calendar.MONTH, month)
+                    calendar.set(Calendar.DAY_OF_MONTH, day)
+                    calendar.set(Calendar.HOUR_OF_DAY, 0)
+                    calendar.set(Calendar.MINUTE, 0)
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MILLISECOND, 0)
+
                     viewModel.onDateChange(calendar)
                     showDatePicker = false
                 },
@@ -359,7 +366,6 @@ fun RegisterAppointment(
                 show()
             }
         }
-
         if (showTimePicker) {
             TimePickerDialog(
                 initialTime = time,

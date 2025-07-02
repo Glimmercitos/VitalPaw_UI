@@ -70,6 +70,7 @@ import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
+import java.util.Calendar
 
 @Composable
 fun <T> rememberStateFromFlow(flow: StateFlow<T>): State<T> {
@@ -113,13 +114,19 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
         android.app.DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                date.set(year, month, dayOfMonth)
+                date.set(Calendar.YEAR, year)
+                date.set(Calendar.MONTH, month)
+                date.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                date.set(Calendar.HOUR_OF_DAY, 0)
+                date.set(Calendar.MINUTE, 0)
+                date.set(Calendar.SECOND, 0)
+                date.set(Calendar.MILLISECOND, 0)
                 viewModel.onAgeChange(dateFormatter.format(date.time))
                 showDatePicker.value = false
             },
-            date.get(java.util.Calendar.YEAR),
-            date.get(java.util.Calendar.MONTH),
-            date.get(java.util.Calendar.DAY_OF_MONTH)
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH)
         ).apply {
             datePicker.maxDate = System.currentTimeMillis()
         }.show()

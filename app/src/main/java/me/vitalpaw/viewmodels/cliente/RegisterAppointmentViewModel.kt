@@ -57,7 +57,14 @@ class RegisterAppointmentViewModel @Inject constructor(
     }
 
     fun onDateChange(date: Calendar) {
-        _selectedDate.value = date
+        val normalizedDate = Calendar.getInstance().apply {
+            timeInMillis = date.timeInMillis
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        _selectedDate.value = normalizedDate
     }
 
     fun onTimeChange(time: Calendar) {
