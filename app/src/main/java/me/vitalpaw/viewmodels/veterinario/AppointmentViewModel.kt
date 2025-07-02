@@ -25,6 +25,9 @@ class AppointmentViewModel @Inject constructor(
     private val _appointments = MutableStateFlow<List<Appointment>>(emptyList())
     val appointments: StateFlow<List<Appointment>> = _appointments
 
+    private val _allAppointments = MutableStateFlow<List<Appointment>>(emptyList())
+    val allAppointments: StateFlow<List<Appointment>> = _allAppointments
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -41,6 +44,23 @@ class AppointmentViewModel @Inject constructor(
             } catch (e: Exception) {
                 _error.value = e.message
                 Log.e("AppointmentViewModel", "Error al cargar citas: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun loadAllAppointments(token: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = repository.getAllAppointments(token)
+                _allAppointments.value = result
+                _error.value = null
+                Log.d("AppointmentVW", "Appoint recibidas: ${result.size}")
+            } catch (e: Exception) {
+                _error.value = e.message
+                Log.e("appointmentVM", "Error al cargar citas: ${e.message}")
             } finally {
                 _isLoading.value = false
             }

@@ -35,7 +35,7 @@ import me.vitalpaw.viewmodels.SessionViewModel
 @Composable
 fun AssignVeterinarianScreen(
     navController: NavController,
-    userId: String,
+    userId: String?,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
 ) {
@@ -48,12 +48,12 @@ fun AssignVeterinarianScreen(
 
     var showDialog by remember { mutableStateOf(false) }
 
-//    LaunchedEffect(userId) {
-//        userId.let {
-//            val user = userViewModel.getUserById(it)
-//            user?.let { userViewModel.selectUser(it) }
-//        }
-//    }
+    LaunchedEffect(userId, token) {
+        if (userId != null && token != null && userViewModel.selectedUser == null) {
+            val user = userViewModel.getUserById(userId, token!!)
+            user?.let { userViewModel.selectUser(it) }
+        }
+    }
 
     MarkAsCompleteDialog(
         show = showDialog,

@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.vitalpaw.models.Appointment
+import me.vitalpaw.utils.formatDate
 
 
 @Composable
@@ -79,7 +80,7 @@ fun AdminAppoinmentCard(
                     color = Color.Black
                 )
                 Text(
-                    text = "Fecha: ${appointment.date}",
+                    text = "Fecha: ${formatDate(appointment.date)}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )

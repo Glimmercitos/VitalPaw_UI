@@ -113,6 +113,22 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    suspend fun getUserById(userId: String, token: String): User? {
+        return try {
+            val response = userRepository.getUserById(userId, token)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("UserViewModel", "Error obteniendo usuario por id: ${response.code()} ${response.message()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("UserViewModel", "Excepción obteniendo usuario por id", e)
+            null
+        }
+    }
+
+
 
     fun dismissError() {
         showErrorDialog = false

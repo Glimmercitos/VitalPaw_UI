@@ -63,6 +63,23 @@ class UserRepository @Inject constructor(
             throw e
         }
     }
+    suspend fun getVeterinarians(token: String): List<User> {
+        val response = apiService.getVets("Bearer $token")
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
+        } else {
+            throw Exception("Error del servidor: ${response.code()} ${response.message()}")
+        }
+    }
+
+    suspend fun getUserById(userId: String, token: String): Response<User> {
+        return try {
+            apiService.getUserById("Bearer $token", userId)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error obteniendo usuario por id: ${e.message}", e)
+            Response.error(500, okhttp3.ResponseBody.create(null, "Error interno"))
+        }
+    }
 
 
 }

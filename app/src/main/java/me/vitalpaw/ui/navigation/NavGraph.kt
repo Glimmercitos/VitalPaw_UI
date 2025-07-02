@@ -20,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
+import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
@@ -264,6 +266,12 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             AssignVeterinarianScreen(navController = navController, userId = userId, sessionViewModel = sessionViewModel)
         }
 
+        composable(NavRoutes.AllVets.route) {
+            AllVeterinarianScreen(navController = navController, sessionViewModel = sessionViewModel)
+        }
+
+        composable(NavRoutes.AdminHome.route)
+        { AllAppointmentsScreen(navController, sessionViewModel) }
 
     }
 }

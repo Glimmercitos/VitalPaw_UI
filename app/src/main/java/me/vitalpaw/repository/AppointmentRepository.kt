@@ -65,4 +65,15 @@ class AppointmentRepository @Inject constructor(
         }
 
     }
+
+    suspend fun getAllAppointments(token: String): List<Appointment> {
+        val response = apiService.getAllAppointments("Bearer $token")
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("AppointmentRepository", "Error HTTP: ${response.code()} - $errorBody")
+            throw Exception("Error al obtener citas")
+        }
+    }
 }

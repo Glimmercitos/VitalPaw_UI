@@ -201,4 +201,19 @@ interface ApiService {
         @Body request: RoleUpdateRequest
     ): Response<User>
 
+    @GET("api/users/veterinarians")
+    suspend fun getVets(
+        @Header("Authorization") token: String,
+    ): Response<List<User>>
+
+    @GET("api/users/{id}")
+    suspend fun getUserById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Response<User>
+
+    @GET("api/appointments/all")
+    suspend fun getAllAppointments(
+        @Header("Authorization") token: String
+    ): Response<List<Appointment>>
 }
