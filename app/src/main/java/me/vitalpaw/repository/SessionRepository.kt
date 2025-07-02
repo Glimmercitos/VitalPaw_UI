@@ -10,4 +10,7 @@ class SessionRepository @Inject constructor() {
         // Simulación de autenticación local
         return email.isNotBlank() && password.isNotBlank()
     }
+    suspend fun logout() {
+        // Borrar tokens guardados o preferencias
+    }
 }

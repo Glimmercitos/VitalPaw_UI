@@ -50,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -59,20 +60,31 @@ import me.vitalpaw.ui.components.SideMenuDrawer
 import me.vitalpaw.ui.components.topbar.HomeTopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.cliente.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel()) {
-    val promotions by viewModel.promotions.collectAsState()
-    val scrollState = rememberScrollState()
+    val sessionViewModel: SessionViewModel = hiltViewModel()
+
     var showMenu by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(0) }
+
+    val promotions by viewModel.promotions.collectAsState()
+    val scrollState = rememberScrollState()
     val promoResIds =
         listOf(R.drawable.promo1, R.drawable.promo2, R.drawable.promo3, R.drawable.promo4)
 
+    SideMenuDrawer(
+        navController = navController,
+        showMenu = showMenu,
+        onClose = { showMenu = false },
+        sessionViewModel = sessionViewModel
+    )
+
     Button(onClick = {
-        navController.navigate(NavRoutes.Shop.route) // ✅ usa la ruta correcta
+        navController.navigate(NavRoutes.Shop.route)
     }) {
         Text("Ir a tienda")
     }
@@ -183,7 +195,8 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
             SideMenuDrawer(
                 navController = navController,
                 showMenu = showMenu,
-                onClose = { showMenu = false }
+                onClose = { showMenu = false },
+                sessionViewModel = sessionViewModel // 👈 acá lo mandás bien
             )
         }
     }

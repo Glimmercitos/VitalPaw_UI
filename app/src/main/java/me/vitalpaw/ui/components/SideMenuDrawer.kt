@@ -28,12 +28,14 @@ import androidx.navigation.NavController
 import me.vitalpaw.R
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
+import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
 fun SideMenuDrawer(
     navController: NavController,
     showMenu: Boolean,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    sessionViewModel: SessionViewModel // ⬅️ AÑADÍ ESTO
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -118,12 +120,19 @@ fun SideMenuDrawer(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Button(
-                            onClick = onClose,
+                            onClick = {
+                                sessionViewModel.logout() // ⬅️ llama al ViewModel
+                                navController.navigate(NavRoutes.Login.route) {
+                                    popUpTo(0) // Limpia el back stack
+                                }
+                                onClose()
+                            },
                             shape = RoundedCornerShape(24.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCBDFF4))
                         ) {
                             Text("Cerrar sesión", color = Color(0xFF19486D), fontFamily = quicksandFont)
                         }
+
                     }
                 }
             }

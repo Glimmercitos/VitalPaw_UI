@@ -14,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val repository: SessionRepository
+
 ) : ViewModel() {
 
     var uiState by mutableStateOf(SessionUiState())
@@ -46,6 +47,13 @@ class SessionViewModel @Inject constructor(
                 isLoading = false,
                 showError = !success
             )
+        }
+    }
+
+    fun logout() {
+        uiState = SessionUiState() // Reinicia todo el estado
+        viewModelScope.launch {
+            repository.logout() // ← si estás usando DataStore o algo persistente
         }
     }
 }

@@ -98,10 +98,7 @@ fun RegisterPetScreen(navController: NavController, viewModel: RegisterPetViewMo
     val expandedGender = remember { mutableStateOf(false) }
 
     val speciesOptions = listOf(
-        "Perro", "Gato", "Conejo", "Ave", "Hámster", "Tortuga", "Pez", "Hurón",
-        "Caballo", "Vaca", "Cerdo", "Cabra", "Oveja", "Gallina",
-        "Iguana", "Serpiente", "Erizo africano", "Guacamaya", "Chinchilla", "Dragón barbudo",
-        "Otro"
+        "Perro", "Gato", "Conejo", "Ave", "Hámster", "Tortuga", "Pez", "Iguana", "Serpiente", "Otro"
     )
     val genderOptions = listOf("Macho", "Hembra")
 

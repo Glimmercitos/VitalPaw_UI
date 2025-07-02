@@ -50,7 +50,6 @@ fun MyPetDetail(
         return
     }
 
-    // ✅ Ya tenemos el pet, renderizamos la vista normalmente
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.fondo),
