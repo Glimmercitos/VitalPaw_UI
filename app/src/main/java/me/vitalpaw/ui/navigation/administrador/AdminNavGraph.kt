@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,6 +15,7 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
+import me.vitalpaw.ui.screens.administrador.AdminHomeScreen
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
@@ -27,7 +29,7 @@ fun AdminNavGraph(navController: NavHostController){
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.RedeemedCoins.route,
+        startDestination = NavRoutes.AdminHome.route,
         enterTransition = { defaultEnterTransition },
         exitTransition = { defaultExitTransition }
     ){
@@ -37,7 +39,7 @@ fun AdminNavGraph(navController: NavHostController){
         composable(NavRoutes.Register.route)
         { Register(navController) }
 
-        composable(NavRoutes.AdminHome.route)
+        composable(NavRoutes.AllAppointments.route)
         { AllAppointmentsScreen(navController) }
 
         composable(NavRoutes.AllVets.route) {
@@ -58,6 +60,10 @@ fun AdminNavGraph(navController: NavHostController){
 
         composable(NavRoutes.RedeemedCoins.route){
             RedeemedCoinsScreen(navController = navController)
+        }
+
+        composable(NavRoutes.AdminHome.route){
+            AdminHomeScreen(navController = navController)
         }
     }
 }

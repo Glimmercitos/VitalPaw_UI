@@ -92,9 +92,9 @@ fun AssignVeterinarianScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.Gray,
                     disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF487FE1),
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
+                    disabledBorderColor = Color(0xFF3695B9),
+                    focusedBorderColor = Color(0xFF3695B9),
+                    unfocusedBorderColor = Color(0xFF3695B9)
                 )
             )
 
@@ -167,8 +167,8 @@ fun AssignVeterinarianScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SalirButton {
-                navController.navigate(NavRoutes.AllVets.route) {
-                    popUpTo(NavRoutes.AllVets.route) { inclusive = true }
+                navController.navigate(NavRoutes.AdminHome.route) {
+                    popUpTo(NavRoutes.AdminHome.route) { inclusive = true }
                 }
             }
 
