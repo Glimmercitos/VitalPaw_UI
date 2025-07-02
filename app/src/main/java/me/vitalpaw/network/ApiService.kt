@@ -1,5 +1,6 @@
 package me.vitalpaw.network
 
+import com.tuapp.network.request.UpdateVitalCoinsRequest
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.models.MedicalRecord
 import me.vitalpaw.models.Pet
@@ -11,6 +12,7 @@ import me.vitalpaw.network.request.CreateAppointmentRequest
 import me.vitalpaw.network.request.CreatePetRequest
 import me.vitalpaw.network.request.MedicalRecordRequest
 import me.vitalpaw.network.request.RegisterRequest
+import me.vitalpaw.network.request.RoleUpdateRequest
 import me.vitalpaw.network.request.UpdateCartItemRequest
 import me.vitalpaw.network.response.AppointmentUpdateResponse
 import me.vitalpaw.network.response.CartResponse
@@ -20,6 +22,7 @@ import me.vitalpaw.network.response.MedicalRecordResponse
 import me.vitalpaw.network.response.MedicalRecordsResponse
 import me.vitalpaw.network.response.PetUpdateResponse
 import me.vitalpaw.network.response.RegisterResponse
+import me.vitalpaw.network.response.UserResponse
 import me.vitalpaw.network.response.VetAppointmentsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -33,6 +36,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("api/users/register")
@@ -177,5 +181,24 @@ interface ApiService {
         @Path("id") petId: String
     ): Response<Unit>
 
+    @POST("api/users/vitalCoins/{id}")
+    suspend fun postVitalCoins(
+        @Header("Authorization") token: String,
+        @Path("id") userId: String,
+        @Body request: UpdateVitalCoinsRequest
+    ): Response<UserResponse>
+
+    @GET("api/users/search-clients")
+    suspend fun searchClients(
+        @Header("Authorization") token: String,
+        @Query("email") email: String
+    ): Response<List<User>>
+
+    @PUT("api/users/role/{id}")
+    suspend fun changeRole(
+        @Header("Authorization") token: String,
+        @Path("id") userId: String,
+        @Body request: RoleUpdateRequest
+    ): Response<User>
 
 }

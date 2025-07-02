@@ -1,88 +1,128 @@
-//package me.vitalpaw.viewmodel
-//
-//import android.content.Context
-//import android.widget.Toast
-//import androidx.compose.runtime.mutableStateListOf
-//import androidx.compose.runtime.mutableStateOf
-//import androidx.lifecycle.ViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
-//import me.vitalpaw.models.User
-//import me.vitalpaw.repository.UserRepository
-//import javax.inject.Inject
-//
-//@HiltViewModel
-//class UserViewModel @Inject constructor(
-//    private val userRepository: UserRepository
-//): ViewModel() {
-//
-//    var searchQuery = mutableStateOf("")
-//    var filteredUsers = mutableStateListOf<User>()
-//    var selectedUser = mutableStateOf<User?>(null)
-//
-//    fun onSearchQueryChanged(query: String) {
-//        searchQuery.value = query
-//
-//        if (selectedUser.value != null) {
-//            selectedUser.value = null
-//        }
-//
-//        val allUsers = userRepository.getAllUsers()
-//        val filtered = if (query.isBlank()) {
-//            emptyList()
-//        } else {
-//            allUsers.filter {
-//                it.email.contains(query.trim(), ignoreCase = true)
-//            }
-//        }
-//
-//        filteredUsers.clear()
-//        filteredUsers.addAll(filtered)
-//    }
-//
-//    fun getPendingRole(): String {
-//        return if (selectedUser.value?.role == "veterinario") "veterinario" else "cliente"
-//    }
-//
-//    fun selectUser(user: User) {
-//        selectedUser.value = user
-//    }
-//
-//    fun isVeterinarian(): Boolean {
-//        return selectedUser.value?.role == "veterinario"
-//    }
-//
-//    fun getUserById(id: String): User? {
-//        return userRepository.getAllUsers().find { it.id == id }
-//    }
-//
-//    fun toggleVeterinarianRole(context: Context) {
-//        selectedUser.value?.let { user ->
-//            val newRole = if (user.role == "veterinario") "cliente" else "veterinario"
-//            val updatedUser = user.copy(role = newRole)
-//            selectedUser.value = updatedUser
-//
-//            Toast.makeText(
-//                context,
-//                "Actualizando Rol a $newRole",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
-//
-//    fun confirmRoleChange(context: Context) {
-//        selectedUser.value?.let { user ->
-//            val newRole = if (user.role == "veterinario") "cliente" else "veterinario"
-//            val updatedUser = user.copy(role = newRole)
-//            selectedUser.value = null
-//            searchQuery.value = ""
-//            filteredUsers.clear()
-//
-//            Toast.makeText(
-//                context,
-//                "Rol de ${user.email} actualizado a $newRole",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
-//
-//}
+package me.vitalpaw.viewmodel
+
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import me.vitalpaw.models.User
+import me.vitalpaw.repository.UserRepository
+import javax.inject.Inject
+
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    var searchQuery by mutableStateOf("")
+    var selectedUser by mutableStateOf<User?>(null)
+    private val _filteredUsers = mutableStateListOf<User>()
+    val filteredUsers: List<User> get() = _filteredUsers
+
+    var showErrorDialog by mutableStateOf(false)
+    var errorMessage by mutableStateOf("")
+
+    fun onSearchQueryChanged(query: String, token: String) {
+        searchQuery = query
+        selectedUser = null
+        if (query.isNotBlank()) {
+            filterUsers(query, token)
+        } else {
+            _filteredUsers.clear()
+        }
+    }
+
+    private fun filterUsers(query: String, token: String) {
+        viewModelScope.launch {
+            try {
+                val results = userRepository.searchClients(token, query)
+                _filteredUsers.clear()
+                _filteredUsers.addAll(results)
+            } catch (e: Exception) {
+                errorMessage = "Error al buscar usuarios: ${e.message}"
+                showErrorDialog = true
+            }
+        }
+    }
+
+    fun selectUser(user: User) {
+        selectedUser = user
+        searchQuery = user.email
+        _filteredUsers.clear()
+        Log.e("NUEVO USER", "$selectedUser")
+    }
+
+    fun getPendingRole(): String {
+        return if (selectedUser?.role == "veterinario") "veterinario" else "cliente"
+    }
+
+    fun isVeterinarian(): Boolean {
+        return selectedUser?.role == "veterinario"
+    }
+
+    fun changeUserRole(token: String, context: Context) {
+        selectedUser?.let { user ->
+            val newRole = getPendingRole()
+            Log.i("UserViewModel", "Intentando cambiar rol de ${user.role} a $newRole para usuario: ${user.email}")
+            val userId = user.id
+
+            if (userId == null) {
+                Log.e("UserViewModel", "ID del usuario es null. No se puede cambiar el rol.")
+                return
+            }
+
+            viewModelScope.launch {
+                try {
+                    val response = userRepository.changeUserRole(token, userId, newRole)
+                    if (response.isSuccessful) {
+                        val updated = response.body()
+                        updated?.let {
+                            selectedUser = it
+                            Toast.makeText(
+                                context,
+                                "Rol actualizado a $newRole",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Log.i(
+                                "UserViewModel",
+                                "Rol actualizado correctamente a $newRole para ${it.email}"
+                            )
+                        } ?: run {
+                            Log.e("UserViewModel", "Respuesta sin cuerpo al actualizar rol.")
+                            errorMessage = "Error: respuesta vacía del servidor"
+                            showErrorDialog = true
+                        }
+                    } else {
+                        val error = "Error HTTP ${response.code()}: ${response.message()}"
+                        Log.e("UserViewModel", error)
+                        errorMessage = error
+                        showErrorDialog = true
+                    }
+                } catch (e: Exception) {
+                    val error = "Excepción al cambiar el rol: ${e.message}"
+                    Log.e("UserViewModel", error, e)
+                    errorMessage = error
+                    showErrorDialog = true
+                }
+            }
+        } ?: run {
+            Log.e("UserViewModel", "selectedUser es null. No se puede cambiar el rol.")
+        }
+    }
+
+
+    fun dismissError() {
+        showErrorDialog = false
+        errorMessage = ""
+    }
+
+    fun reset() {
+        searchQuery = ""
+        selectedUser = null
+        _filteredUsers.clear()
+        dismissError()
+    }
+}

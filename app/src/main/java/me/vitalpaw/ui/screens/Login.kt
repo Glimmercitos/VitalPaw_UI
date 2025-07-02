@@ -86,6 +86,9 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                 "veterinario" -> navController.navigate(NavRoutes.Bienvenido.route) {
                     popUpTo(NavRoutes.Login.route) { inclusive = true }
                 }
+                "admin" -> navController.navigate(NavRoutes.AssignVetRol.route) {
+                    popUpTo(NavRoutes.Login.route) { inclusive = true }
+                }
                 else -> {
                     // Fallback opcional: podrías mostrar un error o navegar a una pantalla de error
                 }

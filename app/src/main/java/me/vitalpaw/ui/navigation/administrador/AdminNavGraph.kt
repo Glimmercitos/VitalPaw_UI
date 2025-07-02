@@ -52,8 +52,6 @@
 //            AssignVeterinarianScreen(navController = navController, userId = userId)
 //        }
 //
-//        composable(NavRoutes.RechargeVitalCoins.route){
-//            RechargeVitalCoinsScreen(navController = navController)
-//        }
+//
 //    }
 //}

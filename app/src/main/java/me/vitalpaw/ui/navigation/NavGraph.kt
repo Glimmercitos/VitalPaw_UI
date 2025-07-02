@@ -19,6 +19,8 @@ import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.vitalpaw.ui.navigation.NavRoutes
+import me.vitalpaw.ui.screens.AssignVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
@@ -247,6 +249,20 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
 //                onBack = { navController.popBackStack() }
 //            )
 //        }
+
+        //Administrador
+        composable(NavRoutes.RechargeVitalCoins.route){
+            RechargeVitalCoinsScreen(navController = navController, sessionViewModel = sessionViewModel)
+        }
+
+        composable(
+            route = NavRoutes.AssignVetRol.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            AssignVeterinarianScreen(navController = navController, userId = userId, sessionViewModel = sessionViewModel)
+        }
 
 
     }
