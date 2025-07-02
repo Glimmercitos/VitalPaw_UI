@@ -16,6 +16,7 @@ import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -26,7 +27,7 @@ fun AdminNavGraph(navController: NavHostController){
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.AllVets.route,
+        startDestination = NavRoutes.RechargeVitalCoins.route,
         enterTransition = { defaultEnterTransition },
         exitTransition = { defaultExitTransition }
     ){
@@ -51,5 +52,8 @@ fun AdminNavGraph(navController: NavHostController){
             AssignVeterinarianScreen(navController = navController, userId = userId)
         }
 
+        composable(NavRoutes.RechargeVitalCoins.route){
+            RechargeVitalCoinsScreen(navController = navController)
+        }
     }
 }

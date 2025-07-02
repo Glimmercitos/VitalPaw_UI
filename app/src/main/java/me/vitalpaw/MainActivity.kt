@@ -11,6 +11,7 @@ import me.vitalpaw.ui.navigation.administrador.AdminNavGraph
 //import me.vitalpaw.ui.navigation.veterinario.AppNavGraph
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

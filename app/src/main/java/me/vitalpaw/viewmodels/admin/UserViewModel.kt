@@ -51,6 +51,10 @@ class UserViewModel @Inject constructor(
         return selectedUser.value?.role == "veterinario"
     }
 
+    fun getUserById(id: String): User? {
+        return userRepository.getAllUsers().find { it.id == id }
+    }
+
     fun toggleVeterinarianRole(context: Context) {
         selectedUser.value?.let { user ->
             val newRole = if (user.role == "veterinario") "cliente" else "veterinario"
@@ -64,11 +68,6 @@ class UserViewModel @Inject constructor(
             ).show()
         }
     }
-
-    fun getUserById(id: String): User? {
-        return userRepository.getAllUsers().find { it.id == id }
-    }
-
 
     fun confirmRoleChange(context: Context) {
         selectedUser.value?.let { user ->

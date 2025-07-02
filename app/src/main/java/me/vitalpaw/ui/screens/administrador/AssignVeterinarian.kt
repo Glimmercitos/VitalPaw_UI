@@ -2,13 +2,10 @@ package me.vitalpaw.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.*
@@ -27,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.admin.UserRolCard
-import me.vitalpaw.ui.components.buttons.CancelarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
@@ -48,7 +44,7 @@ fun AssignVeterinarianScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(userId) {
-        userId?.let {
+        userId.let {
             val user = viewModel.getUserById(it)
             user?.let { viewModel.selectUser(it) }
         }

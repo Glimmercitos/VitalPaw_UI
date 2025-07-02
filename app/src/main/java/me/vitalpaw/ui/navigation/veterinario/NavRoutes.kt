@@ -23,4 +23,5 @@ sealed class NavRoutes(val route: String) {
     object AssignVetRol : NavRoutes("assign_vet_rol/{userId}"){
         fun createRoute(userId : String) = "assign_vet_rol/$userId"
     }
+    object RechargeVitalCoins : NavRoutes("recharge_vital_coins")
 }
