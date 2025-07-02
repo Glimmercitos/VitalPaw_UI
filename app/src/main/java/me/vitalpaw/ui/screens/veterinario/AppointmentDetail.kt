@@ -42,7 +42,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import coil.compose.AsyncImage
+import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.AsignarCitaButton
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -135,7 +138,18 @@ fun AppointmentDetailScreen(
                 .clip(CircleShape)
                 .border(3.dp, Color(0xFF4AA5C8), CircleShape)
         )
+
 */
+        AsyncImage(
+            model = pet.imageUrl?.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+            contentDescription = "Foto de ${pet.name}",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(140.dp)
+                .clip(CircleShape)
+                .border(3.dp, Color(0xFF4AA5C8), CircleShape)
+        )
+
         Spacer(Modifier.height(20.dp))
         DisabledText(pet.name, "Nombre de la mascota")
         Spacer(Modifier.height(15.dp))

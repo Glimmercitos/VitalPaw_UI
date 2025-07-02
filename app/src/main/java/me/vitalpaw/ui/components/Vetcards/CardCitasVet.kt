@@ -25,6 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import me.vitalpaw.R
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.utils.formatDate
 
@@ -59,14 +61,15 @@ fun AppointmentCard(
                     .padding(2.dp)
                     .clip(CircleShape)
             ) {
-                /*Image(
-                    painter = painterResource(appointment.pet.imageRes ),
+
+                AsyncImage(
+                    model = appointment.pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
                     contentDescription = "Foto de ${appointment.pet.name}",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(CircleShape)
-                )*/
+                )
             }
 
             Column(

@@ -110,7 +110,8 @@ class RegisterPetViewModel @Inject constructor(
                 _errorMessage.value = null
                 onSuccess()
             } catch (e: Exception) {
-                onError(e.message ?: "Error desconocido")
+                e.printStackTrace() // Muestra el error real en la consola/logcat
+                onError("Por favor, completa todos los campos obligatorios.")
             }
         }
     }
