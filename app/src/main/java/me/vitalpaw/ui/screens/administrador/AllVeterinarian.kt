@@ -17,14 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import me.vitalpaw.models.User
 import me.vitalpaw.ui.components.admin.VeterinarianCard
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.admin.VeterinarianViewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes
 
 @Composable
 fun AllVeterinarianScreen(

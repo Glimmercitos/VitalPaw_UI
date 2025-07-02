@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    val userRepository: UserRepository
 ): ViewModel() {
 
     var searchQuery = mutableStateOf("")

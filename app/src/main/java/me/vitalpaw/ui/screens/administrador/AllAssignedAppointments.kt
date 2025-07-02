@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.admin.AdminAppoinmentCard
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 import me.vitalpaw.viewmodels.veterinario.AppointmentViewModel
 
 @Composable

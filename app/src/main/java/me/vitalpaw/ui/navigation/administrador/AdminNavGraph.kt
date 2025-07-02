@@ -10,14 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
-import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
+import me.vitalpaw.ui.screens.administrador.RedeemedCoinsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -27,7 +27,7 @@ fun AdminNavGraph(navController: NavHostController){
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.RechargeVitalCoins.route,
+        startDestination = NavRoutes.RedeemedCoins.route,
         enterTransition = { defaultEnterTransition },
         exitTransition = { defaultExitTransition }
     ){
@@ -54,6 +54,10 @@ fun AdminNavGraph(navController: NavHostController){
 
         composable(NavRoutes.RechargeVitalCoins.route){
             RechargeVitalCoinsScreen(navController = navController)
+        }
+
+        composable(NavRoutes.RedeemedCoins.route){
+            RedeemedCoinsScreen(navController = navController)
         }
     }
 }

@@ -6,5 +6,7 @@ data class User(
     val name: String,
     val email: String,
     val role: String = "cliente", // cliente, veterinario, admin
-    val createdAt: String? = null
+    val createdAt: String? = null,
+    val vitalCoins: Int = 500,
+    val redeemedCoins: Int = 0
 )

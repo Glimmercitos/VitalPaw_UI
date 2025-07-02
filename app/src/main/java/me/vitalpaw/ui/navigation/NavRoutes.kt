@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.navigation.veterinario
+package me.vitalpaw.ui.navigation
 
 sealed class NavRoutes(val route: String) {
     object Login : NavRoutes("login")
@@ -24,4 +24,5 @@ sealed class NavRoutes(val route: String) {
         fun createRoute(userId : String) = "assign_vet_rol/$userId"
     }
     object RechargeVitalCoins : NavRoutes("recharge_vital_coins")
+    object RedeemedCoins : NavRoutes("redeemed_coins")
 }

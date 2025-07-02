@@ -41,7 +41,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
