@@ -71,12 +71,6 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.cliente.RegisterPetViewModel
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterPetScreen() {
-    RegisterPetScreen(navController = NavHostController(LocalContext.current))
-}
-
 @Composable
 fun <T> rememberStateFromFlow(flow: StateFlow<T>): State<T> {
     val state = remember { mutableStateOf(flow.value) }

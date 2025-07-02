@@ -91,7 +91,10 @@ fun MyPetAssignedScreen(
                 assignedPets.forEach { pet ->
                     AppointmentPetCard(
                         pet = pet,
-                        onClick = { },
+                        onClick = { /* si querés hacer algo más con toda la card */ },
+                        onArrowClick = {
+                            navController.navigate(NavRoutes.MyPetDetail.createRoute(pet.id ?: ""))
+                        },
                         onDeleteClick = {
                             viewModel.deleteAssignedPet(pet.id ?: "")
                             Toast.makeText(context, "Perfil eliminado correctamente", Toast.LENGTH_SHORT).show()

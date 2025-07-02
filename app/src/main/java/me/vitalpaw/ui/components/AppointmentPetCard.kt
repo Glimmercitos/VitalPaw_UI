@@ -27,11 +27,13 @@ import androidx.compose.ui.unit.dp
 import me.vitalpaw.models.Pet
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
+import me.vitalpaw.ui.navigation.NavRoutes
 
 @Composable
 fun AppointmentPetCard(
     pet: Pet,
     onClick: () -> Unit,
+    onArrowClick: (() -> Unit)? = null,
     onDeleteClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -68,7 +70,6 @@ fun AppointmentPetCard(
                 .background(Color.White)
                 .border(2.dp, Color(0xFF3695B9), CircleShape)
         ) {
-            // Imagen circular
             Box(
                 modifier = Modifier
                     .padding(8.dp)
@@ -81,9 +82,7 @@ fun AppointmentPetCard(
                     painter = painterResource(pet.imageRes),
                     contentDescription = "Foto de ${pet.name}",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -105,7 +104,6 @@ fun AppointmentPetCard(
                 )
             }
 
-            // 🗑️ Ícono de borrar con confirmación
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Eliminar mascota",
@@ -117,11 +115,14 @@ fun AppointmentPetCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // ➡️ Botón de flecha
+            // ➡️ Flechita
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(55.dp)
+                    .clickable(enabled = onArrowClick != null) {
+                        onArrowClick?.invoke()
+                    }
                     .background(
                         Color(0xFF3695B9),
                         shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)

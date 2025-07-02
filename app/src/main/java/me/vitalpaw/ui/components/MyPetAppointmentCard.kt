@@ -35,18 +35,17 @@ fun MyPetAppointmentCard(
         modifier = Modifier
             .width(370.dp)
             .padding(8.dp)
-            .height(100.dp)
-            .clickable { onClick() },
+            .height(100.dp),
         shape = RoundedCornerShape(50.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Row( //0xFF4AA5C8
+        Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(Color.White)
                 .border(2.dp, Color(0xFF3695B9), CircleShape)
         ) {
-            // Imagen circular
+            // Imagen
             Box(
                 modifier = Modifier
                     .padding(8.dp)
@@ -56,22 +55,18 @@ fun MyPetAppointmentCard(
                     .clip(CircleShape)
             ) {
                 Image(
-                    painter = painterResource(appointment.pet.imageRes ),
+                    painter = painterResource(appointment.pet.imageRes),
                     contentDescription = "Foto de ${appointment.pet.name}",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
-
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
                     .padding(8.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = appointment.pet.name,
@@ -89,8 +84,6 @@ fun MyPetAppointmentCard(
                     color = Color.Gray
                 )
             }
-
-            // Botón con flecha
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -98,15 +91,15 @@ fun MyPetAppointmentCard(
                     .background(
                         Color(0xFF3695B9),
                         shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-                    ),
+                    )
+                    .clickable { onClick() }, // <- Aquí navega
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
                     contentDescription = "Ver detalles",
                     tint = Color.White,
-                    modifier = Modifier
-                        .size(40.dp)
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }

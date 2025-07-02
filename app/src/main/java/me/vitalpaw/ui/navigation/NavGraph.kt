@@ -21,6 +21,7 @@ import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+import me.vitalpaw.ui.screens.cliente.MyPetDetail
 import me.vitalpaw.ui.screens.cliente.PetAppointmentDetail
 import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
@@ -89,7 +90,7 @@ fun AppNavGraph(
         composable(NavRoutes.MyPetAppointment.route) {
             MyPetAppointmentScreen(navController = navController)
         }
-        //Detalle MIS CITAS macscota
+        //Detalle MIS CITAS
         composable(
             route = "pet_appointment_detail/{appointmentId}",
             arguments = listOf(navArgument("appointmentId") { type = NavType.StringType })
@@ -100,6 +101,15 @@ fun AppNavGraph(
                 appointmentId = appointmentId
             )
         }
+        //Detalle MIS MASCOTAS
+        composable(
+            route = NavRoutes.MyPetDetail.route,
+            arguments = listOf(navArgument("petId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId")
+            MyPetDetail(navController = navController, petId = petId)
+        }
+
 
         composable("home_shop",
             enterTransition = { fadeIn(animationSpec = tween(300)) },

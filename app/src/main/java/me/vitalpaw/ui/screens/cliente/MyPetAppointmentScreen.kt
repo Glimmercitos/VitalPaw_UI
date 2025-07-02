@@ -46,8 +46,6 @@ fun MyPetAppointmentScreenContent(
     onCardClick: (Appointment) -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-
-        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
@@ -55,7 +53,6 @@ fun MyPetAppointmentScreenContent(
             contentScale = ContentScale.Crop
         )
 
-        // Contenido scrollable (todo menos el botón)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,7 +98,6 @@ fun MyPetAppointmentScreenContent(
             }
         }
 
-        // ✅ Botón fijo en la parte inferior
         Box(
             modifier = Modifier
                 .fillMaxSize(),
