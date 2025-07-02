@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.buttons.SalirButton
-import me.vitalpaw.viewmodels.veterinario.MedicalRecordViewModel
+import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
 

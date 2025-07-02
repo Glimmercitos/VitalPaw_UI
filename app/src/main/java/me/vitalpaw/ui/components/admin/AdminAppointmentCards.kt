@@ -55,14 +55,14 @@ fun AdminAppoinmentCard(
                     .padding(2.dp)
                     .clip(CircleShape)
             ) {
-                Image(
-                    painter = painterResource(appointment.pet.imageRes ),
-                    contentDescription = "Foto de ${appointment.pet.name}",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                )
+//                Image(
+//                    painter = painterResource(appointment.pet.imageRes ),
+//                    contentDescription = "Foto de ${appointment.pet.name}",
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .clip(CircleShape)
+//                )
             }
 
             Column(

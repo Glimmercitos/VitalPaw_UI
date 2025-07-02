@@ -61,11 +61,11 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodel.PetViewModel
 import me.vitalpaw.viewmodels.SessionViewModel
-import me.vitalpaw.viewmodels.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Log
+import me.vitalpaw.viewmodels.veterinario.ToAssignedViewModel
 
 val PrimaryBlue = Color(0xFF6E7AE6)
 val TextGray = Color(0xFF606060)

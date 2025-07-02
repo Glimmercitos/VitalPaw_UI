@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.vitalpaw.ui.components.Vetcards.AppointmentCard
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodels.veterinario.AppointmentViewModel
 import me.vitalpaw.ui.theme.quicksandFont
 import androidx.compose.runtime.getValue

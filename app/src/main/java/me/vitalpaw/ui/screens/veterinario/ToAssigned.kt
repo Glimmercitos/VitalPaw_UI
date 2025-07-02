@@ -60,7 +60,7 @@ import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
-import me.vitalpaw.viewmodels.ToAssignedViewModel
+import me.vitalpaw.viewmodels.veterinario.ToAssignedViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

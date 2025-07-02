@@ -56,7 +56,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import me.vitalpaw.R
-import me.vitalpaw.ui.navigation.veterinario.NavRoutes
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.cliente.HomeViewModel

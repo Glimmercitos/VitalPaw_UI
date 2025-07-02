@@ -1,4 +1,4 @@
-package me.vitalpaw.ui.navigation.veterinario
+package me.vitalpaw.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -18,6 +18,7 @@ import me.vitalpaw.ui.screens.veterinario.AppointmentScreen
 import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
