@@ -25,4 +25,8 @@ class MyAppointmentsPetViewModel @Inject constructor(
         val data = appointmentRepository.getAppointments()
         _appointments.value = data
     }
+
+    fun getAppointmentById(id: String?): Appointment? {
+        return _appointments.value.find { it.id == id }
+    }
 }

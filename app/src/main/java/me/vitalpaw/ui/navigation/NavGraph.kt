@@ -8,9 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.common.collect.Multimaps.index
 import me.vitalpaw.ui.screens.LoginScreen
 import me.vitalpaw.ui.screens.Register
 import me.vitalpaw.ui.screens.cliente.HomeScreen
@@ -20,6 +21,7 @@ import me.vitalpaw.ui.screens.shop.ShopScreen
 import me.vitalpaw.ui.screens.veterinario.AppointmentDetailScreen
 import me.vitalpaw.ui.screens.veterinario.ToAssigned
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
+import me.vitalpaw.ui.screens.cliente.PetAppointmentDetail
 import me.vitalpaw.ui.screens.cliente.RegisterPetScreen
 import me.vitalpaw.ui.screens.shop.CartProductDetailScreen
 import me.vitalpaw.ui.screens.shop.HomeShopScreen
@@ -86,6 +88,17 @@ fun AppNavGraph(
 
         composable(NavRoutes.MyPetAppointment.route) {
             MyPetAppointmentScreen(navController = navController)
+        }
+        //Detalle MIS CITAS macscota
+        composable(
+            route = "pet_appointment_detail/{appointmentId}",
+            arguments = listOf(navArgument("appointmentId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val appointmentId = backStackEntry.arguments?.getString("appointmentId")
+            PetAppointmentDetail(
+                navController = navController,
+                appointmentId = appointmentId
+            )
         }
 
         composable("home_shop",

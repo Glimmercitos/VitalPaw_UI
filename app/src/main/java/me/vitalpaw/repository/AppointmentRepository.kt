@@ -20,7 +20,7 @@ class AppointmentRepository @Inject constructor (
                 pet = pets[0].copy(),
                 service = "Consulta médica",
                 description = "Chequeo general",
-                date = "2025-06-28",
+                date = "28/06/2025",
                 time = "10:00 AM",
                 veterinarian = vet
             ),
@@ -30,7 +30,7 @@ class AppointmentRepository @Inject constructor (
                 pet = pets[1].copy(),
                 service = "Vacunación",
                 description = "Primera dosis de vacunas",
-                date = "2025-07-18",
+                date = "18/07/2025",
                 time = "1:00 PM",
                 veterinarian = vet
             )

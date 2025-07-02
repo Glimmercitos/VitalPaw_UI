@@ -45,9 +45,9 @@ fun MyPetAppointmentScreenContent(
     onNewAppointment: () -> Unit = {},
     onCardClick: (Appointment) -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
@@ -55,14 +55,16 @@ fun MyPetAppointmentScreenContent(
             contentScale = ContentScale.Crop
         )
 
+        // Contenido scrollable (todo menos el botón)
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
+            // Solo esta parte debe ser scrollable
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -95,21 +97,23 @@ fun MyPetAppointmentScreenContent(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AddAppointmentButton(
-                        text = "Agendar nueva cita",
-                        onClick = onNewAppointment,
-                        modifier = Modifier.widthIn(min = 180.dp)
-                    )
-                }
+                Spacer(modifier = Modifier.height(100.dp)) // para que no lo tape el botón
             }
+        }
+
+        // ✅ Botón fijo en la parte inferior
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            AddAppointmentButton(
+                text = "Agendar nueva cita",
+                onClick = onNewAppointment,
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .widthIn(min = 180.dp)
+            )
         }
     }
 }
@@ -128,7 +132,7 @@ fun MyPetAppointmentScreen(
             navController.navigate(NavRoutes.RegisterAppointment.route)
         },
         onCardClick = { appointment ->
-            navController.navigate("appointment_detail/${appointment.id}")
+            navController.navigate("pet_appointment_detail/${appointment.id}")
         }
     )
 }
