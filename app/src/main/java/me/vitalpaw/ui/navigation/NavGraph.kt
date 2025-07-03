@@ -24,6 +24,7 @@ import me.vitalpaw.ui.screens.administrador.AdminHomeScreen
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
+import me.vitalpaw.ui.screens.administrador.RedeemedCoinsScreen
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
@@ -275,6 +276,10 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
 
         composable(NavRoutes.AdminHome.route)
         { AdminHomeScreen(navController, sessionViewModel) }
+
+        composable(NavRoutes.RedeemedCoins.route){
+            RedeemedCoinsScreen(navController = navController, sessionViewModel=sessionViewModel)
+        }
 
 
 

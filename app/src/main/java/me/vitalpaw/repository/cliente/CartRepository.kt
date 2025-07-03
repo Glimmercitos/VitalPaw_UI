@@ -7,6 +7,8 @@ import me.vitalpaw.network.request.AddToCartRequest
 import me.vitalpaw.network.request.UpdateCartItemRequest
 import me.vitalpaw.network.response.CartResponse
 import me.vitalpaw.network.response.CheckoutResponse
+import me.vitalpaw.network.response.RedeemedPurchaseResponse
+import me.vitalpaw.network.response.RedeemedSummaryResponse
 import javax.inject.Inject
 
 class CartRepository  @Inject constructor
@@ -43,5 +45,23 @@ class CartRepository  @Inject constructor
             Log.e("CartRepository", "❌ Checkout fallo: Código ${response.code()}, ErrorBody: ${response.errorBody()?.string()}")
         }
         return response
+    }
+
+    suspend fun getLastRedeemedPurchases(token: String, limit: Int = 5): Response<List<RedeemedPurchaseResponse>> {
+        return try {
+            apiService.getRedeemedPurchases("Bearer $token", limit)
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Error al obtener últimas compras", e)
+            Response.error(500, okhttp3.ResponseBody.create(null, "Error interno"))
+        }
+    }
+
+    suspend fun getTotalRedeemedPoints(token: String): Response<RedeemedSummaryResponse> {
+        return try {
+            apiService.getRedeemedSummary("Bearer $token")
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Error al obtener resumen canjeado", e)
+            Response.error(500, okhttp3.ResponseBody.create(null, "Error interno"))
+        }
     }
 }

@@ -21,6 +21,8 @@ import me.vitalpaw.network.response.LoginResponse
 import me.vitalpaw.network.response.MedicalRecordResponse
 import me.vitalpaw.network.response.MedicalRecordsResponse
 import me.vitalpaw.network.response.PetUpdateResponse
+import me.vitalpaw.network.response.RedeemedPurchaseResponse
+import me.vitalpaw.network.response.RedeemedSummaryResponse
 import me.vitalpaw.network.response.RegisterResponse
 import me.vitalpaw.network.response.UserResponse
 import me.vitalpaw.network.response.VetAppointmentsResponse
@@ -216,4 +218,16 @@ interface ApiService {
     suspend fun getAllAppointments(
         @Header("Authorization") token: String
     ): Response<List<Appointment>>
+
+    @GET("api/shop/redeemed-purchases")
+    suspend fun getRedeemedPurchases(
+        @Header("Authorization") token: String,
+        @Query("limit") limit: Int = 5
+    ): Response<List<RedeemedPurchaseResponse>>
+
+    @GET("api/shop/redeemed-summary")
+    suspend fun getRedeemedSummary(
+        @Header("Authorization") token: String
+    ): Response<RedeemedSummaryResponse>
+
 }
