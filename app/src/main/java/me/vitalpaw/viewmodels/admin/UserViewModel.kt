@@ -128,6 +128,10 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun clearSelectedUser() {
+        selectedUser = null
+    }
+
 
 
     fun dismissError() {

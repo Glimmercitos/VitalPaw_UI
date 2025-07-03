@@ -10,7 +10,7 @@
 //import androidx.navigation.NavType
 //import androidx.navigation.compose.composable
 //import androidx.navigation.navArgument
-//import me.vitalpaw.ui.navigation.NavRoutes
+//import me.vitalpaw.ui.navigation.veterinario.NavRoutes
 //import me.vitalpaw.ui.screens.AssignVeterinarianScreen
 //import me.vitalpaw.ui.screens.LoginScreen
 //import me.vitalpaw.ui.screens.Register
@@ -52,6 +52,8 @@
 //            AssignVeterinarianScreen(navController = navController, userId = userId)
 //        }
 //
-//
+//        composable(NavRoutes.RechargeVitalCoins.route){
+//            RechargeVitalCoinsScreen(navController = navController)
+//        }
 //    }
 //}

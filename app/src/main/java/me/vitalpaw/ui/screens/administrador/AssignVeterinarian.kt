@@ -52,8 +52,11 @@ fun AssignVeterinarianScreen(
         if (userId != null && token != null && userViewModel.selectedUser == null) {
             val user = userViewModel.getUserById(userId, token!!)
             user?.let { userViewModel.selectUser(it) }
+        } else if (userId == null) {
+            userViewModel.clearSelectedUser() // ← agregá esta función en el ViewModel
         }
     }
+
 
     MarkAsCompleteDialog(
         show = showDialog,

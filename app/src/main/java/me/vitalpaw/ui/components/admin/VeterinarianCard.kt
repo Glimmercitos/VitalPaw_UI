@@ -41,7 +41,7 @@ fun VeterinarianCard(
         modifier = Modifier
             .width(340.dp)
             .padding(8.dp)
-            .height(110.dp),
+            .height(100.dp),
         shape = RoundedCornerShape(55.dp),  // en 55 no 50 para evitar desbordamiento de la card
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
