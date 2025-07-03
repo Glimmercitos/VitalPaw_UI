@@ -26,6 +26,7 @@ import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
+import me.vitalpaw.ui.screens.cliente.MyPetDetail
 //import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 //import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
 import me.vitalpaw.ui.screens.cliente.RegisterAppointment
@@ -145,6 +146,15 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
 
         composable(NavRoutes.RegisterPet.route) {
             RegisterPetScreen(navController)
+        }
+
+        composable(route = NavRoutes.MyPetDetail.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId") ?:""
+            Log.d("NavigationArgs", " PET: $petId")
+            MyPetDetail(navController = navController, petId = petId, sessionViewModel)
         }
 
 
