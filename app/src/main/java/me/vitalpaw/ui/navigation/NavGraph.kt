@@ -20,9 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.screens.AssignVeterinarianScreen
+import me.vitalpaw.ui.screens.administrador.AdminHomeScreen
 import me.vitalpaw.ui.screens.administrador.AllAppointmentsScreen
 import me.vitalpaw.ui.screens.administrador.AllVeterinarianScreen
 import me.vitalpaw.ui.screens.administrador.RechargeVitalCoinsScreen
+import me.vitalpaw.ui.screens.administrador.RedeemedCoinsScreen
 import me.vitalpaw.ui.screens.cliente.HomeScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAppointmentScreen
 import me.vitalpaw.ui.screens.cliente.MyPetAssignedScreen
@@ -275,13 +277,21 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
             AssignVeterinarianScreen(navController = navController, userId = userId, sessionViewModel = sessionViewModel)
         }
-
         composable(NavRoutes.AllVets.route) {
             AllVeterinarianScreen(navController = navController, sessionViewModel = sessionViewModel)
         }
 
-        composable(NavRoutes.AdminHome.route)
+        composable(NavRoutes.AllAppointments.route)
         { AllAppointmentsScreen(navController, sessionViewModel) }
+
+        composable(NavRoutes.AdminHome.route)
+        { AdminHomeScreen(navController, sessionViewModel) }
+
+        composable(NavRoutes.RedeemedCoins.route){
+            RedeemedCoinsScreen(navController = navController, sessionViewModel=sessionViewModel)
+        }
+
+
 
     }
 }

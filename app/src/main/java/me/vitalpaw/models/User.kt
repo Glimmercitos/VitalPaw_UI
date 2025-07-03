@@ -9,4 +9,5 @@ data class User(
     val gender: String,
     val role: String,
     val vitalCoins: Int, // 👈 IMPORTANTE
-)
+//    val redeemedCoins: Int = 0,
+    )

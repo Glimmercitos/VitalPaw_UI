@@ -165,8 +165,8 @@ fun RechargeVitalCoinsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SalirButton {
-                navController.navigate(NavRoutes.AllVets.route) {
-                    popUpTo(NavRoutes.AllVets.route) { inclusive = true }
+                navController.navigate(NavRoutes.AdminHome.route) {
+                    popUpTo(NavRoutes.AdminHome.route) { inclusive = true }
                 }
             }
 
