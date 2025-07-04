@@ -130,7 +130,8 @@ fun AppointmentDetailScreen(
         topBar = {
             TopBarStatic(
                 title = "DETALLE DE CITA",
-                navController = navController
+                navController = navController,
+                sessionViewModel = sessionViewModel
             )
         },
         containerColor = Color.White

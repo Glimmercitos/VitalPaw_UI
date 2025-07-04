@@ -86,7 +86,8 @@ fun PetRecordDetailScreen(
             topBar = {
                 TopBarStatic(
                     title = "DETALLE DE HISTORIAL",
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             },
             containerColor = Color.White

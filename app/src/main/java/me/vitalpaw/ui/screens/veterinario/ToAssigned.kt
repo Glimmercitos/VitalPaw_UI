@@ -147,7 +147,8 @@ fun ToAssigned(
         topBar = {
             TopBarStatic(
                 title = "ASIGNAR CITA",
-                navController = navController
+                navController = navController,
+                sessionViewModel = sessionViewModel
             )
         },
         containerColor = Color.White
