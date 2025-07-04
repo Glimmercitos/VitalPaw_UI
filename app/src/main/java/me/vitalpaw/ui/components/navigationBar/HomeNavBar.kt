@@ -33,7 +33,7 @@ fun HomeTopBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFF5F5F5), shape = RoundedCornerShape(40.dp))
+            .background(color = Color(0xFFF5F5F5), shape = RoundedCornerShape(50.dp))
             .padding(vertical = 10.dp, horizontal = 16.dp)
     ) {
         Row(
@@ -42,16 +42,16 @@ fun HomeTopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            IconButton(onClick = onHomeClick) {
-                Icon(Icons.Default.Home, contentDescription =  "Home" , tint = Color.Black, modifier = Modifier.size(20.dp),
+            IconButton(onClick = onHomeClick, modifier = Modifier.size(20.dp)) {
+                Icon(Icons.Default.Home, contentDescription =  "Home" , tint = Color.Black,modifier = Modifier.size(50.dp),
                 )
             }
 
             Text(
                 text = title,
-                fontSize = 20.sp,
+                fontSize = 17.sp,
                 fontFamily = quicksandFont,
-                color = Color.Black
+                color = Color.Gray
             )
 
             IconButton(onClick = onMenuClick) {

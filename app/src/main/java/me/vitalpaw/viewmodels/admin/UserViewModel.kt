@@ -145,4 +145,5 @@ class UserViewModel @Inject constructor(
         _filteredUsers.clear()
         dismissError()
     }
+
 }

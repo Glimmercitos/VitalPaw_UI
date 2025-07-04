@@ -1,6 +1,7 @@
 package me.vitalpaw.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,11 +31,14 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.navigation.NavHostController
+import me.vitalpaw.ui.components.navigationBar.HomeTopBar
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
 import me.vitalpaw.viewmodels.SessionViewModel
 
 @Composable
 fun AssignVeterinarianScreen(
-    navController: NavController,
+    navController: NavHostController,
     userId: String?,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     userViewModel: UserViewModel = hiltViewModel(),
@@ -77,7 +81,28 @@ fun AssignVeterinarianScreen(
         message = userViewModel.errorMessage
     )
 
-    Column(
+    RoleBasedDrawerScaffold(
+        sessionViewModel = sessionViewModel,
+        navController = navController
+    ) { onMenuClick ->
+
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    title = "ASIGNAR ROL",
+                    onMenuClick = onMenuClick,
+                    onHomeClick = {
+                        navController.navigate(NavRoutes.AdminHome.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            },
+            containerColor = Color.White
+        ) { paddingValues ->
+
+            Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
@@ -87,6 +112,7 @@ fun AssignVeterinarianScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(paddingValues)
                 .weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -201,9 +227,14 @@ fun AssignVeterinarianScreen(
 
             GuardarCitaButton(
                 onClick = {
-                    if (selectedUser != null) showDialog = true
+                    if (selectedUser != null) {
+                        showDialog = true
+                    } else {
+                        Toast.makeText(context, "Seleccionar usuario", Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
+
         }
-    }
+    }}}
 }

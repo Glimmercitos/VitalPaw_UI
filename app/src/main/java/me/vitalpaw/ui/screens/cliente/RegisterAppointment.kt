@@ -106,7 +106,7 @@ fun RegisterAppointment(
     val time by viewModel.selectedTime.collectAsState()
     val selectedPet by viewModel.selectedPet.collectAsState()
 
-    val dateFormatter = remember { SimpleDateFormat("dd/MM/yy", Locale.getDefault()) }
+    val dateFormatter = remember { SimpleDateFormat("yy/MM/dd", Locale.getDefault()) }
     val timeFormatter = remember { SimpleDateFormat("h:mm a", Locale.getDefault()) }
 
     var expandedPets by remember { mutableStateOf(false) }

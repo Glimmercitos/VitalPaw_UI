@@ -43,16 +43,20 @@ import me.vitalpaw.ui.components.modal.ErrorDialog
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
 import me.vitalpaw.ui.navigation.NavRoutes
 import android.widget.Toast
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import me.vitalpaw.ui.components.navigationBar.HomeTopBar
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
 import me.vitalpaw.viewmodels.SessionViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RechargeVitalCoinsScreen(
-    navController: NavController,
+    navController: NavHostController,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: RechargeCoinsViewModel = hiltViewModel()
 ) {
@@ -65,11 +69,33 @@ fun RechargeVitalCoinsScreen(
     var expanded by remember { mutableStateOf(false) }
     val token by sessionViewModel.firebaseToken.collectAsState()
 
+    RoleBasedDrawerScaffold(
+        sessionViewModel = sessionViewModel,
+        navController = navController
+    ) { onMenuClick ->
+
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    title = "RECARGAR MONEDAS",
+                    onMenuClick = onMenuClick,
+                    onHomeClick = {
+                        navController.navigate(NavRoutes.AdminHome.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            },
+            containerColor = Color.White
+        ) { paddingValues ->
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 20.dp, vertical = 20.dp),
+            .padding(horizontal = 20.dp, vertical = 20.dp)
+            .padding(paddingValues),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Column(modifier = Modifier
@@ -198,5 +224,7 @@ fun RechargeVitalCoinsScreen(
             onDismiss = { viewModel.dismissDialogs() },
             message = viewModel.errorMessage
         )
+
+    }}
     }
 }
