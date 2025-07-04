@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android") // Hilt plugin
+    id("kotlin-kapt")
 }
 
 android {
@@ -41,6 +44,33 @@ android {
 
 dependencies {
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+    implementation("androidx.compose.material:material:1.6.0")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation( "androidx.navigation:navigation-compose:2.7.7")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.31.6-rc")
+
+    //Compose para cliente
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-compiler:2.52")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    //Firebase
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.firebase.firestore)
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.java.websocket)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
+    implementation(libs.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +79,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

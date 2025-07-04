@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157878908705",
+    "project_id": "vitalpaw-d5213",
+    "storage_bucket": "vitalpaw-d5213.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157878908705:android:ecc577182f9124ee3ff060",
+        "android_client_info": {
+          "package_name": "me.vitalpaw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkMuPDXJaoVHgI-3OE3JN43Yegpe1HqbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
