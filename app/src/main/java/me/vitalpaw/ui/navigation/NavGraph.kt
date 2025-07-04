@@ -285,7 +285,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         { AllAppointmentsScreen(navController, sessionViewModel) }
 
         composable(NavRoutes.AdminHome.route)
-        { AdminHomeScreen(navController = navController) }
+        { AdminHomeScreen(navController = navController, sessionViewModel = sessionViewModel) }
 
         composable(NavRoutes.RedeemedCoins.route){
             RedeemedCoinsScreen(navController = navController, sessionViewModel=sessionViewModel)
