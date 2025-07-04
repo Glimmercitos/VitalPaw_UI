@@ -87,15 +87,15 @@ fun VeterinarianCard(
 
                 Text(
                     text = user.email,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF3C3B3B)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = "editar veterinario",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0XFFE65964),
+                        color = Color(0xFFA4232D),
                         fontWeight = FontWeight.Medium
                     ),
                     modifier = Modifier.clickable { onEditClick() }

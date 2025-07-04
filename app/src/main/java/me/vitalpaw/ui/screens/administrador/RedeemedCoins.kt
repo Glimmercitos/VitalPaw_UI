@@ -55,7 +55,7 @@ fun RedeemedCoinsScreen(
         ) {
             Text(
                 text = "Total canjeado:",
-                fontSize = 35.sp,
+                fontSize = 30.sp,
                 color = Color(0xFF3695B9),
                 textAlign = TextAlign.Center,
                 fontFamily = quicksandFont,
@@ -66,7 +66,7 @@ fun RedeemedCoinsScreen(
 
             Text(
                 text = "$total pts",
-                fontSize = 35.sp,
+                fontSize = 30.sp,
                 color = Color(0xFF3695B9),
                 textAlign = TextAlign.Center,
                 fontFamily = quicksandFont,
@@ -98,8 +98,8 @@ fun RedeemedCoinsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(8.dp),
+                .align(Alignment.Center)
+                .padding(10.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             SalirButton {

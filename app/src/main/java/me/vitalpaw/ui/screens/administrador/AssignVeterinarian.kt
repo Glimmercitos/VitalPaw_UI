@@ -181,7 +181,9 @@ fun AssignVeterinarianScreen(
                 }
 
                 Spacer(modifier = Modifier.height(17.dp))
-                Text("Usuario seleccionado: ${user.email}", fontFamily = quicksandFont)
+                Text("Usuario seleccionado:", fontFamily = quicksandFont)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(" ${user.email}", fontFamily = quicksandFont)
             }
         }
 

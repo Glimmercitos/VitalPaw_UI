@@ -39,7 +39,7 @@
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Puntos canjeados: $redeemedCoins",
+                    text = "Puntos canjeados: $redeemedCoins pts",
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = quicksandFont
                 )
