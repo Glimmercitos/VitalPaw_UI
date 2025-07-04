@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +32,7 @@ import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.viewmodels.SessionViewModel
 import androidx.compose.runtime.getValue
+import me.vitalpaw.ui.components.navigationBar.TopBarStatic
 
 @Composable
 fun PetAppointmentsScreen(
@@ -43,6 +47,8 @@ fun PetAppointmentsScreen(
     }
 
     val token by sessionViewModel.firebaseToken.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
 
     LaunchedEffect(token, petId) {
         token?.let {
@@ -54,45 +60,77 @@ fun PetAppointmentsScreen(
     val medicalRecords by viewModel.recordsByPetId.collectAsState()
     val petName = medicalRecords.firstOrNull()?.pet?.name ?: "Mascota"
 
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(
+                color = Color(0xFF6980BF))
+        }
+        return
+    }
 
+    Scaffold(
+        topBar = {
+            TopBarStatic(
+                title = "HISTORIAL MEDICO",
+                navController = navController,
+                sessionViewModel = sessionViewModel
+            )
+        },
+        containerColor = Color.White
+    ) { paddingValues ->
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 80.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Historial de citas de: $petName",
-                style = MaterialTheme.typography.headlineSmall,
-                fontFamily = quicksandFont,
-                modifier = Modifier.padding(vertical = 10.dp),
-            )
+                .background(Color.White)
+                .padding(paddingValues)
 
-            if (medicalRecords.isEmpty()) {
-                Text("No hay citas anteriores para esta mascota.")
-            } else {
-                medicalRecords.forEach { record ->
-                    PetAppointmentCard(
-                        record = record,
-                        onDetailsClick = {
-                            Log.d("PetRecord", "ID recibido: ${record.id}")
-                            navController.navigate(NavRoutes.MedicalRecordDetail.createRoute(petId,record.id))
-                        }
-                    )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 27.dp, vertical = 18.dp)
+                    .padding(bottom = 80.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Historial de citas de: $petName",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontFamily = quicksandFont,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                )
+
+                if (medicalRecords.isEmpty()) {
+                    Text("No hay citas anteriores para esta mascota.")
+                } else {
+                    medicalRecords.forEach { record ->
+                        PetAppointmentCard(
+                            record = record,
+                            onDetailsClick = {
+                                Log.d("PetRecord", "ID recibido: ${record.id}")
+                                navController.navigate(
+                                    NavRoutes.MedicalRecordDetail.createRoute(
+                                        petId,
+                                        record.id
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            SalirButton { navController.popBackStack() }
+            Box(modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 27.dp, vertical = 12.dp)
+                .padding(bottom = 7.dp),
+                contentAlignment = Alignment.Center)
+            {
+                SalirButton { navController.popBackStack() }
+            }
         }
     }
 }
-

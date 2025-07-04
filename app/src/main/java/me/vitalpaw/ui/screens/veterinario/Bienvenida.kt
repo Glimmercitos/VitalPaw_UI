@@ -53,11 +53,10 @@ fun BienvenidoScreen(navController: NavController, sessionViewModel: SessionView
     {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(290.dp))
 
             Image(
                 painter = painterResource(id = R.drawable.logo),
@@ -66,6 +65,8 @@ fun BienvenidoScreen(navController: NavController, sessionViewModel: SessionView
                     .width(350.dp)
                     .height(180.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "$greeting $name",

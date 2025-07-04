@@ -40,13 +40,16 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.AsignarCitaButton
+import me.vitalpaw.ui.components.navigationBar.TopBarStatic
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
 
@@ -79,8 +82,9 @@ fun AppointmentDetailScreen(
     var successMessage by remember { mutableStateOf("") }
 
     if (isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Cargando...")
+        Box(modifier = Modifier.fillMaxSize().background(Color.White), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(
+                color = Color(0xFF6980BF))
         }
         return
     }
@@ -122,14 +126,25 @@ fun AppointmentDetailScreen(
 
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 30.dp, vertical = 18.dp)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) { /*
+    Scaffold(
+        topBar = {
+            TopBarStatic(
+                title = "DETALLE DE CITA",
+                navController = navController
+            )
+        },
+        containerColor = Color.White
+    ) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(horizontal = 30.dp, vertical = 18.dp)
+                .verticalScroll(scrollState)
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) { /*
         Image(
             painter = painterResource(id = pet.imageRes),
             contentDescription = pet.name,
@@ -140,146 +155,148 @@ fun AppointmentDetailScreen(
         )
 
 */
-        AsyncImage(
-            model = pet.imageUrl?.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
-            contentDescription = "Foto de ${pet.name}",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(140.dp)
-                .clip(CircleShape)
-                .border(3.dp, Color(0xFF4AA5C8), CircleShape)
-        )
-
-        Spacer(Modifier.height(20.dp))
-        DisabledText(pet.name, "Nombre de la mascota")
-        Spacer(Modifier.height(15.dp))
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
-            DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
-            DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
-        }
-        Spacer(Modifier.height(15.dp))
-
-        DisabledText(pet.breed, "Raza")
-        Spacer(Modifier.height(15.dp))
-
-        DisabledText("${pet.weight} Kg", "Peso")
-        Spacer(Modifier.height(15.dp))
-
-        DisabledText(appointment!!.service, "Tipo de servicio")
-        Spacer(Modifier.height(20.dp))
-
-        OutlinedTextField(
-            value = appointment!!.description,
-            onValueChange = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
-            enabled = false,
-            shape = RoundedCornerShape(20.dp),
-            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.Black,
-                disabledContainerColor = Color.Transparent,
-                disabledBorderColor = Color(0xFF4AA5C8)
+            AsyncImage(
+                model = pet.imageUrl?.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+                contentDescription = "Foto de ${pet.name}",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(140.dp)
+                    .clip(CircleShape)
+                    .border(3.dp, Color(0xFF3695B9), CircleShape)
             )
-        )
 
-        Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(20.dp))
+            DisabledText(pet.name, "Nombre de la mascota")
+            Spacer(Modifier.height(15.dp))
 
-        OutlinedTextField(
-            value = notes,
-            onValueChange = { viewModel.onNotesChange(it) },
-            label = { Text("Notas", fontFamily = quicksandFont) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            shape = RoundedCornerShape(20.dp),
-            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF4AA5C8),
-                unfocusedBorderColor = Color(0xFF4AA5C8)
-            )
-        )
-
-        Spacer(Modifier.height(20.dp))
-
-        OutlinedTextField(
-            value = treatment,
-            onValueChange = { viewModel.onTreatmentChange(it) },
-            label = { Text("Tratamiento", fontFamily = quicksandFont) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            shape = RoundedCornerShape(20.dp),
-            textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF4AA5C8),
-                unfocusedBorderColor = Color(0xFF4AA5C8)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        AsignarCitaButton(onClick = {
-            navController.navigate(NavRoutes.ToAssigned.createRoute(appointmentId)) {
-                popUpTo(NavRoutes.ToAssigned.route) { inclusive = true }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                DisabledTextRow(pet.species, modifier = Modifier.weight(1f))
+                DisabledTextRow("${pet.age} ${pet.unitAge}", modifier = Modifier.weight(1f))
+                DisabledTextRow(if (pet.gender) "M" else "F", modifier = Modifier.weight(1f))
             }
-        })
+            Spacer(Modifier.height(15.dp))
 
-        Spacer(modifier = Modifier.height(40.dp))
+            DisabledText(pet.breed, "Raza")
+            Spacer(Modifier.height(15.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CancelarCitaButton(onClick = {
+            DisabledText("${pet.weight} Kg", "Peso")
+            Spacer(Modifier.height(15.dp))
+
+            DisabledText(appointment!!.service, "Tipo de servicio")
+            Spacer(Modifier.height(20.dp))
+
+            OutlinedTextField(
+                value = appointment!!.description,
+                onValueChange = {},
+                label = { Text("Descripcion", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                enabled = false,
+                shape = RoundedCornerShape(20.dp),
+                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledContainerColor = Color.Transparent,
+                    disabledBorderColor = Color(0xFF3695B9)
+                )
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            OutlinedTextField(
+                value = notes,
+                onValueChange = { viewModel.onNotesChange(it) },
+                label = { Text("Notas", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                shape = RoundedCornerShape(20.dp),
+                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF3695B9),
+                    unfocusedBorderColor = Color(0xFF3695B9)
+                )
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            OutlinedTextField(
+                value = treatment,
+                onValueChange = { viewModel.onTreatmentChange(it) },
+                label = { Text("Tratamiento", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                shape = RoundedCornerShape(20.dp),
+                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF3695B9),
+                    unfocusedBorderColor = Color(0xFF3695B9)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            AsignarCitaButton(onClick = {
+                navController.navigate(NavRoutes.ToAssigned.createRoute(appointmentId)) {
+                    popUpTo(NavRoutes.ToAssigned.route) { inclusive = true }
+                }
+            })
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CancelarCitaButton(onClick = {
                     navController.navigate(NavRoutes.Home.route) {
                         popUpTo(NavRoutes.Login.route) { inclusive = true }
                     }
-            })
+                })
 
-            GuardarCitaButton(onClick = { handleSave() })
-        }
-    }
-
-    ConfirmationDialog(
-        show = showSuccessDialog,
-        onDismiss = {
-            token?.let {
-                navController.navigate(NavRoutes.Home.route) {
-                    popUpTo(NavRoutes.Home.route) { inclusive = true }
-                }
-            } ?: run {
-                navController.navigate(NavRoutes.Login.route) {
-                    popUpTo(NavRoutes.Login.route) { inclusive = true }
-                }
+                GuardarCitaButton(onClick = { handleSave() })
             }
-            showSuccessDialog = false
-            successTitle = ""
-            successMessage = ""
-        },
-        Title = successTitle,
-        Message = successMessage
-    )
+        }
+
+        ConfirmationDialog(
+            show = showSuccessDialog,
+            onDismiss = {
+                token?.let {
+                    navController.navigate(NavRoutes.Home.route) {
+                        popUpTo(NavRoutes.Home.route) { inclusive = true }
+                    }
+                } ?: run {
+                    navController.navigate(NavRoutes.Login.route) {
+                        popUpTo(NavRoutes.Login.route) { inclusive = true }
+                    }
+                }
+                showSuccessDialog = false
+                successTitle = ""
+                successMessage = ""
+            },
+            Title = successTitle,
+            Message = successMessage
+        )
 
 
-    ErrorDialog(
-        show = showErrorDialog,
-        onDismiss = {
-            showErrorDialog = false
-            errorTitle = ""
-            errorMessage = ""
-        },
-        title = errorTitle,
-        message = errorMessage
-    )
+        ErrorDialog(
+            show = showErrorDialog,
+            onDismiss = {
+                showErrorDialog = false
+                errorTitle = ""
+                errorMessage = ""
+            },
+            title = errorTitle,
+            message = errorMessage
+        )
+    }
 }
 
 @Composable
@@ -297,7 +314,7 @@ fun DisabledText(value: String, label: String, modifier: Modifier = Modifier) {
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF6E7AE6)
+            disabledBorderColor = Color(0xFF3695B9)
         )
     )
 }
@@ -316,7 +333,7 @@ fun DisabledTextRow(value: String, modifier: Modifier = Modifier) {
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = Color.Black,
             disabledContainerColor = Color.Transparent,
-            disabledBorderColor = Color(0xFF4AA5C8)
+            disabledBorderColor = Color(0xFF3695B9)
         )
     )
 }

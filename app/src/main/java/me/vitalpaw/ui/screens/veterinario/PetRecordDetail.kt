@@ -9,10 +9,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.SalirButton
+import me.vitalpaw.ui.components.navigationBar.TopBarStatic
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -52,10 +55,11 @@ fun PetRecordDetailScreen(
 
     if (isLoading) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            Text("Cargando...", fontFamily = quicksandFont)
+            CircularProgressIndicator(
+                color = Color(0xFF3695B9))
         }
         return
     }
@@ -78,92 +82,109 @@ fun PetRecordDetailScreen(
         val safeRecord = record ?: return
         val pet = safeRecord.pet
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(horizontal = 30.dp, vertical = 18.dp)
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
-                contentDescription = pet.name,
-                modifier = Modifier
-                    .size(140.dp)
-                    .clip(CircleShape)
-                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            DisabledText(value = safeRecord.service ?: "servicio", label = "Tipo de servicio")
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            OutlinedTextField(
-                value = safeRecord.description ?: "descripcion",
-                onValueChange = {},
-                enabled = false,
-                modifier = Modifier.fillMaxWidth().height(100.dp),
-                label = { Text("Descripcion", fontFamily = quicksandFont, color = Color(0xFFAAAAAA)) },
-                shape = RoundedCornerShape(20.dp),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = Color.Black,
-                    disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+        Scaffold(
+            topBar = {
+                TopBarStatic(
+                    title = "DETALLE DE HISTORIAL",
+                    navController = navController
                 )
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            OutlinedTextField(
-                value = safeRecord.notes ?:"notas",
-                onValueChange = {},
-                enabled = false,
+            },
+            containerColor = Color.White
+        ) { paddingValues ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                label = {
-                    Text("Notas", fontFamily = quicksandFont, color = Color(0xFFAAAAAA))
-                },
-                shape = RoundedCornerShape(20.dp),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = Color.Black,
-                    disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(horizontal = 30.dp, vertical = 18.dp)
+                    .verticalScroll(scrollState)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+                    contentDescription = pet.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(140.dp)
+                        .clip(CircleShape)
+                        .border(3.dp, Color(0xFF3695B9), CircleShape)
                 )
-            )
 
-            Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-            OutlinedTextField(
-                value = safeRecord.treatment ?:"tratamiento",
-                onValueChange = {},
-                enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                label = {
-                    Text("Tratamiento", fontFamily = quicksandFont, color = Color(0xFFAAAAAA))
-                },
-                shape = RoundedCornerShape(20.dp),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = Color.Black,
-                    disabledContainerColor = Color.Transparent,
-                    disabledBorderColor = Color(0xFF6E7AE6)
+                DisabledText(value = safeRecord.service ?: "servicio", label = "Tipo de servicio")
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                OutlinedTextField(
+                    value = safeRecord.description ?: "descripcion",
+                    onValueChange = {},
+                    enabled = false,
+                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    label = {
+                        Text(
+                            "Descripcion",
+                            fontFamily = quicksandFont,
+                            color = Color(0xFFAAAAAA)
+                        )
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = Color.Black,
+                        disabledContainerColor = Color.Transparent,
+                        disabledBorderColor = Color(0xFF3695B9)
+                    )
                 )
-            )
 
-            Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-            SalirButton { navController.popBackStack() }
+                OutlinedTextField(
+                    value = safeRecord.notes ?: "notas",
+                    onValueChange = {},
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    label = {
+                        Text("Notas", fontFamily = quicksandFont, color = Color(0xFFAAAAAA))
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = Color.Black,
+                        disabledContainerColor = Color.Transparent,
+                        disabledBorderColor = Color(0xFF3695B9)
+                    )
+                )
 
+                Spacer(modifier = Modifier.height(20.dp))
+
+                OutlinedTextField(
+                    value = safeRecord.treatment ?: "tratamiento",
+                    onValueChange = {},
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    label = {
+                        Text("Tratamiento", fontFamily = quicksandFont, color = Color(0xFFAAAAAA))
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = Color.Black,
+                        disabledContainerColor = Color.Transparent,
+                        disabledBorderColor = Color(0xFF3695B9)
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(60.dp))
+
+                SalirButton { navController.popBackStack() }
+
+            }
         }
     }
+
 }
-
-
