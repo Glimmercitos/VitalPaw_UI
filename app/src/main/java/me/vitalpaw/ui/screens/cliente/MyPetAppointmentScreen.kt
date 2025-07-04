@@ -53,9 +53,8 @@ fun MyPetAppointmentScreenContent(
     onNewAppointment: () -> Unit = {},
     onDeleteClick: (Appointment) -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
@@ -63,6 +62,7 @@ fun MyPetAppointmentScreenContent(
             contentScale = ContentScale.Crop
         )
 
+        // Contenido principal con padding
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,14 +75,14 @@ fun MyPetAppointmentScreenContent(
                 onBackClick = onBack
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Contenido scrollable (sin incluir el botón)
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f) // para que ocupe el espacio restante y no interfiera con el botón
                     .verticalScroll(rememberScrollState())
             ) {
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 if (appointments.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -101,30 +101,29 @@ fun MyPetAppointmentScreenContent(
                         MyPetAppointmentCard(
                             appointment = appointment,
                             onDeleteClick = {
-                                onDeleteClick(appointment) // <- aquí
+                                onDeleteClick(appointment)
                             }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-                }
-
-                Spacer(modifier = Modifier.height(100.dp))
-                // 🔽 Botón al final del scroll y centrado
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    AddAppointmentButton(
-                        text = "Agendar nueva cita",
-                        onClick = onNewAppointment,
-                        modifier = Modifier
-                            .padding(bottom = 40.dp)
-                            .widthIn(min = 180.dp)
-                    )
+                    Spacer(modifier = Modifier.height(100.dp)) // para que el scroll no tape la última card
                 }
             }
+        }
+
+        // Botón fijo abajo
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            AddAppointmentButton(
+                text = "Agendar nueva cita",
+                onClick = onNewAppointment,
+                modifier = Modifier
+                    .padding(bottom = 32.dp)
+                    .widthIn(min = 180.dp)
+            )
         }
     }
 }
@@ -132,7 +131,7 @@ fun MyPetAppointmentScreenContent(
 @Composable
 fun MyPetAppointmentScreen(
     navController: NavController,
-    sessionViewModel: SessionViewModel = hiltViewModel(), // 🔹 Agrega esto ,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MyAppointmentsPetViewModel = hiltViewModel()
 ) {
     val token by sessionViewModel.firebaseToken.collectAsState()

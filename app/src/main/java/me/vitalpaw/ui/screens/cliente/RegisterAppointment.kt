@@ -65,6 +65,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Log
+import androidx.compose.foundation.layout.width
 import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.viewmodels.veterinario.ToAssignedViewModel
 
@@ -408,17 +409,23 @@ fun RegisterAppointment(
                 )
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp)) // lo bajamos más
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 CancelarCitaButton {
                     navController.navigate(NavRoutes.HomeClient.route) {
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
                 }
+
+                Spacer(modifier = Modifier.width(60.dp)) // ajusta este valor a tu gusto
+
                 GuardarCitaButton {
                     handleSave()
                 }
