@@ -1,7 +1,6 @@
 package me.vitalpaw.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -123,5 +122,11 @@ class RegisterViewModel @Inject constructor(
                 _isLoading.value = false
             }
         }
+    }
+
+    fun resetRegisterState() {
+        _isRegisterSuccess.value = false
+        _showError.value = false
+        _errorMsg.value = ""
     }
 }

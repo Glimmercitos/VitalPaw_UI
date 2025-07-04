@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,11 +46,21 @@ fun Register(
     val showError by viewModel.showError.collectAsState()
     val gender by viewModel.gender.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
+    val isRegisterSuccess by viewModel.isRegisterSuccess.collectAsState()
+
+    LaunchedEffect(isRegisterSuccess) {
+        if (isRegisterSuccess) {
+            navController.navigate(NavRoutes.Login.route) {
+                popUpTo(NavRoutes.Register.route) { inclusive = true }
+            }
+            viewModel.resetRegisterState()
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0ECF7))
+            .background(Color(0xFFCBDFF4))
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,7 +72,7 @@ fun Register(
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo VitalPaw",
-                modifier = Modifier.height(100.dp)
+                modifier = Modifier.height(140.dp)
             )
 
             Surface(
@@ -207,9 +218,6 @@ fun Register(
                     Button(
                         onClick = {
                             viewModel.onRegisterClick()
-                            if (!showError) {
-                                navController.navigate(NavRoutes.Login.route) // Puedes cambiar a NavRoutes.Home.route si deseas
-                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C7DBF)),
                         shape = RoundedCornerShape(24.dp),
@@ -230,7 +238,7 @@ fun Register(
                                     append("Inicia Sesión")
                                 }
                             },
-                            fontSize = 14.sp
+                            fontSize = 14.sp, color = Color.Black
                         )
                     }
 
