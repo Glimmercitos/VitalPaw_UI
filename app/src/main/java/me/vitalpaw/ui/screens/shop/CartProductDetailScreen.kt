@@ -51,6 +51,7 @@ import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.shop.CartViewModel
 import me.vitalpaw.ui.components.buttons.RedeemPurchaseButton
 import me.vitalpaw.ui.components.buttons.CancelarCitaButton
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.viewmodels.SessionViewModel
 
@@ -84,45 +85,19 @@ fun CartProductDetailScreen(
             contentScale = ContentScale.Crop
         )
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "CARRITO",
-                                fontFamily = quicksandFont,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                color = Color.Gray
-                            )
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { onBack() }) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = "Volver",
-                                tint = Color.Black
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-                )
-            },
-            containerColor = Color.Transparent
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyColumn(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            TopBar(
+                title = "CARRITO",
+                onBackClick = { onBack() }
+            )
+
+            LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -259,7 +234,7 @@ fun CartProductDetailScreen(
             }
         }
     }
-}
+
 
 
 

@@ -40,7 +40,7 @@ fun ShopDetailTopBar(coinAmount: Int, onBackClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 20.dp),
+            .padding(start = 12.dp, end = 12.dp, top = 36.dp, bottom = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         Card(

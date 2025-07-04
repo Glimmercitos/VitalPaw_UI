@@ -97,7 +97,7 @@ fun HomeShopTopBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, top = 24.dp, bottom = 8.dp), // MÁS ABAJO
+            .padding(start = 12.dp, end = 12.dp, top = 36.dp, bottom = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Card(
@@ -163,17 +163,3 @@ fun HomeShopTopBar(
         }
     }
 }
-
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun HomeShopScreenPreview() {
-//    val nav = rememberNavController()
-//    val previewViewModel = remember { HomeShopViewModel() }
-//
-//    HomeShopScreen(
-//        navController = nav,
-//        viewModel = previewViewModel,
-//        onBack = {}
-//    )
-//}

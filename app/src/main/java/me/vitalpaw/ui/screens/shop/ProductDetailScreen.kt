@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import me.vitalpaw.R
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
 import me.vitalpaw.viewmodels.shop.CartViewModel
@@ -63,39 +64,20 @@ fun ProductDetailScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
+            Spacer(modifier = Modifier.height(24.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = "PRODUCTO",
-                                    fontFamily = quicksandFont,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = Color.Black
-                                )
-                            }
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { onBack() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.Black)
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-                    )
-                },
-                containerColor = Color.Transparent
-            ) { padding ->
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                TopBar(
+                    title = "PRODUCTO",
+                    onBackClick = { onBack() }
+                )
                     Card(
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(8.dp),
@@ -200,5 +182,5 @@ fun ProductDetailScreen(
             }
         }
     }
-}
+
 

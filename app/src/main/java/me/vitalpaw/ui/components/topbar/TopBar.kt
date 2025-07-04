@@ -55,5 +55,5 @@ fun TopBar(
         )
     }
 
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 }
