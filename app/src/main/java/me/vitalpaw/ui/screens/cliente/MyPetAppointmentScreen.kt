@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,11 +36,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import me.vitalpaw.R
 import me.vitalpaw.models.Appointment
 import me.vitalpaw.ui.components.MyPetAppointmentCard
 import me.vitalpaw.ui.components.buttons.AddAppointmentButton
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
+import me.vitalpaw.ui.components.navigationBar.HomeTopBar
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -52,6 +56,7 @@ fun MyPetAppointmentScreenContent(
     onNewAppointment: () -> Unit = {},
     onDeleteClick: (Appointment) -> Unit = {}
 ) {
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -67,22 +72,21 @@ fun MyPetAppointmentScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "MIS CITAS",
-                style = MaterialTheme.typography.bodyMedium,
-                fontFamily = quicksandFont,
-                color = Color.Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color(0xFFF5F5F5),
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .padding(vertical = 20.dp),
-                textAlign = TextAlign.Center
-            )
+//            Text(
+//                text = "MIS CITAS",
+//                style = MaterialTheme.typography.bodyMedium,
+//                fontFamily = quicksandFont,
+//                color = Color.Gray,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(
+//                        color = Color(0xFFF5F5F5),
+//                        shape = RoundedCornerShape(25.dp)
+//                    )
+//                    .padding(vertical = 20.dp),
+//                textAlign = TextAlign.Center
+//            )
 
             Column(
                 modifier = Modifier
@@ -141,11 +145,10 @@ fun MyPetAppointmentScreenContent(
         }
     }
 }
-
 @Composable
 fun MyPetAppointmentScreen(
-    navController: NavController,
-    sessionViewModel: SessionViewModel = hiltViewModel(), // 🔹 Agrega esto ,
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: MyAppointmentsPetViewModel = hiltViewModel()
 ) {
     val token by sessionViewModel.firebaseToken.collectAsState()
@@ -153,52 +156,76 @@ fun MyPetAppointmentScreen(
     var showDialog by remember { mutableStateOf(false) }
     var selectedAppointmentId by remember { mutableStateOf<String?>(null) }
 
-
-    // 🔄 Cargar citas cuando se obtenga el token
+    // Cargar citas al tener token
     LaunchedEffect(token) {
         token?.let {
-            Log.d("viewappoint", "Token recibido: $it")
             viewModel.loadMyAppointments(it)
-            Log.d("RegisterAppointment", "Mascotas en pantalla: $appointments")
         }
     }
-    MyPetAppointmentScreenContent(
-        appointments = appointments.value,
-        onBack = { navController.popBackStack() },
-        onNewAppointment = {
-            navController.navigate(NavRoutes.RegisterAppointment.route)
-        },
-        onDeleteClick = {
-            selectedAppointmentId = it.id
-            showDialog = true
-        }
 
-//        onCardClick = { appointment ->
-//            navController.navigate("appointment_detail/${appointment.id}")
-//        }
-    )
+    RoleBasedDrawerScaffold(
+        sessionViewModel = sessionViewModel,
+        navController = navController
+    ) { onMenuClick ->
 
-    if (showDialog && selectedAppointmentId != null) {
-        MarkAsCompleteDialog(
-            show = showDialog,
-            onDismiss = {
-                showDialog = false
-                selectedAppointmentId = null
-            },
-            onConfirm = {
-                selectedAppointmentId?.let {
-                    token?.let { tkn ->
-                        viewModel.deleteAppointment(tkn, it)
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    title = "MIS CITAS",
+                    onMenuClick = onMenuClick,
+                    onHomeClick = {
+                        navController.navigate(NavRoutes.HomeClient.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
                     }
-                }
-                showDialog = false
-                selectedAppointmentId = null
+                )
             },
-            title = "Eliminar cita",
-            message = "¿Seguro que deseas eliminar esta cita?",
-            confirmText = "Sí, eliminar",
-            dismissText = "Cancelar"
-        )
-    }
+            containerColor = Color.White
+        ) { paddingValues ->
 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                MyPetAppointmentScreenContent(
+                    appointments = appointments.value,
+                    onBack = { navController.popBackStack() },
+                    onNewAppointment = {
+                        navController.navigate(NavRoutes.RegisterAppointment.route)
+                    },
+                    onDeleteClick = {
+                        selectedAppointmentId = it.id
+                        showDialog = true
+                    }
+                )
+            }
+
+            // Diálogo de eliminación
+            if (showDialog && selectedAppointmentId != null) {
+                MarkAsCompleteDialog(
+                    show = showDialog,
+                    onDismiss = {
+                        showDialog = false
+                        selectedAppointmentId = null
+                    },
+                    onConfirm = {
+                        selectedAppointmentId?.let {
+                            token?.let { tkn ->
+                                viewModel.deleteAppointment(tkn, it)
+                            }
+                        }
+                        showDialog = false
+                        selectedAppointmentId = null
+                    },
+                    title = "Eliminar cita",
+                    message = "¿Seguro que deseas eliminar esta cita?",
+                    confirmText = "Sí, eliminar",
+                    dismissText = "Cancelar"
+                )
+            }
+        }
+    }
 }
+

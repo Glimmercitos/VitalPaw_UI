@@ -37,6 +37,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -68,6 +69,8 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarMascota
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.components.navigationBar.HomeTopBar
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -90,7 +93,7 @@ fun <T> rememberStateFromFlow(flow: StateFlow<T>): State<T> {
 
 @Composable
 fun RegisterPetScreen(
-    navController: NavController,
+    navController: NavHostController,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: RegisterPetViewModel = hiltViewModel()
 ) {
@@ -166,328 +169,342 @@ fun RegisterPetScreen(
         )
     }
 
+    RoleBasedDrawerScaffold(
+        sessionViewModel = sessionViewModel,
+        navController = navController
+    ) { onMenuClick ->
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Fondo",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        LaunchedEffect(Unit) {
+            sessionViewModel.loadUserData()
+        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Top
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "REGISTRA TU MASCOTA",
-                    fontSize = 16.sp,
-                    fontFamily = quicksandFont,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier.size(140.dp)
-                ) {
-                    val imageModifier = Modifier
-                        .size(160.dp)
-                        .clip(CircleShape)
-                        .background(Color.White, shape = CircleShape)
-                        .border(2.dp, Color.White, CircleShape)
-
-                    if (imageUriState.value != null) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = imageUriState.value),
-                            contentDescription = "Pet Photo",
-                            modifier = imageModifier,
-                            contentScale = ContentScale.Crop
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(R.drawable.petphoto),
-                            contentDescription = "Default Pet Photo",
-                            modifier = imageModifier,
-                            contentScale = ContentScale.Crop
-                        )
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    title = "REGISTRAR MASCOTA",
+                    onMenuClick = onMenuClick,
+                    onHomeClick = {
+                        navController.navigate(NavRoutes.HomeClient.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
                     }
-
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Editar imagen",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .offset(x = 3.dp, y = (-3).dp)
-                            .graphicsLayer {
-                                shadowElevation = 8f
-                                shape = CircleShape
-                                clip = true
-                            }
-                            .background(Color(0xFF6E7AE6), shape = CircleShape)
-                            .clickable { launcher.launch("image/*") }
-                            .padding(6.dp)
-                            .size(25.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = nameState.value,
-                onValueChange = viewModel::onNameChange,
-                label = { Text("Nombre mascota", fontFamily = quicksandFont) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
                 )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ExposedDropdownMenuBox(expanded = expandedSpecies.value, onExpandedChange = {
-                expandedSpecies.value = !expandedSpecies.value
-            }) {
-                OutlinedTextField(
-                    value = speciesState.value,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Especie", fontFamily = quicksandFont) },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSpecies.value)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = Color(0xFF6E7AE6),
-                        unfocusedBorderColor = Color(0xFF6E7AE6),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black
-                    ),
-                    textStyle = LocalTextStyle.current.copy(
-                        fontFamily = quicksandFont,
-                        color = Color.Black
-                    )
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedSpecies.value,
-                    onDismissRequest = { expandedSpecies.value = false },
-                    modifier = Modifier.background(Color.White, shape = RoundedCornerShape(12.dp))
-                ) {
-                    speciesOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    option,
-                                    fontFamily = quicksandFont,
-                                    color = Color.Black
-                                )
-                            },
-                            onClick = {
-                                viewModel.onSpeciesChange(option)
-                                expandedSpecies.value = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = birthDateState.value,
-                onValueChange = {},
-                readOnly = true,
-                label = {
-                    Text("Fecha de nacimiento", fontFamily = quicksandFont, color = TextGray)
-                },
-                trailingIcon = {
-                    IconButton(onClick = { showDatePicker.value = true }) {
-                        Icon(
-                            Icons.Default.CalendarToday,
-                            contentDescription = "Fecha",
-                            tint = PrimaryBlue
-                        )
-                    }
-                },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = PrimaryBlue,
-                    cursorColor = PrimaryBlue
-                ),
-                textStyle = LocalTextStyle.current.copy(
-                    fontFamily = quicksandFont,
-                    fontSize = 16.sp,
-                    color = TextGray
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ExposedDropdownMenuBox(expanded = expandedGender.value, onExpandedChange = {
-                expandedGender.value = !expandedGender.value
-            }) {
-                OutlinedTextField(
-                    value = genderState.value,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Género", fontFamily = quicksandFont) },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGender.value)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = Color(0xFF6E7AE6),
-                        unfocusedBorderColor = Color(0xFF6E7AE6),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black
-                    ),
-                    textStyle = LocalTextStyle.current.copy(
-                        fontFamily = quicksandFont,
-                        color = Color.Black
-                    )
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedGender.value,
-                    onDismissRequest = { expandedGender.value = false },
-                    modifier = Modifier.background(Color.White, shape = RoundedCornerShape(12.dp))
-                ) {
-                    genderOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    option,
-                                    fontFamily = quicksandFont,
-                                    color = Color.Black
-                                )
-                            },
-                            onClick = {
-                                viewModel.onGenderChange(option)
-                                expandedGender.value = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                "Información adicional",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = quicksandFont,
-                color = Color(0xFF19486D)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = breedState.value,
-                onValueChange = viewModel::onBreedChange,
-                label = { Text("Raza", fontFamily = quicksandFont) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = weightState.value,
-                onValueChange = viewModel::onWeightChange,
-                label = { Text("Peso", fontFamily = quicksandFont) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6E7AE6),
-                    unfocusedBorderColor = Color(0xFF6E7AE6)
-                ),
-                textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                SalirButton {
-                    navController.navigate(NavRoutes.HomeClient.route) {
-                        popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
-                    }
-                }
-
-                GuardarMascota(
-                    enabled = !isSubmitting,
-                    onClick = { handleSave() }
-                )
-
-            }
-
-            }
-
-        ConfirmationDialog(
-            show = showSuccessDialog,
-            onDismiss = {
-                showSuccessDialog = false
-                navController.navigate(NavRoutes.HomeClient.route) {
-                    popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
-                }
             },
-            Title = "¡Éxito!",
-            Message = "Mascota registrada correctamente"
-        )
+            containerColor = Color.White
+        ) { paddingValues ->
 
-        ConfirmationDialog(
-            show = errorDialogMessage != null,
-            onDismiss = { errorDialogMessage = null },
-            Title = "Error",
-            Message = errorDialogMessage ?: "Error desconocido"
-        )
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+                Image(
+                    painter = painterResource(id = R.drawable.fondo),
+                    contentDescription = "Fondo",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Top
+                ) {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier.size(140.dp)
+                        ) {
+                            val imageModifier = Modifier
+                                .size(160.dp)
+                                .clip(CircleShape)
+                                .background(Color.White, shape = CircleShape)
+                                .border(2.dp, Color.White, CircleShape)
+
+                            if (imageUriState.value != null) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(model = imageUriState.value),
+                                    contentDescription = "Pet Photo",
+                                    modifier = imageModifier,
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Image(
+                                    painter = painterResource(R.drawable.petphoto),
+                                    contentDescription = "Default Pet Photo",
+                                    modifier = imageModifier,
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Editar imagen",
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = 3.dp, y = (-3).dp)
+                                    .graphicsLayer {
+                                        shadowElevation = 8f
+                                        shape = CircleShape
+                                        clip = true
+                                    }
+                                    .background(Color(0xFF6E7AE6), shape = CircleShape)
+                                    .clickable { launcher.launch("image/*") }
+                                    .padding(6.dp)
+                                    .size(25.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = nameState.value,
+                        onValueChange = viewModel::onNameChange,
+                        label = { Text("Nombre mascota", fontFamily = quicksandFont) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6E7AE6),
+                            unfocusedBorderColor = Color(0xFF6E7AE6)
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    ExposedDropdownMenuBox(expanded = expandedSpecies.value, onExpandedChange = {
+                        expandedSpecies.value = !expandedSpecies.value
+                    }) {
+                        OutlinedTextField(
+                            value = speciesState.value,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Especie", fontFamily = quicksandFont) },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSpecies.value)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.White,
+                                focusedBorderColor = Color(0xFF6E7AE6),
+                                unfocusedBorderColor = Color(0xFF6E7AE6),
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black
+                            ),
+                            textStyle = LocalTextStyle.current.copy(
+                                fontFamily = quicksandFont,
+                                color = Color.Black
+                            )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedSpecies.value,
+                            onDismissRequest = { expandedSpecies.value = false },
+                            modifier = Modifier.background(
+                                Color.White,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                        ) {
+                            speciesOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            option,
+                                            fontFamily = quicksandFont,
+                                            color = Color.Black
+                                        )
+                                    },
+                                    onClick = {
+                                        viewModel.onSpeciesChange(option)
+                                        expandedSpecies.value = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = birthDateState.value,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = {
+                            Text(
+                                "Fecha de nacimiento",
+                                fontFamily = quicksandFont,
+                                color = TextGray
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = { showDatePicker.value = true }) {
+                                Icon(
+                                    Icons.Default.CalendarToday,
+                                    contentDescription = "Fecha",
+                                    tint = PrimaryBlue
+                                )
+                            }
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = PrimaryBlue,
+                            unfocusedBorderColor = PrimaryBlue,
+                            cursorColor = PrimaryBlue
+                        ),
+                        textStyle = LocalTextStyle.current.copy(
+                            fontFamily = quicksandFont,
+                            fontSize = 16.sp,
+                            color = TextGray
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    ExposedDropdownMenuBox(expanded = expandedGender.value, onExpandedChange = {
+                        expandedGender.value = !expandedGender.value
+                    }) {
+                        OutlinedTextField(
+                            value = genderState.value,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Género", fontFamily = quicksandFont) },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGender.value)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.White,
+                                focusedBorderColor = Color(0xFF6E7AE6),
+                                unfocusedBorderColor = Color(0xFF6E7AE6),
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black
+                            ),
+                            textStyle = LocalTextStyle.current.copy(
+                                fontFamily = quicksandFont,
+                                color = Color.Black
+                            )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedGender.value,
+                            onDismissRequest = { expandedGender.value = false },
+                            modifier = Modifier.background(
+                                Color.White,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                        ) {
+                            genderOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            option,
+                                            fontFamily = quicksandFont,
+                                            color = Color.Black
+                                        )
+                                    },
+                                    onClick = {
+                                        viewModel.onGenderChange(option)
+                                        expandedGender.value = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        "Información adicional",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = quicksandFont,
+                        color = Color(0xFF19486D)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
+                        value = breedState.value,
+                        onValueChange = viewModel::onBreedChange,
+                        label = { Text("Raza", fontFamily = quicksandFont) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6E7AE6),
+                            unfocusedBorderColor = Color(0xFF6E7AE6)
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = weightState.value,
+                        onValueChange = viewModel::onWeightChange,
+                        label = { Text("Peso", fontFamily = quicksandFont) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6E7AE6),
+                            unfocusedBorderColor = Color(0xFF6E7AE6)
+                        ),
+                        textStyle = LocalTextStyle.current.copy(fontFamily = quicksandFont)
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        SalirButton {
+                            navController.navigate(NavRoutes.HomeClient.route) {
+                                popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
+                            }
+                        }
+
+                        GuardarMascota(
+                            enabled = !isSubmitting,
+                            onClick = { handleSave() }
+                        )
+
+                    }
+
+                }
+
+                ConfirmationDialog(
+                    show = showSuccessDialog,
+                    onDismiss = {
+                        showSuccessDialog = false
+                        navController.navigate(NavRoutes.HomeClient.route) {
+                            popUpTo(NavRoutes.RegisterPet.route) { inclusive = true }
+                        }
+                    },
+                    Title = "¡Éxito!",
+                    Message = "Mascota registrada correctamente"
+                )
+
+                ConfirmationDialog(
+                    show = errorDialogMessage != null,
+                    onDismiss = { errorDialogMessage = null },
+                    Title = "Error",
+                    Message = errorDialogMessage ?: "Error desconocido"
+                )
+
+            }
+        }
     }
 }

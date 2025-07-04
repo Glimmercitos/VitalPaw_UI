@@ -18,15 +18,14 @@ fun getMenuItemsByRole(role: String, onLogoutClick: () -> Unit): List<DrawerItem
             DrawerItem("Ganancias", Icons.Default.Check, NavRoutes.RedeemedCoins.route),
             DrawerItem("Cerrar sesión", Icons.Default.Logout, route = null, onClick = onLogoutClick)
         )
-        "veterinario" -> listOf(
-            DrawerItem("Inicio", Icons.Default.Home, NavRoutes.Home.route),
-            DrawerItem("Cerrar sesión", Icons.Default.Logout, route = null, onClick = onLogoutClick)
-        )
-
-        "CLIENTE" -> listOf(
+        "cliente" -> listOf(
             DrawerItem("Inicio", Icons.Default.Home, NavRoutes.HomeClient.route),
+            DrawerItem("Registrar Mascota", Icons.Default.AppRegistration, NavRoutes.RegisterPet.route),
             DrawerItem("Mis Mascotas", Icons.Default.Pets, NavRoutes.MyPetAssigned.route),
-            DrawerItem("Tienda", Icons.Default.ShoppingCart, NavRoutes.Shop.route),
+            DrawerItem("Agendar Cita", Icons.Default.Schedule, NavRoutes.RegisterAppointment.route),
+            DrawerItem("Mis Citas", Icons.Default.MedicalServices, NavRoutes.MyPetAppointment.route),
+            DrawerItem("Tienda", Icons.Default.ShoppingBag, NavRoutes.Shop.route),
+            DrawerItem("Cerrar sesión", Icons.Default.Logout, route = null, onClick = onLogoutClick)
         )
         else -> emptyList()
     }

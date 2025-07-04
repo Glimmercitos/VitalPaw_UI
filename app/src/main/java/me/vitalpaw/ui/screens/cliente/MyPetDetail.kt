@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,17 +24,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import me.vitalpaw.R
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
 import me.vitalpaw.ui.components.topbar.TopBar
+import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodel.PetViewModel
 import me.vitalpaw.viewmodels.SessionViewModel
+import me.vitalpaw.ui.components.navigationBar.HomeTopBar
+
+import me.vitalpaw.ui.components.navigationBar.RoleBasedDrawerScaffold
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPetDetail(
-    navController: NavController,
+    navController: NavHostController,
     petId: String?,
     sessionViewModel: SessionViewModel = hiltViewModel(),
     viewModel: PetViewModel = hiltViewModel()
@@ -46,74 +54,101 @@ fun MyPetDetail(
             viewModel.loadMyPets(token!!)
         }
     }
+
     val pet = pets.value.find { it.id == petId }
 
-    if (pet == null) {
-        // Mostrar cargando (mejor que pantalla vacía)
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(color = Color(0xFF3695B9))
-        }
-        return
-    }
+    RoleBasedDrawerScaffold(
+        sessionViewModel = sessionViewModel,
+        navController = navController
+    ) { onMenuClick ->
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.fondo),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            TopBar(title = "DETALLE DE MASCOTA") {
-                navController.popBackStack()
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                AsyncImage(
-                    model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
-                    contentDescription = "Foto de ${pet.name}",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    title = "DETALLE DE MASCOTA",
+                    onMenuClick = onMenuClick,
+                    onHomeClick = {
+                        navController.navigate(NavRoutes.HomeClient.route) {
+                            popUpTo(NavRoutes.Login.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    }
                 )
+            },
+            containerColor = Color.White
+        ) { paddingValues ->
+
+            if (pet == null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color(0xFF3695B9))
+                }
+                return@Scaffold
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.fondo),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
 
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                InfoField(label = "Nombre", value = pet.name)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    InfoField(label = "Especie", value = pet.species, modifier = Modifier.weight(1f))
-                    InfoField(
-                        label = "Edad",
-                        value = "${pet.age} ${pet.unitAge ?: "años"}",
-                        modifier = Modifier.weight(1f)
-                    )
-                    InfoField(
-                        label = "Género",
-                        value = if (pet.gender) "M" else "F",
-                        modifier = Modifier.weight(1f)
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        AsyncImage(
+                            model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+                            contentDescription = "Foto de ${pet.name}",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(140.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        InfoField(label = "Nombre", value = pet.name)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            InfoField(label = "Especie", value = pet.species, modifier = Modifier.weight(1f))
+                            InfoField(
+                                label = "Edad",
+                                value = "${pet.age} ${pet.unitAge ?: "años"}",
+                                modifier = Modifier.weight(1f)
+                            )
+                            InfoField(
+                                label = "Género",
+                                value = if (pet.gender) "M" else "F",
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        InfoField(label = "Raza", value = pet.breed)
+                        InfoField(label = "Peso", value = "${pet.weight} kg")
+                    }
                 }
-                InfoField(label = "Raza", value = pet.breed)
-                InfoField(label = "Peso", value = "${pet.weight} kg")
             }
         }
     }
 }
+
 
 @Composable
 fun InfoField(label: String, value: String, modifier: Modifier = Modifier) {
