@@ -67,7 +67,8 @@ fun AppointmentScreen(
         topBar = {
             TopBarStatic(
                 title = "CITAS ASIGNADAS",
-                navController = navController
+                navController = navController,
+                sessionViewModel =  sessionViewModel
             )
         },
         containerColor = Color.White
