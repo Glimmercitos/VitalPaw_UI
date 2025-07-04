@@ -12,8 +12,9 @@ fun formatDate(dateString: String): String {
 
         val date = inputFormat.parse(dateString)
         val outputFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-        outputFormat.format(date)
+        outputFormat.format(date!!)
     } catch (e: Exception) {
         dateString
     }
