@@ -65,6 +65,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Log
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.viewmodels.veterinario.ToAssignedViewModel
 
 val PrimaryBlue = Color(0xFF6E7AE6)
@@ -157,32 +158,19 @@ fun RegisterAppointment(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = {
-                    navController.navigate(NavRoutes.ToAssigned.route) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TopBar(
+                title = "REGISTRAR CITA",
+                onBackClick = {
+                    navController.navigate(NavRoutes.HomeClient.route) {
                         popUpTo(NavRoutes.RegisterAppointment.route) { inclusive = true }
                     }
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = TextGray)
                 }
-                Text(
-                    text = "REGISTRAR CITA",
-                    fontFamily = quicksandFont,
-                    fontSize = 20.sp,
-                    color = TextGray,
-                    fontWeight = FontWeight.Medium
-                )
-                IconButton(onClick = { /* Menú futuro */ }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menú", tint = TextGray)
-                }
-            }
-            Spacer(modifier = Modifier.height(20.dp))
+            )
 
-            // --- AÑADE EL SELECTOR DE MASCOTA PRIMERO ---
+            Spacer(modifier = Modifier.height(16.dp))
+
             ExposedDropdownMenuBox(
                 expanded = expandedPets,
                 onExpandedChange = { expandedPets = !expandedPets }

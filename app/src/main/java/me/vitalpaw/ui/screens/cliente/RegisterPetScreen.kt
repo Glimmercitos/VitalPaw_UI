@@ -68,6 +68,7 @@ import me.vitalpaw.ui.components.buttons.GuardarCitaButton
 import me.vitalpaw.ui.components.buttons.GuardarMascota
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.ui.components.modal.ConfirmationDialog
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -113,10 +114,7 @@ fun RegisterPetScreen(
     val expandedGender = remember { mutableStateOf(false) }
 
     val speciesOptions = listOf(
-        "Perro", "Gato", "Conejo", "Ave", "Hámster", "Tortuga", "Pez", "Hurón",
-        "Caballo", "Vaca", "Cerdo", "Cabra", "Oveja", "Gallina",
-        "Iguana", "Serpiente", "Erizo africano", "Guacamaya", "Chinchilla", "Dragón barbudo",
-        "Otro"
+        "Perro", "Gato", "Conejo", "Ave", "Hámster", "Tortuga", "Pez", "Iguana", "Serpiente", "Otro"
     )
     val genderOptions = listOf("Macho", "Hembra")
 
@@ -182,28 +180,12 @@ fun RegisterPetScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Top
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "REGISTRA TU MASCOTA",
-                    fontSize = 16.sp,
-                    fontFamily = quicksandFont,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+            TopBar(
+                title = "REGISTRA TU MASCOTA",
+                onBackClick = { navController.popBackStack() }
+            )
 
             Box(
                 modifier = Modifier
@@ -255,8 +237,6 @@ fun RegisterPetScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = nameState.value,
@@ -418,7 +398,6 @@ fun RegisterPetScreen(
                 fontFamily = quicksandFont,
                 color = Color(0xFF19486D)
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
@@ -468,7 +447,7 @@ fun RegisterPetScreen(
 
             }
 
-            }
+        }
 
         ConfirmationDialog(
             show = showSuccessDialog,

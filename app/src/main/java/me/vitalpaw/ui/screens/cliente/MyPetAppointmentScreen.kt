@@ -40,6 +40,7 @@ import me.vitalpaw.models.Appointment
 import me.vitalpaw.ui.components.MyPetAppointmentCard
 import me.vitalpaw.ui.components.buttons.AddAppointmentButton
 import me.vitalpaw.ui.components.modal.MarkAsCompleteDialog
+import me.vitalpaw.ui.components.topbar.TopBar
 import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.SessionViewModel
@@ -69,19 +70,9 @@ fun MyPetAppointmentScreenContent(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "MIS CITAS",
-                style = MaterialTheme.typography.bodyMedium,
-                fontFamily = quicksandFont,
-                color = Color.Gray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color(0xFFF5F5F5),
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .padding(vertical = 20.dp),
-                textAlign = TextAlign.Center
+            TopBar(
+                title = "MIS CITAS",
+                onBackClick = onBack
             )
 
             Column(
@@ -90,7 +81,7 @@ fun MyPetAppointmentScreenContent(
                     .verticalScroll(rememberScrollState())
             ) {
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 if (appointments.isEmpty()) {
                     Box(
@@ -117,27 +108,23 @@ fun MyPetAppointmentScreenContent(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
+                Spacer(modifier = Modifier.height(100.dp))
                 // 🔽 Botón al final del scroll y centrado
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.BottomCenter
                 ) {
                     AddAppointmentButton(
                         text = "Agendar nueva cita",
                         onClick = onNewAppointment,
-                        modifier = Modifier.widthIn(min = 180.dp)
+                        modifier = Modifier
+                            .padding(bottom = 40.dp)
+                            .widthIn(min = 180.dp)
                     )
                 }
             }
-            AddAppointmentButton(
-                text = "Agendar nueva cita",
-                onClick = onNewAppointment,
-                modifier = Modifier.widthIn(min = 180.dp)
-            )
         }
     }
 }

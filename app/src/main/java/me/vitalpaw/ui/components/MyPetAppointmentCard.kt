@@ -113,25 +113,25 @@ fun MyPetAppointmentCard(
                     tint = Color(0xFF5E5E5E)
                 )
 
-//            // Botón con flecha
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxHeight()
-//                    .width(55.dp)
-//                    .background(
-//                        Color(0xFF3695B9),
-//                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-//                    ),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = "Ver detalles",
-//                    tint = Color.White,
-//                    modifier = Modifier
-//                        .size(40.dp)
-//                )
-//            }
+            // Botón con flecha
+           /* Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(55.dp)
+                    .background(
+                       Color(0xFF3695B9),
+                        shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
+                   ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                  contentDescription = "Ver detalles",
+                   tint = Color.White,
+                   modifier = Modifier
+                      .size(40.dp)
+                    )
+                }*/
             }
         }
     }
