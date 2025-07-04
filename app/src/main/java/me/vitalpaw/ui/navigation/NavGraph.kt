@@ -49,38 +49,31 @@ import me.vitalpaw.viewmodels.shop.HomeShopViewModel
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewModel) {
-    AnimatedNavHost(navController = navController, startDestination = NavRoutes.Login.route,
-        enterTransition = { fadeIn(animationSpec = tween(300)) },
-        exitTransition = { fadeOut(animationSpec = tween(300)) }
+    val defaultEnterTransition = fadeIn(animationSpec = tween(300))
+    val defaultExitTransition = fadeOut(animationSpec = tween(300))
+    AnimatedNavHost(navController = navController,
+        startDestination = NavRoutes.Login.route,
+        enterTransition = { defaultEnterTransition },
+        exitTransition = { defaultExitTransition }
     ) {
         //Autenticacion
         composable(NavRoutes.Login.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { LoginScreen(navController, sessionViewModel) }
 
         composable(NavRoutes.Register.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { Register(navController) }
 
         //Inicio Veterinario
         composable(NavRoutes.Bienvenido.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
         ) { BienvenidoScreen(navController, sessionViewModel) }
 
 
         //Citas
         composable(
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
             route = NavRoutes.Home.route,
         ) { AppointmentScreen(navController, sessionViewModel) }
 
-        composable(route = NavRoutes.AppointmentDetail.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        composable(route = NavRoutes.AppointmentDetail.route
         ) { backStackEntry ->
             val appointmentId = backStackEntry.arguments?.getString("appointmentId") ?:""
             Log.d("NavigationArgs", " APPOINTMENT: $appointmentId")
@@ -101,8 +94,6 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         //Historial medico
         composable(
             route = NavRoutes.PetAppointment.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
             arguments = listOf(
                 navArgument("petId") { type = NavType.StringType },
             )
@@ -112,9 +103,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
 
 
-        composable(route = NavRoutes.MedicalRecordDetail.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        composable(route = NavRoutes.MedicalRecordDetail.route
         ) { backStackEntry ->
             val petId = backStackEntry.arguments?.getString("petId") ?: ""
             val medicalRecordId = backStackEntry.arguments?.getString("medicalRecordId") ?:""
@@ -123,22 +112,16 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
         }
         //cliente
         //Inicio CLiente
-        composable(NavRoutes.HomeClient.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
+        composable(NavRoutes.HomeClient.route
         ) { HomeScreen(navController, sessionViewModel) }
 
         //Cita Cliente
-        composable(NavRoutes.RegisterAppointment.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },) {
+        composable(NavRoutes.RegisterAppointment.route) {
             RegisterAppointment(navController, sessionViewModel)
         }
 
 
-        composable(NavRoutes.MyPetAppointment.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }) {
+        composable(NavRoutes.MyPetAppointment.route) {
             MyPetAppointmentScreen(navController, sessionViewModel)
         }
 
@@ -150,9 +133,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             RegisterPetScreen(navController)
         }
 
-        composable(route = NavRoutes.MyPetDetail.route,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        composable(route = NavRoutes.MyPetDetail.route
         ) { backStackEntry ->
             val petId = backStackEntry.arguments?.getString("petId") ?:""
             Log.d("NavigationArgs", " PET: $petId")
@@ -169,9 +150,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
             ShopScreen(navController = navController)
         }
         //Productos de tienda
-        composable("home_shop",
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
+        composable("home_shop"
         ) {
             HomeShopScreen(
                 navController = navController,
@@ -179,9 +158,6 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
                 onBack = { navController.popBackStack() }
             )
         }
-//        composable(NavRoutes.MyPetAssigned.route) {
-//            MyPetAssignedScreen(navController = navController)
-//        }
 
         composable(
             route = NavRoutes.ProductDetail.route,
@@ -191,8 +167,6 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
                     type = NavType.StringType
                 }
             ),
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
 
@@ -239,30 +213,7 @@ fun AppNavGraph(navController: NavHostController, sessionViewModel: SessionViewM
                 }
             )
         }
-
-//        composable(
-//            route = NavRoutes.ProductDetail.route,
-//            enterTransition = { fadeIn(animationSpec = tween(300)) },
-//            exitTransition = { fadeOut(animationSpec = tween(300)) }
-//        ) { backStackEntry ->
-//            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
-//
-//            // 👇 Este bloque es el que compartirá el CartViewModel
-//            val parentEntry = remember(backStackEntry) {
-//                navController.getBackStackEntry(NavRoutes.HomeShop.route) // ✅ usamos la constante
-//            }
-//
-//            val shopViewModel: HomeShopViewModel = hiltViewModel()
-//            val cartViewModel: CartViewModel = hiltViewModel(parentEntry) // ✅ instancia compartida
-//
-//            ProductDetailScreen(
-//                navController = navController,
-//                shopViewModel = shopViewModel,
-//                cartViewModel = cartViewModel,
-//                productIndex = index,
-//                onBack = { navController.popBackStack() }
-//            )
-//        }
+        
 
         //Administrador
         composable(NavRoutes.RechargeVitalCoins.route){
