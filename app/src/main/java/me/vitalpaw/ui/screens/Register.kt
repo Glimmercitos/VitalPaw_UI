@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -31,6 +33,12 @@ import me.vitalpaw.ui.navigation.NavRoutes
 import me.vitalpaw.ui.theme.quicksandFont
 import me.vitalpaw.viewmodels.RegisterViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 
 
 @Composable
@@ -45,6 +53,11 @@ fun Register(
     val showError by viewModel.showError.collectAsState()
     val gender by viewModel.gender.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
+
+    val focusManager = LocalFocusManager.current
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val confirmPasswordFocusRequester = remember { FocusRequester() }
 
     Box(
         modifier = Modifier
@@ -92,7 +105,16 @@ fun Register(
                         label = { Text("Name") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && name.isBlank()
+                        isError = showError && name.isBlank(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                emailFocusRequester.requestFocus()
+                            }
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -101,9 +123,20 @@ fun Register(
                         value = email,
                         onValueChange = viewModel::onEmailChange,
                         label = { Text("Email") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(emailFocusRequester),
                         shape = RoundedCornerShape(24.dp),
-                        isError = showError && email.isBlank()
+                        isError = showError && email.isBlank(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                passwordFocusRequester.requestFocus()
+                            }
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -160,9 +193,21 @@ fun Register(
                         value = password,
                         onValueChange = viewModel::onPasswordChange,
                         label = { Text("Enter Password") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(passwordFocusRequester),
                         shape = RoundedCornerShape(24.dp),
                         isError = showError && password.isBlank(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next,
+                            autoCorrect = false
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                confirmPasswordFocusRequester.requestFocus()
+                            }
+                        ),
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
@@ -178,9 +223,22 @@ fun Register(
                         value = confirmPassword,
                         onValueChange = viewModel::onConfirmPasswordChange,
                         label = { Text("Confirm Password") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(confirmPasswordFocusRequester),
                         shape = RoundedCornerShape(24.dp),
                         isError = showError && (confirmPassword.isBlank() || password != confirmPassword),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                            autoCorrect = false
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                viewModel.onRegisterClick()
+                            }
+                        ),
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
