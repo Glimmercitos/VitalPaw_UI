@@ -28,7 +28,7 @@ import me.vitalpaw.R
 @Composable
 fun AppointmentPetCard(
     pet: Pet,
-    onClick: () -> Unit,
+    onArrowClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -90,11 +90,13 @@ fun AppointmentPetCard(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(55.dp)
+                .clickable(enabled = onArrowClick != null) {
+                    onArrowClick?.invoke()
+                }
                 .background(
                     Color(0xFF4682B4),
                     shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
-                )
-                .clickable { onClick() },
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(

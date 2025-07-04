@@ -18,10 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import me.vitalpaw.R
 import me.vitalpaw.ui.components.buttons.SalirButton
 import me.vitalpaw.viewmodels.MedicalRecordViewModel
 import me.vitalpaw.ui.theme.quicksandFont
@@ -83,14 +86,14 @@ fun PetRecordDetailScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Image(
-//                painter = painterResource(id = pet.imageRes),
-//                contentDescription = pet.name,
-//                modifier = Modifier
-//                    .size(140.dp)
-//                    .clip(CircleShape)
-//                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
-//            )
+            AsyncImage(
+                model = pet.imageUrl.takeIf { it.isNotBlank() } ?: R.drawable.petphoto,
+                contentDescription = pet.name,
+                modifier = Modifier
+                    .size(140.dp)
+                    .clip(CircleShape)
+                    .border(3.dp, Color(0xFF6E7AE6), CircleShape)
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 

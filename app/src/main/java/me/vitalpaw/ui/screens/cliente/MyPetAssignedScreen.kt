@@ -114,10 +114,12 @@ fun MyPetAssignedScreen(
                 petList.forEach { pet ->
                     AppointmentPetCard(
                         pet = pet,
-                        onClick = { },
+                        onArrowClick = {
+                            navController.navigate(NavRoutes.MyPetDetail.createRoute(pet.id))
+                        },
                         onDeleteClick = {
                             token?.let {
-                                viewModel.deleteClientPet(it, pet.id ?: "")
+                                viewModel.deleteClientPet(it, pet.id)
                                 Toast.makeText(context, "Perfil eliminado correctamente", Toast.LENGTH_SHORT).show()
                             } ?: Toast.makeText(context, "Token no disponible", Toast.LENGTH_SHORT).show()
                         }
