@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -47,6 +49,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
@@ -66,6 +73,11 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
     val errorMsg by viewModel.errorMsg.collectAsState()
+
+    val focusManager = LocalFocusManager.current
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
     /*if (viewModel.isLoginSuccess) {
         LaunchedEffect(Unit) {
             navController.navigate("bienvenida") {
@@ -142,9 +154,20 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                     value = email,
                     onValueChange = viewModel::onEmailChange,
                     label = { Text("Enter Email") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(emailFocusRequester),
                     shape = RoundedCornerShape(24.dp),
-                    isError = showError && email.isBlank()
+                    isError = showError && email.isBlank(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            passwordFocusRequester.requestFocus()
+                        }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(25.dp))
@@ -154,12 +177,24 @@ fun LoginScreen(navController: NavHostController, viewModel: SessionViewModel = 
                     value = password,
                     onValueChange = viewModel::onPasswordChange,
                     label = { Text("Enter Password") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(passwordFocusRequester),
                     shape = RoundedCornerShape(24.dp),
                     isError = showError && password.isBlank(),
                     visualTransformation = if (isPasswordVisible) VisualTransformation.None
                     else PasswordVisualTransformation(),
-                    trailingIcon = {
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                        autoCorrect = false
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            viewModel.onLoginClick()
+                        }
+                    ),trailingIcon = {
                         val image = if (isPasswordVisible)
                             Icons.Filled.Visibility
                         else
